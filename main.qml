@@ -7,10 +7,7 @@ import QtMultimedia 5.5
 import QtGraphicalEffects 1.0
 import Qt.labs.folderlistmodel 2.1
 
-import Qt3D 2.0
-import Qt3D.Renderer 2.0
 import QtQuick 2.1 as QQ2
-import QtQuick.Scene3D 2.0
 
 import "." // to import Settings
 import "qrc:/tools/tools/SelectTool.js" as SelectTool
@@ -21,9 +18,9 @@ import "qrc:/tools/tools/DeleteTool.js" as DeleteTool
 import "qrc:/lib/lib/lodash.js" as Lodash
 import SketchConverter 1.0
 import SketchConstraintsSolver 1.0
-import SketchLolExporter 1.0
+import SketchStaticsExporter 1.0
 import DisplayKeyboard 1.0
-
+import RealtoExporter 1.0
 
 Window {
     visible: true
@@ -130,11 +127,14 @@ Window {
         SplashScreen { }
         WelcomeScreen { id: welcomeScreen }
         Viewer3D { id: viewer3d }
-
         DisplayKeyboard { id: displayKeyboard }
         MenuItem { id: menuItems }
         MessageBox { id: message }
-
+        RealtoExporter{id:realtoExporter
+            onError: {
+                message.displayErrorMessage(err);
+            }
+        }
         ColumnLayout {
             id: mainLayout
             anchors.fill: parent
@@ -238,7 +238,7 @@ Window {
 
                     property SketchConverter converter: SketchConverter { }
                     property SketchConstraintsSolver constraintsSolver: SketchConstraintsSolver { sketch: sketch }
-                    property SketchLolExporter lolExporter: SketchLolExporter { sketch: sketch }
+                    property SketchStaticsExporter staticsExporter: SketchStaticsExporter { sketch: sketch }
 
                     function createPointUi(point, identifier) {
                         // todo move ui components outside of sketch class
@@ -275,7 +275,7 @@ Window {
             }
 
         }
-
+        LoginForm{id: loginForm}
         Image {
             id: backgroundImage
             anchors.fill: parent

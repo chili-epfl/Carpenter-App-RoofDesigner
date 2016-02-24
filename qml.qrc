@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>MainForm.ui.qml</file>
         <file>InsertPoint.qml</file>
         <file>Settings.qml</file>
         <file>qmldir</file>
@@ -27,6 +26,8 @@
         <file>SplashScreen.qml</file>
         <file>WelcomeScreen.qml</file>
         <file>Viewer3D.qml</file>
+        <file>MainForm.ui.qml</file>
+        <file>LoginForm.qml</file>
     </qresource>
     <qresource prefix="/tools">
         <file>tools/MoveTool.js</file>
@@ -37,5 +38,12 @@
     </qresource>
     <qresource prefix="/lib">
         <file>lib/lodash.js</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/minus_pressed.png</file>
+        <file>icons/minus.png</file>
+        <file>icons/plus.png</file>
+        <file>icons/plus_pressed.png</file>
+        <file>icons/realto_logo.png</file>
     </qresource>
 </RCC>

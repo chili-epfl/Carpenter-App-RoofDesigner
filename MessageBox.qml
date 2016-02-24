@@ -8,7 +8,7 @@ Rectangle {
     id: message
     radius: 5
     border.width: 0
-    z: 90
+    z: 3000
     anchors.centerIn: parent
     width: childrenRect.width+20
     height: childrenRect.height+40

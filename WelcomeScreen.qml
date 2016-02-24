@@ -9,6 +9,9 @@ import Qt.labs.folderlistmodel 2.1
 
 
 Rectangle {
+    function dp2px(dp){
+        return  dp * (0.15875 *Screen.pixelDensity)
+    }
     id: welcomeScreen
     anchors.fill: parent
     color: "white"
@@ -21,21 +24,31 @@ Rectangle {
         Rectangle {
             id: newSketchButton
             color: "#CCCCCC"
-
-
             width: welcomeScreen.width / 2
             height: childrenRect.height
-
             Label {
                 text: "Create a new sketch"
                 //font.family: "Avenir LT Std 65 Medium"
                 font.pointSize: 25
                 anchors.centerIn: parent
-
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
                         welcomeScreen.visible = false
+                    }
+                }
+            }
+            Image{
+                source: "qrc:/icons/icons/realto_logo.png";
+                width: dp2px(100)
+                height: width
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.margins: dp2px(16)
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        loginForm.visible=true
                     }
                 }
             }
@@ -70,11 +83,12 @@ Rectangle {
 
 
                     model: FolderListModel {
-                        nameFilters: ["*.final.obj"]
-                        showDirs: false
+                        id:folderModel
+                        nameFilters: ["*.obj"]
+                        showDirs: true
+                        showDotAndDotDot: true
                         showOnlyReadable: true
-                        folder: appPath
-
+                        folder: scenariosPath
                     }
                     delegate: Column {
                         Rectangle {
@@ -91,9 +105,13 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    viewer3d.mesh.source = fileURL
-                                    viewer3d.visible = true
-                                    welcomeScreen.visible = false
+                                    if(fileIsDir)
+                                        folderModel.folder=fileURL
+                                    else{
+                                        viewer3d.mesh.source = fileURL
+                                        viewer3d.visible = true
+                                        welcomeScreen.visible = false
+                                    }
                                 }
                             }
                         }

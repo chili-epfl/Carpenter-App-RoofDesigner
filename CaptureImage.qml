@@ -63,7 +63,7 @@ Rectangle {
             anchors.fill: parent
             onPressed: {
                 console.log("resolution", camera.imageCapture.resolution)
-                camera.imageCapture.captureToLocation(appPath)
+                camera.imageCapture.capture()
             }
         }
     }

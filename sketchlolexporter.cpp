@@ -80,6 +80,14 @@ QVariant SketchLolExporter::exportToFile(QString path) {
     stream << "#Node id,x,y,z,dim(always 0)" << endl;
 
     int i = 0;
+
+    QVariant mmPerPixelScale;
+    bool isGetMmPerPixelScaleCallWorks = QMetaObject::invokeMethod(
+                sketch,
+                "getMmPerPixelScale",
+                Q_RETURN_ARG(QVariant, mmPerPixelScale)
+    );
+
     foreach(QVariant rawPoint, points) {
         QObject* point = rawPoint.value<QObject*>();
         int identifier = point->property("identifier").toInt();
@@ -88,8 +96,8 @@ QVariant SketchLolExporter::exportToFile(QString path) {
         pointToLolIndex[identifier] = i;
 
         stream << i << ","
-               << position.x() << ","
-               << position.y() << ","
+               << position.x()*mmPerPixelScale.toDouble() << ","
+               << position.y()*mmPerPixelScale.toDouble() << ","
                << 0 << ","
                << 0
                << endl;

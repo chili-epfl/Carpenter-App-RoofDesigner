@@ -1,7 +1,7 @@
 #include "sketch_converter.h"
 #include <QDebug>
-
-
+#include "globals.h"
+#include <QDir>
 SketchConverter::SketchConverter() {
 
 }
@@ -30,9 +30,9 @@ QSharedPointer<SketchPoint> SketchConverter::addPoint(QObject* point) {
     return sketchPoint;
 }
 
-QVariant SketchConverter::exportToFile(QObject* sketch, QString file) {
+QVariant SketchConverter::exportToFile(QObject* sketch, QString basename) {
     QString error;
-    bool result = this->exportToFile(sketch, file, error);
+    bool result = this->exportToFile(sketch, basename, error);
 
     if(result) {
         return true;
@@ -43,7 +43,7 @@ QVariant SketchConverter::exportToFile(QObject* sketch, QString file) {
 }
 
 
-bool SketchConverter::exportToFile(QObject* sketch, QString file, QString& error) {
+bool SketchConverter::exportToFile(QObject* sketch, QString basename, QString& error) {
 #ifdef CARPENTER_DEBUG
     qDebug() << "SketchConverter: exportToFile() called";
 #endif
@@ -86,6 +86,10 @@ bool SketchConverter::exportToFile(QObject* sketch, QString file, QString& error
                 Q_RETURN_ARG(QVariant, mmPerPixelScale)
     );
 
+    if(mmPerPixelScale==0){
+         error="Set Scale First";
+         return false;
+    }
 
 #ifdef CARPENTER_USE_SKETCHPOINT
     foreach(QVariant rawPoint, points) {
@@ -156,6 +160,16 @@ bool SketchConverter::exportToFile(QObject* sketch, QString file, QString& error
 
     Assimp::Exporter exporter;
 
+    QString path=scenariosDir+basename+"/";
+
+    if(!QDir(path).exists()){
+        if(!QDir().mkpath(path)){
+            qDebug()<<"Can't create path";
+            return false;
+        }
+    }
+
+    QString file=path+basename;
     QString pathDae = (file + ".dae");
     QString pathObj = (file + ".obj");
     QString pathObjFinal = (file + ".final.obj");
@@ -189,7 +203,6 @@ QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
     QSharedPointer<aiScene> scene(new aiScene());
 
     scene->mRootNode = new aiNode();
-
     // single material, not reallyused
     scene->mMaterials = new aiMaterial*[ 1 ];
     scene->mMaterials[ 0 ] = nullptr;

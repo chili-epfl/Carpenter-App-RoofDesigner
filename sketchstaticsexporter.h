@@ -32,7 +32,7 @@ class SketchStaticsExporter : public QObject {
     public slots:
         void setSketch(QObject *sketch);
         QObject* getSketch();
-        QVariant exportToFile(QString path);
+        QVariant exportToFile(QString basename, QString path=QString());
 
     private:
         QObject *sketch;

@@ -62,7 +62,7 @@ class SketchConverter : public QObject
          * that allows to work in Javascript side, since string are
          * immutable type in Javascript.
          */
-        QVariant exportToFile(QObject* sketch, QString path);
+        QVariant exportToFile(QObject* sketch, QString basename);
 };
 
 #endif // SKETCHCONVERTER_H

@@ -1,9 +1,9 @@
 #include "sketchstaticsexporter.h"
 #include <QDebug>
-
+#include <QDir>
+#include "globals.h"
 SketchStaticsExporter::SketchStaticsExporter(QObject *parent) : QObject(parent) {
     this->sketch = Q_NULLPTR;
-
     for(int i = 0; i < 26; i++) {
         this->idToLetter[i] = i + 65;
     }
@@ -42,15 +42,37 @@ bool SketchStaticsExporter::identifierToLetter(int id, QString &name) {
     return true;
 }
 
-QVariant SketchStaticsExporter::exportToFile(QString path) {
+QVariant SketchStaticsExporter::exportToFile(QString basename, QString path) {
     if(this->sketch == Q_NULLPTR) {
         return "No sketch to export";
     }
-    if(path == Q_NULLPTR || path.length() == 0) {
-        return "No filepath provided";
+
+    QVariant mmPerPixelScale;
+    bool isGetMmPerPixelScaleCallWorks = QMetaObject::invokeMethod(
+                sketch,
+                "getMmPerPixelScale",
+                Q_RETURN_ARG(QVariant, mmPerPixelScale)
+    );
+
+    if(mmPerPixelScale==0){
+         return "Set Scale First";
     }
 
-    QString filename="Model.lol";
+
+    if(basename.isEmpty()){
+        return "Invalid basename";
+    }
+
+    if(path.isEmpty()){
+        path=scenariosDir+basename+"/";
+    }
+
+    if(!QDir(path).exists()){
+        if(!QDir().mkpath(path))
+            return "Can't create path for exportFile";
+    }
+
+    QString filename=path+basename+".static_structure";
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text) ){
         return "Cannot open the model file to export";
@@ -81,12 +103,7 @@ QVariant SketchStaticsExporter::exportToFile(QString path) {
 
     int i = 0;
 
-    QVariant mmPerPixelScale;
-    bool isGetMmPerPixelScaleCallWorks = QMetaObject::invokeMethod(
-                sketch,
-                "getMmPerPixelScale",
-                Q_RETURN_ARG(QVariant, mmPerPixelScale)
-    );
+
 
     foreach(QVariant rawPoint, points) {
         QObject* point = rawPoint.value<QObject*>();

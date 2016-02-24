@@ -1,7 +1,7 @@
-#include "sketchlolexporter.h"
+#include "sketchstaticsexporter.h"
 #include <QDebug>
 
-SketchLolExporter::SketchLolExporter(QObject *parent) : QObject(parent) {
+SketchStaticsExporter::SketchStaticsExporter(QObject *parent) : QObject(parent) {
     this->sketch = Q_NULLPTR;
 
     for(int i = 0; i < 26; i++) {
@@ -9,15 +9,15 @@ SketchLolExporter::SketchLolExporter(QObject *parent) : QObject(parent) {
     }
 }
 
-void SketchLolExporter::setSketch(QObject *sketch) {
+void SketchStaticsExporter::setSketch(QObject *sketch) {
     this->sketch = sketch;
 }
 
-QObject* SketchLolExporter::getSketch() {
+QObject* SketchStaticsExporter::getSketch() {
     return this->sketch;
 }
 
-bool SketchLolExporter::identifierToLetter(int id, QString &name) {
+bool SketchStaticsExporter::identifierToLetter(int id, QString &name) {
     if(id < 0) {
         return false;
     }
@@ -42,7 +42,7 @@ bool SketchLolExporter::identifierToLetter(int id, QString &name) {
     return true;
 }
 
-QVariant SketchLolExporter::exportToFile(QString path) {
+QVariant SketchStaticsExporter::exportToFile(QString path) {
     if(this->sketch == Q_NULLPTR) {
         return "No sketch to export";
     }
@@ -60,7 +60,7 @@ QVariant SketchLolExporter::exportToFile(QString path) {
     QVariantList points = store["points"].value<QVariantList>();
     QVariantList lines = store["lines"].value<QVariantList>();
 
-    QMap<int, int> pointToLolIndex;
+    QMap<int, int> pointToStaticsIndex;
 
     int numberOfPoints = points.size();
     int numberOfReaction = 0;
@@ -93,7 +93,7 @@ QVariant SketchLolExporter::exportToFile(QString path) {
         int identifier = point->property("identifier").toInt();
         QVector2D position = point->property("start").value<QVector2D>();
 
-        pointToLolIndex[identifier] = i;
+        pointToStaticsIndex[identifier] = i;
 
         stream << i << ","
                << position.x()*mmPerPixelScale.toDouble() << ","
@@ -164,16 +164,16 @@ QVariant SketchLolExporter::exportToFile(QString path) {
         QString letterEnd;
 
         if(
-                !this->identifierToLetter(pointToLolIndex[idStart], letterStart)
-                || !this->identifierToLetter(pointToLolIndex[idEnd], letterEnd)
+                !this->identifierToLetter(pointToStaticsIndex[idStart], letterStart)
+                || !this->identifierToLetter(pointToStaticsIndex[idEnd], letterEnd)
         ) {
             file.close();
             return "Unable to transform identifier to export format";
         }
 
         stream << letterStart << letterEnd << ","
-               << pointToLolIndex[idStart] << ","
-               << pointToLolIndex[idEnd] << ","
+               << pointToStaticsIndex[idStart] << ","
+               << pointToStaticsIndex[idEnd] << ","
                << pointer.length() << ","
                << (SketchLine::radius * 2) << ","
                << "20000" << ","

@@ -1,5 +1,5 @@
-#ifndef SKETCHLOLEXPORTER_H
-#define SKETCHLOLEXPORTER_H
+#ifndef SketchStaticsExporter_H
+#define SketchStaticsExporter_H
 
 #include <QObject>
 #include <QVariant>
@@ -12,22 +12,22 @@
 #include "sketchline.h"
 
 /**
- * @brief The SketchLolExporter class
+ * @brief The SketchStaticsExporter class
  *
- * SketchLolExporter allows to export the current
+ * SketchStaticsExporter allows to export the current
  * sketch document in a flat text file.
  *
  * After qml registration, it can be used as a qml
  * component like that :
- * SketchLolExporter { sketch: mySketchComponent },
+ * SketchStaticsExporter { sketch: mySketchComponent },
  */
-class SketchLolExporter : public QObject {
+class SketchStaticsExporter : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(QObject* sketch READ getSketch WRITE setSketch)
 
     public:
-        explicit SketchLolExporter(QObject *parent = 0);
+        explicit SketchStaticsExporter(QObject *parent = 0);
 
     public slots:
         void setSketch(QObject *sketch);
@@ -40,4 +40,4 @@ class SketchLolExporter : public QObject {
         bool identifierToLetter(int id, QString &name);
 };
 
-#endif // SKETCHLOLEXPORTER_H
+#endif // SketchStaticsExporter_H

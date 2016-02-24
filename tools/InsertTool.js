@@ -1,7 +1,7 @@
 Qt.include("Tool.js")
 Qt.include("qrc:/lib/lib/lodash.js");
 
-var _ = lodash(this);
+var _ = lodash();
 
 function InsertTool(context) {
     Tool.call(this, context);

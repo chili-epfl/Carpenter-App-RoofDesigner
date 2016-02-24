@@ -214,6 +214,7 @@ function SelectTool(context) {
 
     this.itemEnterHandler = function(item) {
         item.mouseArea.enabled = true;
+        console.log(this.handlers)
         this.handlers[item.identifier] = this.itemClickHandler(item);
         item.mouseArea.clicked.connect(this.handlers[item.identifier]);
     }

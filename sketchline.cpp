@@ -127,11 +127,6 @@ QList<QVector3D> SketchLine::getVertices() {
     return vertices;
 }
 
-QList<QVector3D> SketchLine::getNormals()
-{
-    return normals;
-}
-
 QList<QList<int>> SketchLine::getFaces() {
     return faces;
 }

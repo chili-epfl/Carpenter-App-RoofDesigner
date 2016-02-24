@@ -38,16 +38,16 @@ Rectangle {
 
     Camera {
         id: camera
-
+        viewfinder.resolution:Qt.size(640,480)
         imageCapture {
-            resolution: Qt.size(1920,1080)
+            resolution: Qt.size(640,480)
             onImageCaptured: {
                 photoPreview.source = preview
                 previewPaneVisible = true
             }
             onImageSaved: {
+                Settings.captureImagePath=camera.imageCapture.capturedImagePath;
                 console.log("preview", camera.imageCapture.capturedImagePath)
-
             }
         }
     }
@@ -57,6 +57,7 @@ Rectangle {
         source: camera
         anchors.fill: parent
         fillMode: Settings.backgroundFillMode
+
 
         MouseArea {
             anchors.fill: parent

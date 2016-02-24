@@ -1,6 +1,7 @@
 #include "sketchstaticsexporter.h"
 #include <QDebug>
 #include <QDir>
+#include <QImage>
 #include "globals.h"
 SketchStaticsExporter::SketchStaticsExporter(QObject *parent) : QObject(parent) {
     this->sketch = Q_NULLPTR;
@@ -42,7 +43,7 @@ bool SketchStaticsExporter::identifierToLetter(int id, QString &name) {
     return true;
 }
 
-QVariant SketchStaticsExporter::exportToFile(QString basename, QString path) {
+QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroundImagePath, QString path) {
     if(this->sketch == Q_NULLPTR) {
         return "No sketch to export";
     }
@@ -200,6 +201,15 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString path) {
     }
 
     stream << endl;
+
+    QImage backgroundImage(backgroundImagePath);
+    if(!backgroundImage.isNull()){
+        backgroundImage.save(path+basename+".png");
+    }
+    else
+        qDebug()<<"Null background image";
+
+
 
     return true;
 }

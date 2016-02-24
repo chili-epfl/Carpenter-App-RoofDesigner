@@ -85,15 +85,17 @@ Rectangle {
             }
 
             onClicked: {
-                var lolExportResult = mouseArea.lolExporter.exportToFile(Settings.assetsExportPath + "model");
-                console.log("lolExportResult", lolExportResult);
+                var basename=new Date().toLocaleString(Qt.locale(),"dMyyhms");
 
-                var exportResult = mouseArea.converter.exportToFile(sketch, Settings.assetsExportPath + "output-" + new Date().getTime());
+                var staticsExportResult = mouseArea.staticsExporter.exportToFile(basename,Settings.captureImagePath);
+                console.log("staticsExportResult", staticsExportResult);
+
+                var exportResult = mouseArea.converter.exportToFile(sketch, basename);
                 console.log("exportResult: ", exportResult);
 
                 if(exportResult === true) {
-                    if(lolExportResult !== true) {
-                        message.displayErrorMessage("Text file export failed: " + lolExportResult)
+                    if(staticsExportResult !== true) {
+                        message.displayErrorMessage("Text file export failed: " + staticsExportResult)
                     }
                     else {
                         message.displaySuccessMessage("3D export succeed")

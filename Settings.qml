@@ -49,4 +49,6 @@ QtObject {
     readonly property real contextMenuRadius: 5
     readonly property real contextMenuZ: 200
     readonly property color contextMenuColor:  Qt.rgba(palette.r, palette.g, palette.b, 0.8)
+
+    property string captureImagePath;
 }

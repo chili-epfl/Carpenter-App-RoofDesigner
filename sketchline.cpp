@@ -94,16 +94,16 @@ SketchLine::SketchLine(QObject* line, QMap<QObject*, QList<QObject*>> linesPerPo
 
     int facesIndex[36] = {
         0,1,2,
-        1,2,3,
-        0,1,4,
+        1,3,2,
+        1,0,4,
         1,4,5,
         0,2,4,
-        2,4,6,
+        2,6,4,
         2,3,7,
-        2,6,7,
-        1,3,5,
+        2,7,6,
+        1,5,3,
         3,5,7,
-        4,5,6,
+        4,6,5,
         5,6,7
     };
 
@@ -125,6 +125,11 @@ SketchLine::SketchLine(QObject* line, QMap<QObject*, QList<QObject*>> linesPerPo
 
 QList<QVector3D> SketchLine::getVertices() {
     return vertices;
+}
+
+QList<QVector3D> SketchLine::getNormals()
+{
+    return normals;
 }
 
 QList<QList<int>> SketchLine::getFaces() {

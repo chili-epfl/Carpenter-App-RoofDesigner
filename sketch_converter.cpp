@@ -172,19 +172,22 @@ bool SketchConverter::exportToFile(QObject* sketch, QString basename, QString& e
     QString file=path+basename;
     QString pathDae = (file + ".dae");
     QString pathObj = (file + ".obj");
-    QString pathObjFinal = (file + ".final.obj");
-    aiReturn stateDae = exporter.Export(scene.data(), "collada", pathDae.toStdString().c_str(), aiProcess_Triangulate);
+    aiReturn stateDae = exporter.Export(scene.data(), "collada", pathDae.toStdString().c_str(), aiProcess_Triangulate );
     aiReturn stateObj = exporter.Export(scene.data(), "obj", pathObj.toStdString().c_str(), aiProcess_Triangulate);
 
-    Assimp::Importer importer;
-    const aiScene* import = importer.ReadFile(pathObj.toStdString().c_str(), 0);
+    /*Comment this check because it might fail beacuse of the normals*/
+    //QString pathObjFinal = (file + ".final.obj");
+
+//    Assimp::Importer importer;
+//    const aiScene* import = importer.ReadFile(pathObj.toStdString().c_str(), 0);
 
     aiReturn stateObjFinal = aiReturn_FAILURE;
 
-    if(stateObj == AI_SUCCESS) {
-        stateObjFinal = exporter.Export(import, "obj", pathObjFinal.toStdString().c_str());
-    }
+//    if(stateObj == AI_SUCCESS) {
+//        stateObjFinal = exporter.Export(import, "obj", pathObjFinal.toStdString().c_str());
+//    }
 
+    stateObjFinal=AI_SUCCESS;
 
     if(stateDae == AI_SUCCESS && stateObj == AI_SUCCESS && stateObjFinal == AI_SUCCESS) {
         return true;
@@ -273,13 +276,15 @@ QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
         int verticesCount = mesh->getVertices().size();
 
         pMesh->mVertices = new aiVector3D[verticesCount];
-        pMesh->mNumVertices = verticesCount;
+        pMesh->mNormals=new aiVector3D[verticesCount];
 
+        pMesh->mNumVertices = verticesCount;
 
 
         for(int j = 0; j < verticesCount; j++) {
             QVector3D vertex = mesh->getVertices().at(j);
             pMesh->mVertices[j] = aiVector3D( (vertex.x() + moveX) * scale, (vertex.y() + moveY) * scale, vertex.z() * scale );
+            pMesh->mNormals[j]=aiVector3D(0,0,1);
             //pMesh->mVertices[j] = aiVector3D(vertex.x(), vertex.y(), vertex.z());
         }
 

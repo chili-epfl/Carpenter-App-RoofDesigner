@@ -14,6 +14,11 @@ import QtQuick.Scene3D 2.0
 
 
 Rectangle {
+
+    function dp2px(dp){
+        return  dp * (0.15875 *Screen.pixelDensity)
+    }
+
     id: viewer3d
     anchors.fill: parent
     color: "white"
@@ -38,6 +43,40 @@ Rectangle {
             console.log("hide viewer3d")
         }
     }
+
+    Image {
+        anchors.right: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.margins: 20
+        source: minus_mouse_area.pressed ? "qrc:/icons/icons/minus_pressed.png" :"qrc:/icons/icons/minus.png"
+        z: 100
+        width: dp2px(56)
+        height: width
+        MouseArea{
+            id:minus_mouse_area
+            anchors.fill: parent;
+            onClicked: {
+                scaleTransform.scale*=0.80
+            }
+        }
+    }
+    Image {
+        anchors.left: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.margins: 20
+        z: 100
+        width: dp2px(56)
+        height: width
+        source: plus_mouse_area.pressed ? "qrc:/icons/icons/plus_pressed.png" :"qrc:/icons/icons/plus.png"
+        MouseArea{
+            id:plus_mouse_area
+            anchors.fill: parent;
+            onClicked: {
+                scaleTransform.scale*=1.2
+            }
+        }
+    }
+
     Scene3D {
         id: scene3d
         anchors.fill: parent
@@ -46,136 +85,52 @@ Rectangle {
         aspects: "input"
 
         Entity {
-        id: root
+            id: root
 
-        // Render from the mainCamera
-        components: [
-            FrameGraph {
-                activeFrameGraph: ForwardRenderer {
-                    id: renderer
-                    camera: mainCamera
+            // Render from the mainCamera
+            components: [
+                FrameGraph {
+                    activeFrameGraph: ForwardRenderer {
+                        id: renderer
+                        camera: mainCamera
+                    }
                 }
-            }
-        ]
-
-        Camera {
-            id: mainCamera
-            projectionType: CameraLens.PerspectiveProjection
-            fieldOfView: 22.5
-            aspectRatio: mainForm.width / mainForm.height
-            nearPlane:   0.01
-            farPlane:    1000.0
-            viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
-            upVector:   Qt.vector3d( 0.0, 1.0, 0.0 )
-            position: Qt.vector3d( 0.0, 0.0, 15.0 )
-
-        }
-
-
-        Configuration  {
-            controlledCamera: mainCamera
-        }
-
-        Material {
-            id: wireframeMaterial
-
-            property color ambient:  Qt.rgba( 0.2, 0.0, 0.0, 1.0 )
-            property color diffuse: Qt.rgba( 0.8, 0.0, 0.0, 1.0 )
-            property color specular: Qt.rgba( 0.95, 0.95, 0.95, 1.0 )
-            property real shininess: 150.0
-            property real lineWidth: 1.5
-            property color lineColor: Qt.rgba( 0.0, 0.0, 0.0, 1.0 )
-
-            parameters: [
-                Parameter { name: "ambient"; value: Qt.vector3d(wireframeMaterial.ambient.r, wireframeMaterial.ambient.g, wireframeMaterial.ambient.b) },
-                Parameter { name: "diffuse"; value: Qt.vector3d(wireframeMaterial.diffuse.r, wireframeMaterial.diffuse.g, wireframeMaterial.diffuse.b) },
-                Parameter { name: "specular"; value: Qt.vector3d(wireframeMaterial.specular.r, wireframeMaterial.specular.g, wireframeMaterial.specular.b) },
-                Parameter { name: "shininess"; value: wireframeMaterial.shininess },
-                Parameter { name: "line.width"; value: wireframeMaterial.lineWidth },
-                Parameter { name: "line.color"; value: wireframeMaterial.lineColor }
             ]
 
-            effect: Effect {
+            Camera {
+                id: mainCamera
+                projectionType: CameraLens.PerspectiveProjection
+                fieldOfView: 22.5
+                aspectRatio: mainForm.width / mainForm.height
+                nearPlane:   0.01
+                farPlane:    1000.0
+                viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
+                upVector:   Qt.vector3d( 0.0, 1.0, 0.0 )
+                position: Qt.vector3d( 0.0, 0.0, 15.0 )
 
-                parameters: [
-                    Parameter { name: "ambient";   value: Qt.vector3d( 0.1, 0.1, 0.1 ) },
-                    Parameter { name: "diffuse";   value: Qt.vector3d( 0.7, 0.7, 0.7 ) },
-                    Parameter { name: "specular";  value: Qt.vector3d( 0.95, 0.95, 0.95 ) },
-                    Parameter { name: "shininess"; value: 150.0 }
-                ]
+            }
 
-                techniques: [
-                    Technique {
-                        openGLFilter {
-                            api: OpenGLFilter.Desktop
-                            profile: OpenGLFilter.Core
-                            majorVersion: 3
-                            minorVersion: 1
-                        }
+            Configuration  {
+                controlledCamera: mainCamera
+            }
 
-                        annotations: [ Annotation { name: "renderingStyle"; value: "forward" } ]
-
-                        parameters: [
-                            Parameter { name: "light.position"; value: Qt.vector4d( 0.0, 0.0, 0.0, 1.0 ) },
-                            Parameter { name: "light.intensity"; value: Qt.vector3d( 1.0, 1.0, 1.0 ) },
-                            Parameter { name: "line.width"; value: 1.0 },
-                            Parameter { name: "line.color"; value: Qt.vector4d( 1.0, 1.0, 1.0, 1.0 ) }
-                        ]
-
-                        renderPasses: [
-                            RenderPass {
-
-                                bindings: [
-                                    ParameterMapping { parameterName: "ambient";  shaderVariableName: "ka"; bindingType: ParameterMapping.Uniform },
-                                    ParameterMapping { parameterName: "diffuse";  shaderVariableName: "kd"; bindingType: ParameterMapping.Uniform },
-                                    ParameterMapping { parameterName: "specular"; shaderVariableName: "ks"; bindingType: ParameterMapping.Uniform }
-                                ]
-
-                                shaderProgram: ShaderProgram {
-                                    vertexShaderCode:   loadSource("qrc:/shaders/robustwireframe.vert")
-                                    geometryShaderCode: loadSource("qrc:/shaders/robustwireframe.geom")
-                                    fragmentShaderCode: loadSource("qrc:/shaders/robustwireframe.frag")
-                                }
-                            }
-                        ]
+            Entity {
+                Mesh {
+                    id: mesh
+                }
+                Transform{
+                    id:transform
+                    Scale { id: scaleTransform
+                        scale:1
                     }
-                ]
-            }
 
-        }
+                }
 
-        Entity {
-            id: trefoilKnot
+                components: [mesh,transform]
 
-            property alias x: translation.dx
-            property alias y: translation.dy
-            property alias z: translation.dz
-            property alias scale: scaleTransform.scale
-            property alias theta: thetaRotation.angle
-            property alias phi: phiRotation.angle
-            property Material material: wireframeMaterial
-
-            components: [ transform, mesh, trefoilKnot.material ]
-
-            Transform {
-                id: transform
-                Translate { id: translation }
-                Scale { id: scaleTransform }
-                Rotate{ id: thetaRotation; axis: Qt.vector3d( 1.0, 0.0, 0.0 ) }
-                Rotate{ id: phiRotation;   axis: Qt.vector3d( 0.0, 1.0, 0.0 ) }
-            }
-
-            Mesh {
-                id: mesh
-                source: "file:///c:/Users/Sfimx/Documents/build-carpenter-Desktop_Qt_5_5_1_MinGW_32bit-Debug/output-1453431627860.final.obj"
             }
         }
     }
-    }
 
-    MouseArea {
-        anchors.fill: parent
-        z: 88
-    }
 }
 

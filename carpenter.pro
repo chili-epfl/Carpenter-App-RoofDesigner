@@ -14,9 +14,10 @@ SOURCES += main.cpp \
     sketchjoint.cpp \
     solve.cpp \
     derivatives.cpp \
-    sketchlolexporter.cpp \
     parameter.cpp \
-    displaykeyboard.cpp
+    displaykeyboard.cpp \
+    sketchstaticsexporter.cpp \
+    realtoexporter.cpp
 
 HEADERS += sketch_converter.h \
     sketchmesh.h \
@@ -27,13 +28,14 @@ HEADERS += sketch_converter.h \
     constrainedline.h \
     sketchjoint.h \
     solve.h \
-    sketchlolexporter.h \
     parameter.h \
-    displaykeyboard.h
+    displaykeyboard.h \
+    sketchstaticsexporter.h \
+    globals.h \
+    realtoexporter.h
 
 
-RESOURCES += qml.qrc \
-    3d.qrc
+RESOURCES += qml.qrc
 
 # enable debug
 DEFINES += CARPENTER_DEBUG
@@ -42,25 +44,22 @@ DEFINES += CARPENTER_DEBUG
 # enable using SketchJoint as joint component
 DEFINES += CARPENTER_USE_SKETCHJOINT
 
-macx {
-    INCLUDEPATH += /usr/local/include/
+LIBS += -lassimp
+LIBS += -lquazip -lz
 
-    LIBS += /usr/local/lib/libassimp.dylib
-}
 linux {
-    INCLUDEPATH += /usr/local/include/
+#    INCLUDEPATH += /usr/local/include/
 
-    LIBS += -L/usr/local/lib
-    LIBS += -lassimp
+    LIBS += -L/usr/local/lib/
 }
-win32  {
-    # build or download binaries from : https://bruceoutdoors.wordpress.com/2014/08/22/building-assimp-3-with-mingw-4-8/
-    INCLUDEPATH += C:\Assimp3-1-1_MinGW4-8-1_Win32\include
 
-    LIBS += -LC:\Assimp3-1-1_MinGW4-8-1_Win32\ -lassimp
-}
 android {
 
+    INCLUDEPATH+= /home/chili/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/include/
+    LIBS += -L/home/chili/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/lib -lassimp
+    ANDROID_EXTRA_LIBS = \
+        /home/chili/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/lib/libassimp.so \
+        $$[QT_INSTALL_LIBS]/libquazip.so
 }
 
 

@@ -230,7 +230,7 @@ QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
     foreach(QSharedPointer<SketchMesh> mesh, this->meshes) {
         foreach(QVector3D vertex, mesh->getVertices()) {
             double x = vertex.x();
-            double y = vertex.y();
+            double y = -vertex.y();
 
             if(first) {
                 first = false;
@@ -283,7 +283,7 @@ QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
 
         for(int j = 0; j < verticesCount; j++) {
             QVector3D vertex = mesh->getVertices().at(j);
-            pMesh->mVertices[j] = aiVector3D( (vertex.x() + moveX) * scale, (vertex.y() + moveY) * scale, vertex.z() * scale );
+            pMesh->mVertices[j] = aiVector3D( (vertex.x() + moveX) * scale, (-vertex.y() + moveY) * scale, vertex.z() * scale );
             pMesh->mNormals[j]=aiVector3D(0,0,1);
             //pMesh->mVertices[j] = aiVector3D(vertex.x(), vertex.y(), vertex.z());
         }

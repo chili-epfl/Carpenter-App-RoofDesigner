@@ -115,7 +115,7 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
 
         stream << i << ","
                << position.x()*mmPerPixelScale.toDouble() << ","
-               << position.y()*mmPerPixelScale.toDouble() << ","
+               << -position.y()*mmPerPixelScale.toDouble() << ","
                << 0 << ","
                << 0
                << endl;

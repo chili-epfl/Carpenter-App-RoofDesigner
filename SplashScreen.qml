@@ -9,7 +9,7 @@ import QtGraphicalEffects 1.0
 Rectangle {
     anchors.fill: parent
     color: "white"
-    z: 2000
+    z: visible ? 2000 :0
 
     Label {
         id: appTitle

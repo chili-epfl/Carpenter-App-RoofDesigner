@@ -7,7 +7,7 @@ import "." // to import Settings
 
 Rectangle {
     anchors.fill: parent
-    z:900
+    z: visible ? 900 : 0
     color: Settings.captureImagePanelBackground
     id: capturePanel
 
@@ -38,6 +38,7 @@ Rectangle {
 
     Camera {
         id: camera
+        deviceId:QtMultimedia.availableCameras[1].deviceId
         viewfinder.resolution:Qt.size(640,480)
         imageCapture {
             resolution: Qt.size(640,480)

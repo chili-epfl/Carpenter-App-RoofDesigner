@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.2
 import QtMultimedia 5.5
 import QtQuick.Controls.Styles 1.4
 import "." // to import Settings
-
+import QtQuick.Window 2.0
 Rectangle {
     id: menuBar
     Layout.fillWidth: true
@@ -87,7 +87,7 @@ Rectangle {
             onClicked: {
                 var basename=new Date().toLocaleString(Qt.locale(),"dMyyhms");
 
-                var staticsExportResult = mouseArea.staticsExporter.exportToFile(basename,Settings.captureImagePath);
+                var staticsExportResult = mouseArea.staticsExporter.exportToFile(basename,Settings.captureImagePath,Qt.size(mainForm.width,mainForm.height));
                 console.log("staticsExportResult", staticsExportResult);
 
                 var exportResult = mouseArea.converter.exportToFile(sketch, basename);

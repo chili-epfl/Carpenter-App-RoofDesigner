@@ -16,7 +16,7 @@ QtObject {
     readonly property color selectedColor: "blue"
     readonly property color labelColor: "#222222"
 
-    readonly property int backgroundFillMode: Image.PreserveAspectCrop
+    readonly property int backgroundFillMode: Image.Stretch
 
     readonly property real pointSize: 50 // diameter
 

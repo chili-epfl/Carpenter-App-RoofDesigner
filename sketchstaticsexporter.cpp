@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QImage>
+#include <QPainter>
 #include "globals.h"
 SketchStaticsExporter::SketchStaticsExporter(QObject *parent) : QObject(parent) {
     this->sketch = Q_NULLPTR;
@@ -43,7 +44,7 @@ bool SketchStaticsExporter::identifierToLetter(int id, QString &name) {
     return true;
 }
 
-QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroundImagePath, QString path) {
+QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroundImagePath, QSize appSize , QString path) {
     if(this->sketch == Q_NULLPTR) {
         return "No sketch to export";
     }
@@ -246,13 +247,27 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
     stream << endl;
 
     QImage backgroundImage(backgroundImagePath);
-    if(!backgroundImage.isNull()){
-        backgroundImage.save(path+basename+".png");
+    QPainter painter;
+    if(backgroundImage.isNull()){
+       backgroundImage=QImage(640,480,QImage::Format_RGB32);
+       backgroundImage.fill(Qt::white);
     }
-    else
-        qDebug()<<"Null background image";
-
-
-
+    painter.begin(&backgroundImage);
+    QPen pen;
+    pen.setColor(Qt::blue);
+    pen.setWidth(15);
+    painter.setPen(pen);
+    float scaleX=(float)backgroundImage.size().width()/appSize.width();
+    float scaleY=(float)backgroundImage.size().height()/appSize.height();
+    foreach(QVariant rawLine, lines) {
+        QObject* line = rawLine.value<QObject*>();
+        QObject* start = line->property("startPoint").value<QObject*>();
+        QObject* end = line->property("endPoint").value<QObject*>();
+        QVector2D startPoint=start->property("start").value<QVector2D>();
+        QVector2D endPoint=end->property("start").value<QVector2D>();
+        painter.drawLine(startPoint.x()*scaleX,startPoint.y()*scaleY,endPoint.x()*scaleX,endPoint.y()*scaleY);
+    }
+    painter.end();
+    backgroundImage.save(path+basename+".png");
     return true;
 }

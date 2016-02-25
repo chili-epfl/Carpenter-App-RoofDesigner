@@ -105,6 +105,49 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
     int i = 0;
 
 
+    // getting the origin :
+    double minX = 0;
+    double maxX = 0;
+    double minY = 0;
+    double maxY = 0;
+    bool first = true;
+
+    foreach(QVariant rawPoint, points) {
+        QObject* point = rawPoint.value<QObject*>();
+        QVector2D position = point->property("start").value<QVector2D>();
+        double x = position.x();
+        double y = -position.y();
+
+        if(first) {
+            first = false;
+            minX = x;
+            maxY = x;
+
+            minY = y;
+            maxY = y;
+        }
+        else {
+            if(x > maxX) {
+                maxX = x;
+            }
+            if(x < minX) {
+                minX = x;
+            }
+            if(y > maxY) {
+                maxY = y;
+            }
+            if(y < minY) {
+                minY = y;
+            }
+        }
+    }
+
+
+    double moveX = - (maxX + minX) / 2.0;
+    double moveY = - (maxY + minY) / 2.0;
+
+
+
 
     foreach(QVariant rawPoint, points) {
         QObject* point = rawPoint.value<QObject*>();
@@ -114,8 +157,8 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
         pointToStaticsIndex[identifier] = i;
 
         stream << i << ","
-               << position.x()*mmPerPixelScale.toDouble() << ","
-               << -position.y()*mmPerPixelScale.toDouble() << ","
+               << (position.x()+moveX)*mmPerPixelScale.toDouble() << ","
+               << (-position.y()+moveY)*mmPerPixelScale.toDouble() << ","
                << 0 << ","
                << 0
                << endl;

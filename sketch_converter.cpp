@@ -155,8 +155,52 @@ bool SketchConverter::exportToFile(QObject* sketch, QString basename, QString& e
     qDebug() << "SketchConverter: linesPerPoint: " << linesPerPoint;
 #endif
 
+
+    // getting the origin :
+    double minX = 0;
+    double maxX = 0;
+    double minY = 0;
+    double maxY = 0;
+    bool first = true;
+
+    foreach(QVariant rawPoint, points) {
+        QObject* point = rawPoint.value<QObject*>();
+        QVector2D position = point->property("start").value<QVector2D>();
+        double x = position.x();
+        double y = -position.y();
+
+        if(first) {
+            first = false;
+            minX = x;
+            maxY = x;
+
+            minY = y;
+            maxY = y;
+        }
+        else {
+            if(x > maxX) {
+                maxX = x;
+            }
+            if(x < minX) {
+                minX = x;
+            }
+            if(y > maxY) {
+                maxY = y;
+            }
+            if(y < minY) {
+                minY = y;
+            }
+        }
+    }
+
+
+    double moveX = - (maxX + minX) / 2.0;
+    double moveY = - (maxY + minY) / 2.0;
+
+
+
     // create a scene
-    QSharedPointer<aiScene> scene = this->generateScene(mmPerPixelScale.toDouble());
+    QSharedPointer<aiScene> scene = this->generateScene(mmPerPixelScale.toDouble(),QVector2D(moveX,moveY));
 
     Assimp::Exporter exporter;
 
@@ -202,7 +246,7 @@ bool SketchConverter::exportToFile(QObject* sketch, QString basename, QString& e
     }
 }
 
-QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
+QSharedPointer<aiScene> SketchConverter::generateScene(double scale,QVector2D offset) {
     QSharedPointer<aiScene> scene(new aiScene());
 
     scene->mRootNode = new aiNode();
@@ -219,46 +263,6 @@ QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
     scene->mRootNode->mMeshes = new unsigned int[ meshes.size() ];
     scene->mRootNode->mNumMeshes = meshes.size();
 
-
-    // getting the origin :
-    double minX = 0;
-    double maxX = 0;
-    double minY = 0;
-    double maxY = 0;
-    bool first = true;
-
-    foreach(QSharedPointer<SketchMesh> mesh, this->meshes) {
-        foreach(QVector3D vertex, mesh->getVertices()) {
-            double x = vertex.x();
-            double y = -vertex.y();
-
-            if(first) {
-                first = false;
-                minX = x;
-                maxY = x;
-
-                minY = y;
-                maxY = y;
-            }
-            else {
-                if(x > maxX) {
-                    maxX = x;
-                }
-                if(x < minX) {
-                    minX = x;
-                }
-                if(y > maxY) {
-                    maxY = y;
-                }
-                if(y < minY) {
-                    minY = y;
-                }
-            }
-        }
-    }
-
-    double moveX = - (maxX + minX) / 2.0;
-    double moveY = - (maxY + minY) / 2.0;
 
 
     // per mesh initialization, set the material to 0
@@ -283,7 +287,7 @@ QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
 
         for(int j = 0; j < verticesCount; j++) {
             QVector3D vertex = mesh->getVertices().at(j);
-            pMesh->mVertices[j] = aiVector3D( (vertex.x() + moveX) * scale, (-vertex.y() + moveY) * scale, vertex.z() * scale );
+            pMesh->mVertices[j] = aiVector3D( (vertex.x() + offset.x()) * scale, (-vertex.y() + offset.y()) * scale, vertex.z() * scale );
             pMesh->mNormals[j]=aiVector3D(0,0,1);
             //pMesh->mVertices[j] = aiVector3D(vertex.x(), vertex.y(), vertex.z());
         }

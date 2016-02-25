@@ -28,6 +28,9 @@
         <file>Viewer3D.qml</file>
         <file>MainForm.ui.qml</file>
         <file>LoginForm.qml</file>
+        <file>CameraController.qml</file>
+        <file>WireframeMaterial.qml</file>
+        <file>WireframeEffect.qml</file>
     </qresource>
     <qresource prefix="/tools">
         <file>tools/MoveTool.js</file>
@@ -38,6 +41,11 @@
     </qresource>
     <qresource prefix="/lib">
         <file>lib/lodash.js</file>
+    </qresource>
+    <qresource prefix="/shaders">
+        <file>shaders/robustwireframe.vert</file>
+        <file>shaders/robustwireframe.geom</file>
+        <file>shaders/robustwireframe.frag</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/minus_pressed.png</file>

@@ -122,7 +122,15 @@ Rectangle {
 
                 }
 
-                components: [mesh,transform]
+
+                WireframeMaterial{
+                    id:material
+                    effect: WireframeEffect{}
+                    ambient: Qt.rgba( 0.2, 0.5, 0.5, 1 )
+                    diffuse: Qt.rgba( 0.8, 0.5, 0.5, 1 )
+                }
+
+                components: [mesh,transform,material]
 
             }
         }

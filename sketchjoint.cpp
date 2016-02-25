@@ -351,7 +351,15 @@ SketchJoint::SketchJoint(QObject* rawPoint, QList<QObject*> lines) {
 
     this->vertices << topVertices;
     this->faces << topFace;
-    this->faces << bottomFace;
+    //this->faces << bottomFace;
+
+    QList<int> rlist; // reverse list+
+
+    for(int i=bottomFace.size()-1;i>=0;i--){
+        rlist<<bottomFace[i];
+    }
+
+    this->faces << rlist;
 
 #ifdef CARPENTER_DEBUG
     qDebug() << "SketchJoint: ---------\nSketchJoint: ";

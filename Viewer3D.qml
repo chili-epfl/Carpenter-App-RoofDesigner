@@ -12,9 +12,7 @@ import Qt3D.Render 2.0
 import QtQuick 2.1 as QQ2
 import QtQuick.Scene3D 2.0
 
-
 Rectangle {
-
     function dp2px(dp){
         return  dp * (0.15875 *Screen.pixelDensity)
     }
@@ -22,7 +20,7 @@ Rectangle {
     id: viewer3d
     anchors.fill: parent
     color: "white"
-    z: 1250
+    z: visible ? 1250: 0
     visible: false
     property Mesh mesh: mesh
 
@@ -78,15 +76,15 @@ Rectangle {
     }
 
     Scene3D {
+        enabled:viewer3d.visible
         id: scene3d
         anchors.fill: parent
         anchors.margins: 10
         focus: true
-        aspects: "input"
-
+        aspects: ["input","logic"]
         Entity {
             id: root
-
+            enabled: scene3d.enabled
             // Render from the mainCamera
             components: [
                 FrameGraph {
@@ -106,12 +104,12 @@ Rectangle {
                 farPlane:    1000.0
                 viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
                 upVector:   Qt.vector3d( 0.0, 1.0, 0.0 )
-                position: Qt.vector3d( 0.0, 0.0, 15.0 )
+                position: Qt.vector3d( 0.0, 0.0, 50.0 )
 
             }
 
-            Configuration  {
-                controlledCamera: mainCamera
+            CameraController{
+                camera:mainCamera
             }
 
             Entity {

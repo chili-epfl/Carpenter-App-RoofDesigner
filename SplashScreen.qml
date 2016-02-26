@@ -22,7 +22,7 @@ Rectangle {
 
     Label {
         id: slogan
-        text: "the app that plan"
+        text: "the app that plans"
         anchors.left: appTitle.left
         anchors.top: appTitle.bottom
         anchors.topMargin: -31

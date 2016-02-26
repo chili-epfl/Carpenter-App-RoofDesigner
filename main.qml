@@ -126,7 +126,21 @@ Window {
 
         SplashScreen { }
         WelcomeScreen { id: welcomeScreen }
-        Viewer3D { id: viewer3d }
+        Loader{
+            id:viewer3dLoader
+            anchors.fill:parent;
+            source: "qrc:/Viewer3D.qml"
+            asynchronous: true
+            active: false
+            z:active? 1250:0
+            property url meshSource;
+            onStatusChanged: {
+                if(status===Loader.Ready){
+                    welcomeScreen.visible=false;
+                    item.mesh.source=meshSource;
+                }
+            }
+        }
         DisplayKeyboard { id: displayKeyboard }
         MenuItem { id: menuItems }
         MessageBox { id: message }

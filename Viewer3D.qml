@@ -16,12 +16,12 @@ Rectangle {
     function dp2px(dp){
         return  dp * (0.15875 *Screen.pixelDensity)
     }
-
+    Component.onCompleted: console.log("Done")
     id: viewer3d
     anchors.fill: parent
     color: "white"
     z: visible ? 1250: 0
-    visible: false
+    visible: true
     property Mesh mesh: mesh
 
     Button {
@@ -37,7 +37,8 @@ Rectangle {
 
         onClicked: {
             welcomeScreen.visible = true
-            viewer3d.visible = false
+            //viewer3d.visible = false
+            viewer3dLoader.active=false;
             console.log("hide viewer3d")
         }
     }
@@ -76,7 +77,8 @@ Rectangle {
     }
 
     Scene3D {
-        enabled:viewer3d.visible
+        //enabled:viewer3d.visible
+        enabled: viewer3dLoader.active
         id: scene3d
         anchors.fill: parent
         anchors.margins: 10

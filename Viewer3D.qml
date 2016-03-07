@@ -37,7 +37,6 @@ Rectangle {
 
         onClicked: {
             welcomeScreen.visible = true
-            //viewer3d.visible = false
             viewer3dLoader.active=false;
             console.log("hide viewer3d")
         }
@@ -77,7 +76,6 @@ Rectangle {
     }
 
     Scene3D {
-        //enabled:viewer3d.visible
         enabled: viewer3dLoader.active
         id: scene3d
         anchors.fill: parent

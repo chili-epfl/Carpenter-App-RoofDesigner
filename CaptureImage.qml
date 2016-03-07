@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import QtMultimedia 5.5
+import QtMultimedia 5.6
 import QtQuick.Layouts 1.2
 import QtQuick.Controls 1.4
 
@@ -38,7 +38,7 @@ Rectangle {
 
     Camera {
         id: camera
-        deviceId:QtMultimedia.availableCameras[1].deviceId
+        //deviceId:QtMultimedia.availableCameras[1].deviceId
         viewfinder.resolution:Qt.size(640,480)
         imageCapture {
             resolution: Qt.size(640,480)
@@ -58,8 +58,6 @@ Rectangle {
         source: camera
         anchors.fill: parent
         fillMode: Settings.backgroundFillMode
-
-
         MouseArea {
             anchors.fill: parent
             onPressed: {

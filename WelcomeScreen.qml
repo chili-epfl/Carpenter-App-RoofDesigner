@@ -108,11 +108,8 @@ Rectangle {
                                     if(fileIsDir)
                                         folderModel.folder=fileURL
                                     else{
-                                        //viewer3d.mesh.source = fileURL
-                                        //viewer3d.visible = true
                                         viewer3dLoader.active=true;
                                         viewer3dLoader.meshSource = fileURL
-                                        //welcomeScreen.visible = false
                                     }
                                 }
                             }

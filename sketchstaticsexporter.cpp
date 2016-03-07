@@ -74,7 +74,7 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
             return "Can't create path for exportFile";
     }
 
-    QString filename=path+basename+".static_structure";
+    QString filename=path+basename+".structure";
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text) ){
         return "Cannot open the model file to export";

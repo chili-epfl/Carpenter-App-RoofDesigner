@@ -78,7 +78,7 @@ Rectangle {
             Label {
                 y: 10
                 x: 5
-                text: "mm"
+                text: "m"
                 color: "white"
                 font.pointSize: 11
                 MouseArea {

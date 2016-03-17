@@ -195,12 +195,12 @@ bool SketchConverter::exportToFile(QObject* sketch, QString basename, QString& e
 
 
     double moveX = - (maxX + minX) / 2.0;
-    double moveY = - (maxY + minY) / 2.0;
-
+    //double moveY = - (maxY + minY) / 2.0;
+    double moveY = -minY ;
 
 
     // create a scene
-    QSharedPointer<aiScene> scene = this->generateScene(mmPerPixelScale.toDouble(),QVector2D(moveX,moveY));
+    QSharedPointer<aiScene> scene = this->generateScene(mmPerPixelScale.toDouble()*100,QVector2D(moveX,moveY));
 
     Assimp::Exporter exporter;
 
@@ -287,7 +287,7 @@ QSharedPointer<aiScene> SketchConverter::generateScene(double scale,QVector2D of
 
         for(int j = 0; j < verticesCount; j++) {
             QVector3D vertex = mesh->getVertices().at(j);
-            pMesh->mVertices[j] = aiVector3D( (vertex.x() + offset.x()) * scale, (-vertex.y() + offset.y()) * scale, vertex.z() * scale );
+            pMesh->mVertices[j] = aiVector3D( (vertex.x() + offset.x()) * scale, (-vertex.y() + offset.y()) * scale +30, vertex.z() * scale );
             pMesh->mNormals[j]=aiVector3D(0,0,1);
             //pMesh->mVertices[j] = aiVector3D(vertex.x(), vertex.y(), vertex.z());
         }

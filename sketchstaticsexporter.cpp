@@ -145,7 +145,8 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
 
 
     double moveX = - (maxX + minX) / 2.0;
-    double moveY = - (maxY + minY) / 2.0;
+    //double moveY = - (maxY + minY) / 2.0;
+    double moveY = -minY ;
 
 
 
@@ -158,8 +159,8 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
         pointToStaticsIndex[identifier] = i;
 
         stream << i << ","
-               << (position.x()+moveX)*mmPerPixelScale.toDouble() << ","
-               << (-position.y()+moveY)*mmPerPixelScale.toDouble() << ","
+               << (position.x()+moveX)*mmPerPixelScale.toDouble()*1000 << ","
+               << (-position.y()+moveY)*mmPerPixelScale.toDouble()*1000+300 << ","
                << 0 << ","
                << 0
                << endl;
@@ -174,31 +175,57 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
     QString reactions;
     QTextStream reactionsStream(&reactions, QIODevice::WriteOnly);
     i = 0;
+    bool atLeastOneSupport=false;
+
+
     foreach(QVariant rawPoint, points) {
         QObject* point = rawPoint.value<QObject*>();
 
         bool cx = point->property("cx").toBool();
         bool cy = point->property("cy").toBool();
-        bool cz = point->property("cz").toBool();
+        if(cx && cy) atLeastOneSupport=true;
 
-        bool mx = point->property("mx").toBool();
-        bool my = point->property("my").toBool();
-        bool mz = point->property("mz").toBool();
+    }
+
+    foreach(QVariant rawPoint, points) {
+        QObject* point = rawPoint.value<QObject*>();
+
+        bool cx = point->property("cx").toBool();
+        bool cy = point->property("cy").toBool();
+        bool cz = true;point->property("cz").toBool();
+
+        bool mx = true;//point->property("mx").toBool();
+        bool my = true;//point->property("my").toBool();
+        bool mz = false;point->property("mz").toBool();
 
         if(cx || cy || cz || mx || my || mz) {
             numberOfReaction++;
+            if(i==0 && !atLeastOneSupport){
+                atLeastOneSupport=true;
+                reactionsStream << i << ","
+                                << 1 << ","
+                                << 1 << ","
+                                << (cz ? "1" : "0") << ","
+                                << (mx ? "1" : "0") << ","
+                                << (my ? "1" : "0") << ","
+                                << 1
+                                << endl;
+            }
+            else{
+                reactionsStream << i << ","
+                                << (cx ? "1" : "0") << ","
+                                << (cy ? "1" : "0") << ","
+                                << (cz ? "1" : "0") << ","
+                                << (mx ? "1" : "0") << ","
+                                << (my ? "1" : "0") << ","
+                                << (mz ? "1" : "0")
+                                << endl;
+            }
 
-            reactionsStream << i << ","
-                            << (cx ? "1" : "0") << ","
-                            << (cy ? "1" : "0") << ","
-                            << (cz ? "1" : "0") << ","
-                            << (mx ? "1" : "0") << ","
-                            << (my ? "1" : "0") << ","
-                            << (mz ? "1" : "0")
-                            << endl;
         }
         i++;
     }
+
 
     stream << "#Number of reaction" << endl
            << numberOfReaction << endl
@@ -236,11 +263,9 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
         stream << letterStart << letterEnd << ","
                << pointToStaticsIndex[idStart] << ","
                << pointToStaticsIndex[idEnd] << ","
-               << pointer.length() << ","
-               << (SketchLine::radius * 2) << ","
-               << "20000" << ","
-               << "1250" << ","
-               << "0.50e-9"
+               << 120 << ","
+               << 250 << ","
+               << "default"
                << endl;
     }
 

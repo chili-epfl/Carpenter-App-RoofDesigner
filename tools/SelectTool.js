@@ -182,6 +182,10 @@ function SelectTool(context) {
                      this.selectedItem.pointer.length(),
                      parseFloat(this.lineContextMenu().widthEdit.text)
             );
+            this.sketch.setDesiredDistance(
+                     this.selectedItem.identifier,
+                     parseFloat(this.lineContextMenu().widthEdit.text)
+            );
         }
     }
 

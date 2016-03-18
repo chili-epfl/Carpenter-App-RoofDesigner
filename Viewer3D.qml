@@ -104,7 +104,7 @@ Rectangle {
                 farPlane:    1000.0
                 viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
                 upVector:   Qt.vector3d( 0.0, 1.0, 0.0 )
-                position: Qt.vector3d( 0.0, 0.0, 50.0 )
+                position: Qt.vector3d( 0.0, 30.0, 100.0 )
 
             }
 
@@ -118,7 +118,7 @@ Rectangle {
                 }
                 Transform{
                     id:transform
-                    scale:1
+                    scale:0.5
 
                 }
 

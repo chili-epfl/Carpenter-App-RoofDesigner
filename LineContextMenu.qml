@@ -38,12 +38,14 @@ Rectangle {
             TextField {
                 x: 5
                 y: 10
+                textColor: "white"
                 id: widthEditField
                 width: 200
                 enabled: false
                 validator: RegExpValidator {
                     regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
                 }
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
                 placeholderText: "Initial scale"
                 font.pointSize: 14
 

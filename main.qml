@@ -35,6 +35,7 @@ Window {
 
         property var captureImage : Qt.createComponent("CaptureImage.qml");
         property var captureImagePanel : null;
+
         property Sketch sketch: sketch;
 
         states: [
@@ -161,6 +162,14 @@ Window {
 
             Rectangle {
                 id: sketchArea
+                Image {
+                    id: backgroundImage
+                    anchors.fill: parent
+                    fillMode: Settings.backgroundFillMode
+                    opacity: 1
+                    source: sketch.isBackgroundSet() ? sketch.getBackground() : ""
+                }
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -290,13 +299,7 @@ Window {
 
         }
         LoginForm{id: loginForm}
-        Image {
-            id: backgroundImage
-            anchors.fill: parent
-            fillMode: Settings.backgroundFillMode
-            opacity: 0.5
-            source: sketch.isBackgroundSet() ? sketch.getBackground() : ""
-        }
+
     }
 }
 

@@ -32,7 +32,7 @@ QtObject {
     readonly property color captureImagePanelBackground: "black"
 
     readonly property color lineColor: "gray";
-    readonly property real lineOpacity: 0.5;
+    readonly property real lineOpacity: 0.8;
 
     readonly property color topBarLabelColor: labelColor;
 

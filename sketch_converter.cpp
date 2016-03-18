@@ -86,7 +86,7 @@ bool SketchConverter::exportToFile(QObject* sketch, QString basename, QString& e
                 Q_RETURN_ARG(QVariant, mmPerPixelScale)
     );
 
-    if(mmPerPixelScale==0){
+    if(!mmPerPixelScale.isValid()){
          error="Set Scale First";
          return false;
     }

@@ -56,7 +56,7 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
                 Q_RETURN_ARG(QVariant, mmPerPixelScale)
     );
 
-    if(mmPerPixelScale==0){
+    if(!mmPerPixelScale.isValid()){
          return "Set Scale First";
     }
 
@@ -239,7 +239,7 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
            << numberOfBeams << endl
            << endl;
 
-    stream << "#Beam name,node 1,node 2,width,height,Youngh,E,d" << endl;
+    stream << "#Beam name,node 1,node 2,width,height,MaterialID,tangibleWidth,tangibleHeight" << endl;
 
     foreach(QVariant rawLine, lines) {
         QObject* line = rawLine.value<QObject*>();
@@ -265,34 +265,54 @@ QVariant SketchStaticsExporter::exportToFile(QString basename, QString backgroun
                << pointToStaticsIndex[idEnd] << ","
                << 120 << ","
                << 250 << ","
-               << "default"
+               << "default"<<","
+               << SketchLine::radius<<","
+               << SketchLine::radius
                << endl;
     }
 
     stream << endl;
 
     QImage backgroundImage(backgroundImagePath);
+    QImage outputImage;
     QPainter painter;
+    int xOffset=0;
+    int width=640;
+    int height=480;
     if(backgroundImage.isNull()){
-       backgroundImage=QImage(640,480,QImage::Format_RGB32);
-       backgroundImage.fill(Qt::white);
+       outputImage=QImage(width,height,QImage::Format_RGB32);
     }
-    painter.begin(&backgroundImage);
+    else{
+        width=backgroundImage.width();
+        height=backgroundImage.height();
+        outputImage=backgroundImage.copy(0,0,2*backgroundImage.width(),backgroundImage.height());
+        xOffset=backgroundImage.width();
+    }
+    painter.begin(&outputImage);
     QPen pen;
-    pen.setColor(Qt::blue);
-    pen.setWidth(15);
+    pen.setColor(Qt::white);
+    pen.setCapStyle(Qt::RoundCap);
+    pen.setStyle(Qt::DashDotLine);
+    pen.setWidth(10);
     painter.setPen(pen);
-    float scaleX=(float)backgroundImage.size().width()/appSize.width();
-    float scaleY=(float)backgroundImage.size().height()/appSize.height();
+    painter.fillRect(xOffset,0,width,height, QBrush(QColor(5,4,144)));
+    float scaleX=(float)width/appSize.width();
+    float scaleY=(float)height/appSize.height();
     foreach(QVariant rawLine, lines) {
+        pen.setColor(QColor(166,169,171));
+        painter.setPen(pen);
         QObject* line = rawLine.value<QObject*>();
         QObject* start = line->property("startPoint").value<QObject*>();
         QObject* end = line->property("endPoint").value<QObject*>();
         QVector2D startPoint=start->property("start").value<QVector2D>();
         QVector2D endPoint=end->property("start").value<QVector2D>();
-        painter.drawLine(startPoint.x()*scaleX,startPoint.y()*scaleY,endPoint.x()*scaleX,endPoint.y()*scaleY);
+        painter.drawLine(startPoint.x()*scaleX + xOffset,startPoint.y()*scaleY,endPoint.x()*scaleX+ xOffset,endPoint.y()*scaleY);
+        QVector2D midPoint=0.5*(endPoint+startPoint);
+        pen.setColor(Qt::white);
+        painter.setPen(pen);
+        painter.drawText(midPoint.x()*scaleX+xOffset-pen.width()*1.5,midPoint.y()*scaleY+pen.width()*1.5,QString::number((endPoint-startPoint).length()*mmPerPixelScale.toDouble(),'f',3)+"m");
     }
     painter.end();
-    backgroundImage.save(path+basename+".png");
+    outputImage.save(path+basename+".png");
     return true;
 }

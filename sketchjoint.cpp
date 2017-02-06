@@ -231,21 +231,31 @@ SketchJoint::SketchJoint(QObject* rawPoint, QList<QObject*> lines) {
 
         double c = x12 * y34 - y12 * x34;
 
+        QVector2D intersection;
         // No intersection
         if (fabs(c) < 0.01) {
-          this->setErrorMessage("Cannot build a joint because of an intersection");
-          return;
+            if(A.distanceToPoint(B)==0 || A.distanceToPoint(C)==0 || A.distanceToPoint(D)==0)
+                intersection=A;
+            else if(B.distanceToPoint(C)==0 || B.distanceToPoint(D)==0)
+                intersection=B;
+            else if(C.distanceToPoint(D)==0)
+                intersection=C;
+            else {
+                this->setErrorMessage("Cannot build a joint because of an intersection");
+                return;
+            }
         }
+        else{
 
-        // Intersection
-        double a = x1 * y2 - y1 * x2;
-        double b = x3 * y4 - y3 * x4;
+            // Intersection
+            double a = x1 * y2 - y1 * x2;
+            double b = x3 * y4 - y3 * x4;
 
-        double x = (a * x34 - b * x12) / c;
-        double y = (a * y34 - b * y12) / c;
+            double x = (a * x34 - b * x12) / c;
+            double y = (a * y34 - b * y12) / c;
 
-        QVector2D intersection = QVector2D(x, y);
-
+            intersection = QVector2D(x, y);
+        }
         vertices << B;
         vertices << intersection;
         vertices << D;

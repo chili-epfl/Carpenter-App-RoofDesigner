@@ -52,13 +52,12 @@ linux {
 
     LIBS += -L/usr/local/lib/
 }
-
 android {
 
-    INCLUDEPATH+= /home/chili/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/include/
-    LIBS += -L/home/chili/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/lib -lassimp
+    INCLUDEPATH+= assimp/include/
+    LIBS += -L$$_PRO_FILE_PWD_/assimp -lassimp
     ANDROID_EXTRA_LIBS = \
-        /home/chili/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/lib/libassimp.so \
+        $$_PRO_FILE_PWD_/assimp/libassimp.so \
         $$[QT_INSTALL_LIBS]/libquazip.so
 }
 

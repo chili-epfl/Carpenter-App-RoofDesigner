@@ -7,27 +7,27 @@ import "." // to import Settings
 import QtQuick.Window 2.0
 Rectangle {
     id: menuBar
-    Layout.fillWidth: true
     color: "transparent"
     height:100
-    z: 1000
+    width: parent.width
 
     RowLayout {
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         anchors.fill: parent
 
         Button {
+            id: menuButton
+            anchors.left: parent.left
+            anchors.margins: 10
+            width: 100
             text: "Menu"
             style: RoundedButton {
                 icon: "\uf060";
             }
-
             onClicked: {
-                welcomeScreen.visible = true
+                welcomeScreenLoader.source = "qrc:/WelcomeScreen.qml"
+                sketchScreenLoader.source = ""
             }
         }
 
@@ -44,6 +44,10 @@ Rectangle {
         }
 
         Button {
+            id: setBackgroundButton
+            anchors.right: applyConstraintsButton.left
+            anchors.margins: 10
+            width: 100
             text: "Set background"
             style: RoundedButton {
                 icon: "\uf030"
@@ -60,6 +64,10 @@ Rectangle {
         }
 
         Button {
+            id: applyConstraintsButton
+            anchors.right: exportButton.left
+            anchors.margins: 10
+            width: 100
             text:"Apply constraints"
             style: RoundedButton {
                 icon: "\uf021"
@@ -79,6 +87,10 @@ Rectangle {
         }
 
         Button {
+            id: exportButton
+            anchors.right: parent.right
+            anchors.margins: 10
+            width: 100
             text:"Export"
             style: RoundedButton {
                 icon: "\uf1b2"

@@ -86,7 +86,7 @@ Rectangle {
         id: hideTimer
         onTriggered: {
             console.log("end of timer")
-            message.opacity = 0;
+            hideMessage()
         }
     }
 

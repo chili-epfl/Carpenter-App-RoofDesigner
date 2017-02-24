@@ -5,18 +5,11 @@ import "." // to import Settings
 
 
 Rectangle {
-
-    id: menu
+    id: toolsMenu
     width: childrenRect.width
-    z: 100
     height: menuItems.count * itemHeight
 
-
     property real itemHeight: 72
-
-    anchors.left: sketchArea.left
-    anchors.leftMargin: 10
-    anchors.verticalCenter: sketchArea.verticalCenter
 
     function toggleState() {
         console.log("change state")
@@ -33,8 +26,8 @@ Rectangle {
     }
 
     ListView {
-        height: menu.height
-        width:itemHeight
+        height: toolsMenu.height
+        width: itemHeight
 
         model: menuItems
         delegate: Rectangle {
@@ -43,7 +36,7 @@ Rectangle {
             color: isToolSelected(tool) ? Settings.paletteHighlight : Settings.palette;
 
             function isToolSelected(tool) {
-                return mainForm.state === tool;
+                return sketchScreen.state === tool;
             }
 
             property color labelColor : isToolSelected(tool) ? Settings.selectedToolColor : Settings.toolColor
@@ -54,17 +47,21 @@ Rectangle {
                 font.family: fontName
                 font.pointSize: labelFontSize
                 color: labelColor
-                height: menu.itemHeight
-                width: menu.width
+                height: toolsMenu.itemHeight
+                width: toolsMenu.width
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: mainForm.changeTool(tool, name)
+                onClicked: sketchScreen.changeTool(tool, name)
             }
         }
+    }
+
+    MenuItem{
+        id: menuItems
     }
 }
 

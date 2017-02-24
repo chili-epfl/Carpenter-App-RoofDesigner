@@ -84,5 +84,5 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/quazip/0.7.3/lib/release/ 
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/quazip/0.7.3/lib/debug/ -lquazip.1.0.0
 else:unix: LIBS += -L$$PWD/quazip/0.7.3/lib/ -lquazip.1.0.0
 
-INCLUDEPATH += $$PWD/''
-DEPENDPATH += $$PWD/''
+INCLUDEPATH += $$PWD/quazip
+DEPENDPATH += $$PWD/quazip

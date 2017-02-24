@@ -2,14 +2,14 @@ import QtQuick 2.0
 import QtQuick.Controls 1.4
 
 Rectangle{
-    visible: false;
+    id: loginForm
+    visible: true;
     radius: 5
     border.color: "#F0F0F0"
     border.width: 10
     color: "transparent"
     anchors.fill: parent
     anchors.centerIn: parent
-    z: visible ? 2000 : 0
     Rectangle{
         anchors.fill: parent
         anchors.margins: 20
@@ -63,7 +63,8 @@ Rectangle{
         Button{
             text: "Close"
             onClicked: {
-                loginForm.visible=false;
+                welcomeScreenLoader.source = "qrc:/WelcomeScreen.qml"
+                loginFormLoader.source = ""
             }
             anchors.top: host_field.bottom
             anchors.right: parent.horizontalCenter

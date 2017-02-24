@@ -9,7 +9,6 @@ Rectangle {
     color: Settings.contextMenuColor
     width: childrenRect.width + 10
     height: childrenRect.height
-    z: Settings.contextMenuZ
     radius: Settings.contextMenuRadius
     visible: false
 

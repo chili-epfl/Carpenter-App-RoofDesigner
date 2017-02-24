@@ -31,6 +31,7 @@
         <file>CameraController.qml</file>
         <file>WireframeMaterial.qml</file>
         <file>WireframeEffect.qml</file>
+        <file>SketchScreen.qml</file>
     </qresource>
     <qresource prefix="/tools">
         <file>tools/MoveTool.js</file>

@@ -14,28 +14,26 @@ Rectangle {
     }
     id: welcomeScreen
     anchors.fill: parent
-    color: "white"
-    z: 1500
 
     SplitView {
-        z: 100
         anchors.fill: parent
 
         Rectangle {
             id: newSketchButton
             color: "#CCCCCC"
-            width: welcomeScreen.width / 2
-            height: childrenRect.height
+            width: parent.width / 2
+            height: parent.height
             Label {
                 text: "Create a new sketch"
                 //font.family: "Avenir LT Std 65 Medium"
                 font.pointSize: 25
                 anchors.centerIn: parent
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        welcomeScreen.visible = false
-                    }
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    sketchScreenLoader.source = "qrc:/SketchScreen.qml"
+                    welcomeScreenLoader.source = ""
                 }
             }
             Image{
@@ -48,7 +46,8 @@ Rectangle {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        loginForm.visible=true
+                        loginFormLoader.source = "qrc:/LoginForm.qml"
+                        welcomeScreenLoader.source = ""
                     }
                 }
             }
@@ -59,7 +58,7 @@ Rectangle {
             Layout.fillHeight: true
 
 
-            width: newSketchButton.width
+            width: parent.width / 2
             Rectangle {
                 color: "transparent"
                 height: childrenRect.height + 40
@@ -98,7 +97,7 @@ Rectangle {
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 x: 20
-                                text:fileName
+                                text: fileName == ".." ? "Previous directory" : fileName
                                 horizontalAlignment: Qt.AlignLeft
                                 font.pointSize: 14
                             }
@@ -114,17 +113,10 @@ Rectangle {
                                 }
                             }
                         }
-
-
                     }
                 }
             }
         }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        z: 88
     }
 }
 

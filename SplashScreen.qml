@@ -9,7 +9,6 @@ import QtGraphicalEffects 1.0
 Rectangle {
     anchors.fill: parent
     color: "white"
-    z: visible ? 2000 :0
 
     Label {
         id: appTitle
@@ -32,40 +31,11 @@ Rectangle {
     }
 
     Rectangle {
-        id: firstPoint
-        radius:15
-        anchors.verticalCenterOffset: 9
-        border.width: 0
-        width:30
-        height:30
-        color: "#808080"
-        anchors.left: slogan.right
-        anchors.leftMargin: 30
-        anchors.verticalCenter: slogan.verticalCenter
-        anchors.topMargin: 10
-        z: 100
-    }
-
-    Rectangle {
-        id:secondPoint
-        radius:firstPoint.radius
-        border.width: 0
-        width:firstPoint.height
-        height:firstPoint.height
-        color: "#808080"
-        anchors.left: firstPoint.right;
-        anchors.leftMargin: 200
-        anchors.verticalCenter: firstPoint.verticalCenter
-        z: firstPoint.z
-    }
-
-    Rectangle {
         anchors.left: firstPoint.left
         color: "#BBBBBB"
         height: firstPoint.height
         anchors.verticalCenter: firstPoint.verticalCenter
         radius: firstPoint.radius
-        z: firstPoint.z - 1
 
         SequentialAnimation on width {
             loops: 1
@@ -83,13 +53,37 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: firstPoint
+        radius:15
+        anchors.verticalCenterOffset: 9
+        border.width: 0
+        width:30
+        height:30
+        color: "#808080"
+        anchors.left: slogan.right
+        anchors.leftMargin: 30
+        anchors.verticalCenter: slogan.verticalCenter
+        anchors.topMargin: 10
+    }
+
+    Rectangle {
+        id:secondPoint
+        radius:firstPoint.radius
+        border.width: 0
+        width:firstPoint.height
+        height:firstPoint.height
+        color: "#808080"
+        anchors.left: firstPoint.right;
+        anchors.leftMargin: 200
+        anchors.verticalCenter: firstPoint.verticalCenter
+    }
+
     Behavior on opacity {
         NumberAnimation {
             duration: 700
         }
     }
-
-    visible: opacity === 0.0 ? false : true
 
     Timer {
         id: reset
@@ -97,7 +91,8 @@ Rectangle {
         running: true
 
         onTriggered: {
-            parent.opacity = 0
+            welcomeScreenLoader.source = "qrc:/WelcomeScreen.qml"
+            splashScreenLoader.source = ""
         }
     }
 

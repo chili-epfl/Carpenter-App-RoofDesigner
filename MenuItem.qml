@@ -1,6 +1,8 @@
 import QtQuick 2.0
 
 ListModel {
+    id: menuItems
+
     ListElement {
         name: "Select"
         icon: "\uf245"

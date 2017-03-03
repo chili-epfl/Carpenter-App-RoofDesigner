@@ -7,11 +7,12 @@ import "." // to import Settings
 
 Rectangle {
     id: pointContextMenu
-    width: childrenRect.width + 10
+    width: childrenRect.width
     height: childrenRect.height
     radius: Settings.contextMenuRadius
     color: Settings.contextMenuColor
     visible: false
+    z: 4
 
     property Item cx: cx
     property Item cy: cy
@@ -20,6 +21,10 @@ Rectangle {
     property Item mx: mx
     property Item my: my
     property Item mz: mz
+
+    MouseArea {
+        anchors.fill: parent
+    }
 
     RowLayout {
         x: 5

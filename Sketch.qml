@@ -26,7 +26,7 @@ Item {
         },
         'background' : {
             'set': false,
-            'url': ''
+            'url': Settings.captureImagePath
         }
     };
 

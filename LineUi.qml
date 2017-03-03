@@ -43,7 +43,6 @@ Line {
         height: Settings.constructionLineWidth
         opacity: Settings.lineOpacity
         radius: Settings.constructionLineWidth / 2.0
-        z: 10;
 
         x: parent.start.x - height*0.5
         y: parent.start.y - height*0.5

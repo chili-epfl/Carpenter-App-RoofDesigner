@@ -3,6 +3,7 @@ import "." // to import Settings
 
 Item {
     id: myLine
+    z: 1
 
     property real identifier
 

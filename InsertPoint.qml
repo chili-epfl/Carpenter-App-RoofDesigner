@@ -6,7 +6,6 @@ Point {
     id: insertPoint
     property color pointColor : "black"
     property bool selected: false;
-    z: 20
 
     property MouseArea mouseArea : mouseArea
 
@@ -19,7 +18,6 @@ Point {
         x: start.x - radius
         y: start.y - radius
 
-
         // Want to display the identifier on object ?
         Label {
             text: identifier
@@ -30,7 +28,6 @@ Point {
             visible: Settings.displayIdentifier
         }
 
-
         MouseArea {
             id: mouseArea;
             anchors.fill: parent
@@ -38,4 +35,3 @@ Point {
         }
     }
 }
-

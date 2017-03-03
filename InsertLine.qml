@@ -2,8 +2,6 @@ import QtQuick 2.0
 import "." // to import Settings
 
 LineUi {
-    z: 10
-
     property bool isInsertable: computeIsInsertable()
 
     onStartChanged: {
@@ -19,4 +17,3 @@ LineUi {
         return getLine().width > Settings.minimalPointDistance
     }
 }
-

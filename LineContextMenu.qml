@@ -6,16 +6,21 @@ import QtQuick.Layouts 1.2
 import "." // to import Settings
 
 Rectangle {
-    color: Settings.contextMenuColor
-    width: childrenRect.width + 10
+    id: lineContextMenu
+    width: childrenRect.width
     height: childrenRect.height
     radius: Settings.contextMenuRadius
+    color: Settings.contextMenuColor
     visible: false
-
+    z: 3
 
     property TextField widthEdit: widthEditField
     property Button verticalConstraint: verticalConstraint
     property Button horizontalConstraint: horizontalConstraint
+
+    MouseArea {
+        anchors.fill: parent
+    }
 
     RowLayout {
         x: 5
@@ -37,7 +42,7 @@ Rectangle {
             TextField {
                 x: 5
                 y: 10
-                textColor: "white"
+                textColor: "black"
                 id: widthEditField
                 width: 200
                 enabled: false
@@ -82,9 +87,6 @@ Rectangle {
                 text: "m"
                 color: "white"
                 font.pointSize: 11
-                MouseArea {
-                    anchors.fill: parent
-                }
             }
         }
         Item {
@@ -96,10 +98,6 @@ Rectangle {
                 text: "constraints"
                 color: "white"
                 font.pointSize: 16
-
-                MouseArea {
-                    anchors.fill: parent
-                }
             }
         }
 
@@ -126,7 +124,6 @@ Rectangle {
                 checked = !checked
             }
         }
-
     }
 }
 

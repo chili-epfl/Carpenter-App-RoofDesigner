@@ -25,13 +25,9 @@ import RealtoExporter 1.0
 Rectangle {
     id: sketchScreen
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+    anchors.fill: parent
 
-    property var captureImage : Qt.createComponent("CaptureImage.qml");
-    property var captureImagePanel : null;
-
-    property Sketch sketch: sketch;
+    property alias sketch: sketch;
 
     states: [
         State {
@@ -94,23 +90,14 @@ Rectangle {
             // message.displayInfoMessage("Selected tool: " + name);
 
             currentTool = newTool
+            console.log("change tool: " + name)
         }
     }
 
-    function displayCameraPanel() {
-        if(captureImagePanel == null) {
-            captureImagePanel = captureImage.createObject(mainForm, {});
-        }
-        else {
-            captureImagePanel.visible = true;
-        }
-        mouseArea.enabled = false;
-    }
-
-    function hideCameraPanel() {
+    /*function hideCameraPanel() {
         mouseArea.enabled = true
         captureImagePanel.visible = false
-    }
+    }*/
 
     onCurrentToolChanged: {
         state = currentTool;
@@ -120,33 +107,28 @@ Rectangle {
         id: backgroundImage
         anchors.fill: parent
         fillMode: Settings.backgroundFillMode
-        source: sketch.isBackgroundSet() ? sketch.getBackground() : ""
+        source: sketch.isBackgroundSet() ? sketch.getBackground() : "pictures/background_default.jpg"
     }
 
-    Label {
-        id: helpTip
-        text: "First, you should set the scale by selecting an item, and defines its length"
-        scale: 0.01
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 10
-        anchors.left: parent.left
-        anchors.leftMargin: 10
+    Image {
+        id: backgroundgrid
+        anchors.fill: parent
+        fillMode: Image.Tile
+        opacity: 0.42
+        source: Settings.backgroundGridEnable? "pictures/background_grid.png" : ""
     }
-
-    Ruler { id: ruler }
-
-    PointContextMenu { id: pointContextMenu }
-    LineContextMenu { id: lineContextMenu }
-
 
     MouseArea {
         id: mouseArea
+
+        anchors.fill: parent
 
         property var points: Object.create(Object.prototype)
         property var lines: Object.create(Object.prototype)
 
         property var sketch : Sketch {
             id:sketch
+            anchors.fill: parent
 
             onPointInserted: {
                 mouseArea.points[identifier] = mouseArea.createPointUi(point, identifier);
@@ -242,12 +224,20 @@ Rectangle {
             message.hideMessage()
         }
 
-        anchors.fill: parent
     }
+
+    Label {
+        id: helpTip
+        text: "First, you should set the scale by selecting an item, and defines its length"
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.margins: 10
+    }
+
+    Ruler { id: ruler }
 
     MessageBox {
         id: message
-        anchors.centerIn: parent
     }
 
     ToolsMenu{
@@ -260,7 +250,15 @@ Rectangle {
     TopBar {
         id: topBar
         width: parent.width
-        anchors.top: parent.Top
+        anchors.top: parent.top
         height: 100
+    }
+
+    PointContextMenu {
+        id: pointContextMenu
+    }
+
+    LineContextMenu {
+        id: lineContextMenu
     }
 }

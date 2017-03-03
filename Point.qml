@@ -13,6 +13,8 @@ Item {
     property bool my: false
     property bool mz: false
 
+    z: 2
+
     // todo put in a model class
     function distanceTo(point) {
         return point.minus(start).length();

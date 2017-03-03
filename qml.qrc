@@ -32,6 +32,8 @@
         <file>WireframeMaterial.qml</file>
         <file>WireframeEffect.qml</file>
         <file>SketchScreen.qml</file>
+        <file>pictures/background_default.jpg</file>
+        <file>pictures/background_grid.png</file>
     </qresource>
     <qresource prefix="/tools">
         <file>tools/MoveTool.js</file>

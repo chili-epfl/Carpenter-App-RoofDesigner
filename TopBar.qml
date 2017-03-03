@@ -44,6 +44,25 @@ Rectangle {
         }
 
         Button {
+            id: enableGridButton
+            anchors.right: setBackgroundButton.left
+            anchors.margins: 10
+            width: 100
+            text: "Enable grid"
+            checked: Settings.backgroundGridEnable
+            enabled: true
+            isDefault: false
+            checkable: true
+            style: RoundedButton {
+                icon: "\uf00a"
+            }
+
+            onClicked: {
+                Settings.backgroundGridEnable = !Settings.backgroundGridEnable
+            }
+        }
+
+        Button {
             id: setBackgroundButton
             anchors.right: applyConstraintsButton.left
             anchors.margins: 10
@@ -58,7 +77,8 @@ Rectangle {
                     message.displayErrorMessage("No camera available");
                 }
                 else {
-                    mainForm.displayCameraPanel()
+                    captureImageLoader.source = "qrc:/CaptureImage.qml"
+                    sketchScreenLoader.source = ""
                 }
             }
         }

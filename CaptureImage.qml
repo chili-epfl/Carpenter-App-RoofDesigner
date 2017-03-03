@@ -7,44 +7,26 @@ import "." // to import Settings
 
 Rectangle {
     anchors.fill: parent
-    z: visible ? 900 : 0
     color: Settings.captureImagePanelBackground
     id: capturePanel
 
-    property bool previewPaneVisible: false;
+    property bool isImageCaptured: false;
 
-    onVisibleChanged: {
+    /*onVisibleChanged: {
         if(visible) {
             camera.start()
-            previewPaneVisible = false
+            isImageCaptured = false
         }
-    }
-
-    Rectangle {
-        anchors.centerIn: parent
-        color: "#20FFFFFF"
-        border.color: "#80FFFFFF"
-        radius:5;
-        z:100
-        width: childrenRect.width + 20;
-        height: childrenRect.height + 20;
-        visible: !previewPaneVisible
-
-        Label {
-            text: "Touch the screen to take a picture"
-            color: "#ffffff"
-        }
-    }
+    }*/
 
     Camera {
         id: camera
-        //deviceId:QtMultimedia.availableCameras[1].deviceId
-        viewfinder.resolution:Qt.size(640,480)
+        cameraState: Camera.ActiveState
         imageCapture {
-            resolution: Qt.size(640,480)
             onImageCaptured: {
                 photoPreview.source = preview
-                previewPaneVisible = true
+                isImageCaptured = true
+                camera.stop()
             }
             onImageSaved: {
                 Settings.captureImagePath=camera.imageCapture.capturedImagePath;
@@ -69,8 +51,8 @@ Rectangle {
 
     Rectangle {
         id: previewPane
-        visible: previewPaneVisible
-        anchors.fill: parent
+        width: parent.width
+        anchors.bottom: parent.bottom
 
         Image {
             id: photoPreview
@@ -84,9 +66,10 @@ Rectangle {
             anchors.bottomMargin: 20
             anchors.left: parent.left
             anchors.bottom: parent.bottom
+            visible: isImageCaptured
             onClicked: {
                 camera.start()
-                previewPaneVisible = false
+                isImageCaptured = false
             }
         }
         Button {
@@ -95,7 +78,8 @@ Rectangle {
             anchors.bottom: parent.bottom;
             anchors.horizontalCenter: parent.horizontalCenter
             onClicked: {
-                mainForm.hideCameraPanel();
+                captureImageLoader.source = ""
+                sketchScreenLoader.source = "qrc:/SketchScreen.qml"
             }
         }
 
@@ -105,13 +89,30 @@ Rectangle {
             anchors.rightMargin: 20
             anchors.right: parent.right
             anchors.bottom: parent.bottom
+            visible: isImageCaptured
             onClicked: {
-                previewPaneVisible = false
-                mainForm.hideCameraPanel()
-                mainForm.sketch.setBackground("file:///" + camera.imageCapture.capturedImagePath)
-
+                sketchScreenLoader.source = "qrc:/SketchScreen.qml"
+                sketchScreenLoader.item.sketch.setBackground("file:///" + camera.imageCapture.capturedImagePath)
+                captureImageLoader.source = ""
             }
         }
     }
+
+
+    Rectangle {
+        anchors.centerIn: parent
+        color: "#20FFFFFF"
+        border.color: "#80FFFFFF"
+        radius: 5;
+        visible: !isImageCaptured
+
+        Label {
+            text: "Touch the screen to take a picture"
+            color: "#ffffff"
+            anchors.centerIn: parent
+        }
+    }
 }
+
+
 

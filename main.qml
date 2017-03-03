@@ -31,6 +31,8 @@ Window {
         id: mainForm
         anchors.fill: parent
 
+        property SketchScreen sketchScreen: sketchScreen
+
         Loader {
             id: splashScreenLoader
             source: "qrc:/SplashScreen.qml"
@@ -49,6 +51,33 @@ Window {
 
         Loader {
             id: sketchScreenLoader
+            anchors.fill: parent
+            focus: true
+            Keys.onPressed: {
+                if (status == Loader.Ready){
+                    switch (event.key) {
+                    case Qt.Key_S :
+                        item.changeTool("SelectTool", "select from key")
+                        break;
+                    case Qt.Key_I :
+                        item.changeTool("InsertTool", "insert from key")
+                        break;
+                    case Qt.Key_M :
+                        item.changeTool("MoveTool", "move from key")
+                        break;
+                    case Qt.Key_D :
+                        item.changeTool("DeleteTool", "delete from key")
+                        break;
+                    default :
+                        console.log("key " + event.key + " pressed")
+                        break;
+                    }
+                }
+            }
+        }
+
+        Loader {
+            id: captureImageLoader
             anchors.fill: parent
         }
 

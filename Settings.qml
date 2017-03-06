@@ -50,6 +50,8 @@ QtObject {
     readonly property real contextMenuZ: 200
     readonly property color contextMenuColor:  Qt.rgba(palette.r, palette.g, palette.b, 1)
 
-    property string captureImagePath: ""
+    readonly property string defaultCaptureImagePath: "pictures/background_default.jpg"
     property bool backgroundGridEnable: true
+    property bool helpTipEnable: true
+    property bool rulerEnable: false
 }

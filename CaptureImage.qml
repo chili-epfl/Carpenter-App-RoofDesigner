@@ -29,7 +29,6 @@ Rectangle {
                 camera.stop()
             }
             onImageSaved: {
-                Settings.captureImagePath=camera.imageCapture.capturedImagePath;
                 console.log("preview", camera.imageCapture.capturedImagePath)
             }
         }
@@ -43,8 +42,8 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onPressed: {
-                console.log("resolution", camera.imageCapture.resolution)
                 camera.imageCapture.capture()
+                console.log("resolution", camera.imageCapture.resolution)
             }
         }
     }

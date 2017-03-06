@@ -5,9 +5,6 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtMultimedia 5.5
 import QtGraphicalEffects 1.0
-import Qt.labs.folderlistmodel 2.1
-
-import QtQuick 2.1 as QQ2
 
 import "." // to import Settings
 import "qrc:/tools/tools/SelectTool.js" as SelectTool
@@ -21,17 +18,24 @@ import SketchStaticsExporter 1.0
 import DisplayKeyboard 1.0
 import RealtoExporter 1.0
 
-Window {
+ApplicationWindow {
     visible: true
     width: Settings.appWidth
     height: Settings.appHeight
     visibility: "Maximized"
 
+    Loader {
+        id: menuBarLoader
+        width: parent.width
+    }
+
+    Loader{
+        id: fileDialogLoader
+    }
+
     MainForm {
         id: mainForm
         anchors.fill: parent
-
-        property SketchScreen sketchScreen: sketchScreen
 
         Loader {
             id: splashScreenLoader
@@ -52,26 +56,9 @@ Window {
         Loader {
             id: sketchScreenLoader
             anchors.fill: parent
-            focus: true
-            Keys.onPressed: {
+            onStatusChanged: {
                 if (status == Loader.Ready){
-                    switch (event.key) {
-                    case Qt.Key_S :
-                        item.changeTool("SelectTool", "select from key")
-                        break;
-                    case Qt.Key_I :
-                        item.changeTool("InsertTool", "insert from key")
-                        break;
-                    case Qt.Key_M :
-                        item.changeTool("MoveTool", "move from key")
-                        break;
-                    case Qt.Key_D :
-                        item.changeTool("DeleteTool", "delete from key")
-                        break;
-                    default :
-                        console.log("key " + event.key + " pressed")
-                        break;
-                    }
+                    console.log(status)
                 }
             }
         }
@@ -97,7 +84,7 @@ Window {
             active: false
             property url meshSource;
             onStatusChanged: {
-                if(status===Loader.Ready){
+                if(status == Loader.Ready){
                     item.mesh.source=meshSource;
                 }
             }

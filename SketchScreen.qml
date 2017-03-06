@@ -16,9 +16,7 @@ import "qrc:/tools/tools/MoveTool.js" as MoveTool
 import "qrc:/tools/tools/DeleteTool.js" as DeleteTool
 
 import "qrc:/lib/lib/lodash.js" as Lodash
-import SketchConverter 1.0
 import SketchConstraintsSolver 1.0
-import SketchStaticsExporter 1.0
 import DisplayKeyboard 1.0
 import RealtoExporter 1.0
 
@@ -107,7 +105,7 @@ Rectangle {
         id: backgroundImage
         anchors.fill: parent
         fillMode: Settings.backgroundFillMode
-        source: sketch.isBackgroundSet() ? sketch.getBackground() : "pictures/background_default.jpg"
+        source: sketch.isBackgroundSet() ? sketch.getBackground() : ""
     }
 
     Image {
@@ -129,56 +127,6 @@ Rectangle {
         property var sketch : Sketch {
             id:sketch
             anchors.fill: parent
-
-            onPointInserted: {
-                mouseArea.points[identifier] = mouseArea.createPointUi(point, identifier);
-            }
-            onPointRemoved: {
-                console.log("pointRemoved(id: ", identifier, ")")
-                mouseArea.points[identifier].destroy();
-                mouseArea.points = _.omit(mouseArea.points, identifier)
-            }
-            onPointMoved: {
-                var pointUi = mouseArea.points[identifier]
-                pointUi.setStart(to)
-            }
-            onLineUpdated: {
-                var line = mouseArea.lines[identifier]
-
-                if(line.intermediatePoint) {
-                    line.intermediatePoint.line = newLine
-                }
-            }
-
-            onLineAdded: {
-                mouseArea.lines[line.identifier] = mouseArea.createLineUi(line)
-            }
-            onLineRemoved: {
-                console.log("lineRemoved(id: ", identifier, ")")
-                mouseArea.lines[identifier.toString()].destroy()
-                mouseArea.lines = _.omit(mouseArea.lines, identifier.toString())
-            }
-
-            onHorizontallyConstrainLine: {
-                mouseArea.lines[identifier].horizontallyConstrained = constrain;
-            }
-            onVerticallyConstrainLine: {
-                mouseArea.lines[identifier].verticallyConstrained = constrain;
-            }
-
-            onSetInitialScale: {
-                helpTip.text = "Then you can set the distance for each line"
-                lineContextMenu.widthEdit.placeholderText = "Line length"
-            }
-
-            onSetDesiredDistance: {
-                mouseArea.lines[identifier].distanceFixed = true;
-                mouseArea.lines[identifier].desiredDistance = desiredLength;
-            }
-
-            onPointReactionUpdated: {
-                mouseArea.points[identifier][constraint] = value
-            }
         }
 
         property var insertPoint : Qt.createComponent("InsertPoint.qml");
@@ -186,9 +134,7 @@ Rectangle {
         property var lineUiComponent : Qt.createComponent("LineUi.qml");
         property var insertLineComponent : Qt.createComponent("InsertLine.qml");
 
-        property SketchConverter converter: SketchConverter { }
         property SketchConstraintsSolver constraintsSolver: SketchConstraintsSolver { sketch: sketch }
-        property SketchStaticsExporter staticsExporter: SketchStaticsExporter { sketch: sketch }
 
         function createPointUi(point, identifier) {
             // todo move ui components outside of sketch class
@@ -223,7 +169,6 @@ Rectangle {
         onClicked: {
             message.hideMessage()
         }
-
     }
 
     Label {
@@ -245,13 +190,6 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 30
         anchors.verticalCenter: parent.verticalCenter
-    }
-
-    TopBar {
-        id: topBar
-        width: parent.width
-        anchors.top: parent.top
-        height: 100
     }
 
     PointContextMenu {

@@ -12,7 +12,7 @@
         <file>fonts/FontAwesome.otf</file>
         <file>MenuItem.qml</file>
         <file>ToolsMenu.qml</file>
-        <file>TopBar.qml</file>
+        <file>MenuBar.qml</file>
         <file>IntermediatePoint.qml</file>
         <file>Sketch.qml</file>
         <file>main.cpp</file>
@@ -34,6 +34,7 @@
         <file>SketchScreen.qml</file>
         <file>pictures/background_default.jpg</file>
         <file>pictures/background_grid.png</file>
+        <file>OpenFileDialog.qml</file>
     </qresource>
     <qresource prefix="/tools">
         <file>tools/MoveTool.js</file>

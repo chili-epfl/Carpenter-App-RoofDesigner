@@ -27,17 +27,18 @@ class SketchStaticsExporter : public QObject {
 
     Q_PROPERTY(QObject* sketch READ getSketch WRITE setSketch)
 
-    public:
-        explicit SketchStaticsExporter(QObject *parent = 0);
+public:
+    explicit SketchStaticsExporter(QObject *parent = 0);
 
-    public slots:
-        void setSketch(QObject *sketch);
-        QObject* getSketch();
-        QVariant exportToFile(QString basename, QString backgroundImagePath, QSize appSize, QString path=QString());
-    private:
-        QObject *sketch;
-        QString idToLetter[26];
-        bool identifierToLetter(int id, QString &name);
+public slots:
+    void setSketch(QObject *sketch);
+    QObject* getSketch();
+    QVariant exportToFile(QString basename, QString backgroundImagePath, QSize appSize, QString path=QString());
+    Q_INVOKABLE QVariant saveFile(QString basename, QString backgroundImagePath, QSize appSize , QString path);
+private:
+    QObject *sketch;
+    QString idToLetter[26];
+    bool identifierToLetter(int id, QString &name);
 };
 
 #endif // SketchStaticsExporter_H

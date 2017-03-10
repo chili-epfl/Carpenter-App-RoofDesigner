@@ -5,17 +5,17 @@ import QtQuick.Layouts 1.2
 import "." // to import Settings
 
 Rectangle {
-    z: 100;
     id: ruler
-    anchors.bottom: parent.bottom
-    anchors.bottomMargin: 10
-    anchors.right: parent.right
-    anchors.rightMargin: 10
 
+    visible: Settings.rulerEnable
 
     width: childrenRect.width
     height: childrenRect.height
-    visible: sketch.isMmPerPixelScaleSet()
+
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    anchors.margins: 10
+    color: "white"
 
     property var availableUnits: {
         "0" : "mm",
@@ -38,9 +38,7 @@ Rectangle {
             var order = Math.floor(Math.log(mmDistanceFor100px) / Math.LN10);
 
             //ruler.height = Math.ceil(Math.pow(10, order) / mmPerPixelScale);
-            scaleRuleSize.height = 300;
-            scaleRuleSize.width = 300;
-            console.log("new height", scaleRuleSize.height)
+            scaleRuleSize.width = 100;
             scaleRuleText.text = (function(order) {
                 if(order >= 0 && order <= 6) {
                     return "1 " + ruler.availableUnits[order.toString(10)];
@@ -56,17 +54,22 @@ Rectangle {
     }
 
     RowLayout {
+        width: scaleRuleText.width + scaleRuleSize.width + 15
 
         Label {
             id: scaleRuleText
-            text: "1 cm"
-            Layout.alignment: Qt.AlignBottom
-
+            text: ""
+            anchors.left: parent.left
+            anchors.margins: 5
         }
+
         Rectangle {
-            width:10
-            id:scaleRuleSize
-            color: "#000000"
+            id: scaleRuleSize
+            height: 2
+            anchors.verticalCenter: scaleRuleText.verticalCenter
+            color: "black"
+            anchors.right: parent.right
+            anchors.margins: 5
         }
     }
 }

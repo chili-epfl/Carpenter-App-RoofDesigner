@@ -14,6 +14,9 @@ import SketchStaticsExporter 1.0
 MenuBar {
     id: menuBar
 
+    property var sketchScreenLoader
+    property var sketch: sketchScreenLoader.item.sketch
+
     Menu {
         title: "File"
         MenuItem {
@@ -36,9 +39,15 @@ MenuBar {
                 fileDialogLoader.source = "OpenFileDialog.qml"
             }
         }
+        MenuSeparator {}
         MenuItem {
             text: "Save the sketch"
             shortcut: "S"
+            onTriggered: {
+                fileDialogLoader.source = "SaveFileDialog.qml"
+            }
+            property SketchStaticsExporter staticsExporter: SketchStaticsExporter {
+                sketch: sketchScreenLoader.item.sketch }
         }
         MenuItem {
             text: "Export as 3D"
@@ -65,12 +74,30 @@ MenuBar {
                 }
             }
             property SketchConverter converter: SketchConverter { }
-            property SketchStaticsExporter staticsExporter: SketchStaticsExporter { sketch: sketch }
+            property SketchStaticsExporter staticsExporter: SketchStaticsExporter {
+                sketch: sketch }
         }
     }
 
     Menu {
         title: "Edit"
+        MenuItem {
+            text: "Undo"
+            shortcut: "Z"
+            enabled: Settings.canUndo
+            onTriggered: {
+                sketch.undo()
+            }
+        }
+        MenuItem {
+            text: "Redo"
+            shortcut: "Y"
+            enabled: Settings.canRedo
+            onTriggered: {
+                sketch.redo()
+            }
+        }
+        MenuSeparator {}
         MenuItem {
             text: "Select"
             shortcut: "C"
@@ -82,21 +109,21 @@ MenuBar {
             text: "Insert"
             shortcut: "I"
             onTriggered: {
-                sketchScreenLoader.item.changeTool("SelectTool", "select from key")
+                sketchScreenLoader.item.changeTool("InsertTool", "insert from key")
             }
         }
         MenuItem {
             text: "Move"
             shortcut: "M"
             onTriggered: {
-                sketchScreenLoader.item.changeTool("SelectTool", "select from key")
+                sketchScreenLoader.item.changeTool("MoveTool", "move from key")
             }
         }
         MenuItem {
             text: "Delete"
             shortcut: "D"
             onTriggered: {
-                sketchScreenLoader.item.changeTool("SelectTool", "select from key")
+                sketchScreenLoader.item.changeTool("DeleteTool", "delete from key")
             }
         }
     }
@@ -108,7 +135,7 @@ MenuBar {
             checkable: true
             checked: sketch.isBackgroundSet()
             onTriggered: {
-                sketch.enableBackground(!this.checked)
+                sketch.enableBackground(this.checked)
             }
         }
         MenuItem {

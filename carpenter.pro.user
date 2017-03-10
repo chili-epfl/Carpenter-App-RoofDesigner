@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.2.1, 2017-03-05T15:18:08. -->
+<!-- Written by QtCreator 4.2.1, 2017-03-09T16:17:26. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -843,8 +843,8 @@
      <value type="int">14</value>
     </valuelist>
     <valuemap type="QVariantMap" key="Ios.device_type">
-     <value type="QString" key="displayName"></value>
-     <value type="QString" key="identifier"></value>
+     <value type="QString" key="displayName">iPhone 6s, iOS 9.3</value>
+     <value type="QString" key="identifier">44946AF4-AC62-43CE-944E-EBCBC3B51776</value>
      <value type="int" key="type">1</value>
     </valuemap>
     <value type="QString" key="Ios.run_arguments"></value>

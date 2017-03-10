@@ -15,14 +15,15 @@ Item {
 
     property var _;
     property var history: [];
+    property var undoneActions: [];
 
     property var store: {
         'points': [],
         'lines': [],
         'constraints': [],
         'scale': {
-            'set': false,
-            'mmPerPixel': 0.0
+            'set': true,
+            'mmPerPixel': 50.0
         },
         'background' : {
             'set': true,
@@ -70,8 +71,7 @@ Item {
         if(pointExists(position)) {
             console.error("Point already in sketch",  position);
             return store;
-        }
-        else {
+        } else {
             var newPoint = createPoint(position);
             pointInserted(position, newPoint.identifier);
             return _.assign({}, store, { 'points': [].concat(store.points, [newPoint]) });
@@ -121,7 +121,7 @@ Item {
             var indexOfPoint = this.indexOfPoint(store, id);
 
             if(indexOfPoint === -1) {
-                console.error("Point not in the setch")
+                console.error("Point not in the sketch")
                 return store;
             }
             else {
@@ -399,17 +399,18 @@ Item {
             }
         };
 
-        var lineCandidates = nearestLines(position, true)
-            .map(replaceItemByIdentifier("line"));
+
         var pointCandidates = nearestPoints(position, undefined, true)
             .map(replaceItemByIdentifier("point"));
+        var lineCandidates = nearestLines(position, true)
+            .map(replaceItemByIdentifier("line"));
 
         // tricks to get the first item of each array or an empty
         // array if the array was empty so the resulting array's
         // length can only be [0,2].
         var candidates = [].concat(
-                    lineCandidates.slice(0,1),
-                    pointCandidates.slice(0,1)
+                    pointCandidates.slice(0,1),
+                    lineCandidates.slice(0,1)
             )
             .sort(compareForSortByDistance);
 
@@ -525,7 +526,7 @@ Item {
 
         var points = collection
             .map(function(x) { return { 'point' : x, 'distance' : x.distanceTo(position) } })
-            .filter(function(x) { return x.distance < Settings.minimalPointDistance })
+            .filter(function(x) { return x.distance < Settings.pointSize / 2})
             .sort(compareForSortByDistance)
 
         if(!keepPosition) {
@@ -591,7 +592,7 @@ Item {
 
         var lines = store.lines
             .map(function(x) { return { 'line': x, 'distance': distanceToSegment(position, x.startPoint.start, x.endPoint.start) } })
-            .filter(function(x) { return x.distance < Settings.minimalPointDistance })
+            .filter(function(x) { return x.distance < Settings.constructionLineWidth / 2.0})
             .sort(compareForSortByDistance);
 
         if(!keepPosition) {
@@ -786,8 +787,36 @@ Item {
 
     // Store functions
     function updateStore(newStore) {
-        //history.push(store);
+        history.push(store);
         store = newStore;
+        undoneActions = [];
+        Settings.canUndo = true;
+        Settings.canRedo = false;
+    }
+
+    function undo(){
+        if (Settings.canUndo) {
+            undoneActions.push(store);
+            store = history.pop();
+            console.log(store)
+            Settings.canRedo = undoneActions.length > 0;
+        } else {
+            console.log("Can't undo");
+        }
+    }
+
+    function redo(){
+        if (Settings.canRedo) {
+            history.push(store);
+            store = undoneActions.pop();
+            Settings.canUndo = history.length > 0;
+        } else {
+            console.log("Can't redo");
+        }
+    }
+
+    function canRedo(){
+        return undoneActions.length > 0;
     }
 
     function getLines() {

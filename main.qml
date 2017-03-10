@@ -26,11 +26,22 @@ ApplicationWindow {
 
     Loader {
         id: menuBarLoader
-        width: parent.width
+        Binding {
+            when: menuBarLoader.status == Loader.Ready
+            target: menuBarLoader.item
+            property: "sketchScreenLoader"
+            value: sketchScreenLoader
+        }
     }
 
     Loader{
         id: fileDialogLoader
+        Binding {
+            when: fileDialogLoader.status == Loader.Ready
+            target: fileDialogLoader.item
+            property: "sketchScreenLoader"
+            value: sketchScreenLoader
+        }
     }
 
     MainForm {
@@ -56,11 +67,6 @@ ApplicationWindow {
         Loader {
             id: sketchScreenLoader
             anchors.fill: parent
-            onStatusChanged: {
-                if (status == Loader.Ready){
-                    console.log(status)
-                }
-            }
         }
 
         Loader {
@@ -99,6 +105,10 @@ ApplicationWindow {
             onError: {
                 message.displayErrorMessage(err);
             }
+        }
+
+        MessageBox {
+            id: message
         }
     }
 }

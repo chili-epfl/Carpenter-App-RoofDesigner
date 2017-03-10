@@ -91,7 +91,7 @@ Rectangle {
         running: true
 
         onTriggered: {
-            welcomeScreenLoader.source = "qrc:/SketchScreen.qml"
+            sketchScreenLoader.source = "qrc:/SketchScreen.qml"
             menuBarLoader.source = "qrc:/MenuBar.qml"
             splashScreenLoader.source = ""
         }

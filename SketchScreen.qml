@@ -174,15 +174,14 @@ Rectangle {
     Label {
         id: helpTip
         text: "First, you should set the scale by selecting an item, and defines its length"
+        visible: Settings.helpTipEnable
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.margins: 10
     }
 
-    Ruler { id: ruler }
-
-    MessageBox {
-        id: message
+    Ruler {
+        id: ruler
     }
 
     ToolsMenu{
@@ -192,11 +191,11 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
     }
 
-    PointContextMenu {
-        id: pointContextMenu
-    }
-
     LineContextMenu {
         id: lineContextMenu
+    }
+
+    PointContextMenu {
+        id: pointContextMenu
     }
 }

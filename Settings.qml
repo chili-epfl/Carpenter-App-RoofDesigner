@@ -53,5 +53,8 @@ QtObject {
     readonly property string defaultCaptureImagePath: "pictures/background_default.jpg"
     property bool backgroundGridEnable: true
     property bool helpTipEnable: true
-    property bool rulerEnable: false
+    property bool rulerEnable: true
+
+    property bool canUndo: false
+    property bool canRedo: false
 }

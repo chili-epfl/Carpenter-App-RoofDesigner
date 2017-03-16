@@ -92,7 +92,7 @@ Rectangle {
 
         onTriggered: {
             sketchScreenLoader.source = "qrc:/SketchScreen.qml"
-            menuBarLoader.source = "qrc:/MenuBar.qml"
+            menuBarLoader.source = "qrc:/TopMenuBar.qml"
             splashScreenLoader.source = ""
         }
     }

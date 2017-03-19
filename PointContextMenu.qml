@@ -1,89 +1,52 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick 2.7
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.2
+import QtQuick.Window 2.0
 
-import "." // to import Settings
-
-Rectangle {
+Popup {
     id: pointContextMenu
-    width: childrenRect.width
-    height: childrenRect.height
-    radius: Settings.contextMenuRadius
-    color: Settings.contextMenuColor
+    width: Screen.pixelDensity*60 +20
+    height: Screen.pixelDensity*10 +20
     visible: false
-    z: 4
-
-    property Item cx: cx
-    property Item cy: cy
-    property Item cz: cz
-
-    property Item mx: mx
-    property Item my: my
-    property Item mz: mz
-
-    MouseArea {
-        anchors.fill: parent
-    }
 
     RowLayout {
-        x: 5
+        anchors.fill: parent
         spacing: 0
 
-        Button {
+        ToolButton {
             id: cx
-            text: "x"
-            style: TogglableButton { icon: "\uf023" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("cx", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
+            text: "\uf023 x"
+            font.family: "FontAwesome"
+
         }
-        Button {
+        ToolButton {
             id: cy
-            text: "y"
-            style: TogglableButton { icon: "\uf023" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("cy", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
+            text: "\uf023 y"
+            font.family: "FontAwesome"
         }
-        Button {
+        ToolButton {
             id: cz
-            text: "z"
-            style: TogglableButton { icon: "\uf023" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("cz", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
+            text: "\uf023 z"
+            font.family: "FontAwesome"
         }
 
-        Button {
+        ToolButton {
             id: mx
-            text: "x"
-            style: TogglableButton { icon: "\uf01e" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("mx", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
+            text: "\uf01e x"
+            font.family: "FontAwesome"
+
         }
-        Button {
+        ToolButton {
             id: my
-            text: "y"
-            style: TogglableButton { icon: "\uf01e" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("my", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
+            text: "\uf01e y"
+            font.family: "FontAwesome"
+
         }
-        Button {
+        ToolButton {
             id: mz
-            text: "z"
-            style: TogglableButton { icon: "\uf01e" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("mz", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
+            text: "\uf01e z"
+            font.family: "FontAwesome"
+
         }
     }
 }

@@ -1,35 +1,24 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtMultimedia 5.6
-import QtQuick.Layouts 1.2
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.1
 
 import "." // to import Settings
 
 Rectangle {
-    anchors.fill: parent
-    color: Settings.captureImagePanelBackground
     id: capturePanel
-
-    property bool isImageCaptured: false;
-
-    /*onVisibleChanged: {
-        if(visible) {
-            camera.start()
-            isImageCaptured = false
-        }
-    }*/
-
+    property bool isImageCaptured:false
+    property url image_path
     Camera {
         id: camera
-        cameraState: Camera.ActiveState
+        focus.focusMode: Camera.FocusContinuous
+        captureMode: Camera.CaptureStillImage
         imageCapture {
             onImageCaptured: {
+                isImageCaptured=true
                 photoPreview.source = preview
-                isImageCaptured = true
-                camera.stop()
             }
             onImageSaved: {
-                console.log("preview", camera.imageCapture.capturedImagePath)
+                image_path="file://"+path
             }
         }
     }
@@ -38,64 +27,56 @@ Rectangle {
         id: videoOutput
         source: camera
         anchors.fill: parent
-        fillMode: Settings.backgroundFillMode
         MouseArea {
             anchors.fill: parent
             onPressed: {
                 camera.imageCapture.capture()
-                console.log("resolution", camera.imageCapture.resolution)
             }
+        }
+        autoOrientation: true
+    }
+
+    Image {
+        id: photoPreview
+        visible: isImageCaptured
+        fillMode: Image.PreserveAspectFit
+        anchors.fill: parent
+    }
+
+    Button {
+        text: "Retake"
+        anchors.leftMargin: 20
+        anchors.bottomMargin: 20
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        visible: isImageCaptured
+        onClicked: {
+            isImageCaptured = false
+        }
+    }
+    Button {
+        text: "Cancel"
+        anchors.bottomMargin: 20
+        anchors.bottom: parent.bottom;
+        anchors.horizontalCenter: parent.horizontalCenter
+        onClicked: {
+            sketchScreen.aux_loader.source=""
         }
     }
 
-    Rectangle {
-        id: previewPane
-        width: parent.width
-        anchors.bottom: parent.bottom
-
-        Image {
-            id: photoPreview
-            fillMode: Settings.backgroundFillMode
-            anchors.fill: parent
-        }
-
-        Button {
-            text: "Retake"
-            anchors.leftMargin: 20
-            anchors.bottomMargin: 20
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-            visible: isImageCaptured
-            onClicked: {
-                camera.start()
-                isImageCaptured = false
-            }
-        }
-        Button {
-            text: "Cancel"
-            anchors.bottomMargin: 20
-            anchors.bottom: parent.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter
-            onClicked: {
-                captureImageLoader.source = ""
-                sketchScreenLoader.source = "qrc:/SketchScreen.qml"
-            }
-        }
-
-        Button {
+    Button {
             text: "Use it"
             anchors.bottomMargin: 20
             anchors.rightMargin: 20
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             visible: isImageCaptured
-            onClicked: {
-                sketchScreenLoader.source = "qrc:/SketchScreen.qml"
-                sketchScreenLoader.item.sketch.setBackground("file:///" + camera.imageCapture.capturedImagePath)
-                captureImageLoader.source = ""
+            onClicked: {                
+                sketchScreen.background_picture_url=image_path
+                sketchScreen.aux_loader.source=""
             }
         }
-    }
+
 
 
     Rectangle {

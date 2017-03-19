@@ -1,56 +1,30 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>InsertPoint.qml</file>
         <file>Settings.qml</file>
         <file>qmldir</file>
         <file>Point.qml</file>
         <file>Line.qml</file>
-        <file>LineUi.qml</file>
-        <file>InsertLine.qml</file>
         <file>fonts/Material-Design-Iconic-Font.ttf</file>
         <file>fonts/FontAwesome.otf</file>
-        <file>MenuItem.qml</file>
         <file>ToolsMenu.qml</file>
-        <file>MenuBar.qml</file>
-        <file>IntermediatePoint.qml</file>
+        <file>TopMenuBar.qml</file>
         <file>Sketch.qml</file>
-        <file>main.cpp</file>
         <file>CaptureImage.qml</file>
-        <file>RoundedButton.qml</file>
         <file>MessageBox.qml</file>
-        <file>Ruler.qml</file>
-        <file>TogglableButton.qml</file>
+        <file>BottomToolBar.qml</file>
         <file>PointContextMenu.qml</file>
         <file>LineContextMenu.qml</file>
         <file>SplashScreen.qml</file>
         <file>WelcomeScreen.qml</file>
-        <file>Viewer3D.qml</file>
-        <file>MainForm.ui.qml</file>
         <file>LoginForm.qml</file>
-        <file>CameraController.qml</file>
-        <file>WireframeMaterial.qml</file>
-        <file>WireframeEffect.qml</file>
         <file>SketchScreen.qml</file>
         <file>pictures/background_default.jpg</file>
         <file>pictures/background_grid.png</file>
-        <file>OpenFileDialog.qml</file>
-        <file>SaveFileDialog.qml</file>
-    </qresource>
-    <qresource prefix="/tools">
-        <file>tools/MoveTool.js</file>
-        <file>tools/InsertTool.js</file>
-        <file>tools/Tool.js</file>
-        <file>tools/DeleteTool.js</file>
-        <file>tools/SelectTool.js</file>
-    </qresource>
-    <qresource prefix="/lib">
-        <file>lib/lodash.js</file>
-    </qresource>
-    <qresource prefix="/shaders">
-        <file>shaders/robustwireframe.vert</file>
-        <file>shaders/robustwireframe.geom</file>
-        <file>shaders/robustwireframe.frag</file>
+        <file>InsertTool.qml</file>
+        <file>MoveTool.qml</file>
+        <file>DeleteTool.qml</file>
+        <file>SelectTool.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/minus_pressed.png</file>
@@ -58,5 +32,11 @@
         <file>icons/plus.png</file>
         <file>icons/plus_pressed.png</file>
         <file>icons/realto_logo.png</file>
+        <file>icons/plus-1270001_1280.png</file>
+        <file>icons/simple-orange-house-md.png</file>
+        <file>icons/redo-4-xxl.png</file>
+        <file>icons/undo-4-xxl.png</file>
+        <file>icons/export3d.png</file>
+        <file>icons/camera.png</file>
     </qresource>
 </RCC>

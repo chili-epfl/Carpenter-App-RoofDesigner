@@ -1,127 +1,45 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick 2.7
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.2
+import QtQuick.Window 2.0
 
-import "." // to import Settings
-
-Rectangle {
+Popup {
     id: lineContextMenu
-    width: childrenRect.width
-    height: childrenRect.height
-    radius: Settings.contextMenuRadius
-    color: Settings.contextMenuColor
+    width: Screen.pixelDensity*40 +20
+    height: Screen.pixelDensity*10 +20
     visible: false
-    z: 3
-
-    property TextField widthEdit: widthEditField
-    property Button verticalConstraint: verticalConstraint
-    property Button horizontalConstraint: horizontalConstraint
-
-    MouseArea {
-        anchors.fill: parent
-    }
 
     RowLayout {
-        x: 5
-        id: rowLayout1
-        spacing: 0
-
-        Item {
-            width: childrenRect.width + 10
-            height: childrenRect.height + 20
-            Label {
-                x: 5
-                y: 10
-                text: "\uf07e"
-                font.family: "FontAwesome"
-                color: "white"
-                font.pointSize: 14
+        anchors.fill: parent
+        spacing: 5
+        Label {
+            text: "\uf07e"
+            font.family: "FontAwesome"
+            font.pointSize: 14
+        }
+        TextField {
+            Layout.preferredWidth: Screen.pixelDensity*10
+            enabled: true
+            validator: RegExpValidator {
+                regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
             }
-
-            TextField {
-                x: 5
-                y: 10
-                textColor: "black"
-                id: widthEditField
-                width: 200
-                enabled: false
-                validator: RegExpValidator {
-                    regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
-                }
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                placeholderText: "Initial scale"
-                font.pointSize: 14
-
-                signal gotFocus(var field);
-                signal lostFocus(var field);
-
-                property bool wasFocus: false;
-
-                Component.onCompleted: {
-                    displayKeyboard.registerTextField(widthEditField)
-                }
-
-                onFocusChanged: {
-                    if(focus && !wasFocus) {
-                        gotFocus(widthEditField)
-                    }
-                    else {
-                        lostFocus(widthEditField)
-                    }
-                }
-                onVisibleChanged: {
-                    if(!visible) {
-                        focus = false;
-                    }
-                }
-            }
+            inputMethodHints: Qt.ImhFormattedNumbersOnly
+            placeholderText: "Initial scale"
+            font.pointSize: 14
+        }
+        Label {
+            text: "m"
+            font.pointSize: 14
         }
 
-        Item {
-            width: childrenRect.width + 5
-            height: childrenRect.height + 20
-            Label {
-                y: 10
-                x: 5
-                text: "m"
-                color: "white"
-                font.pointSize: 11
-            }
-        }
-        Item {
-            width: childrenRect.width + 50
-            height: childrenRect.height + 20
-            Label {
-                y: 10
-                x: 40
-                text: "constraints"
-                color: "white"
-                font.pointSize: 16
-            }
-        }
-
-        Button {
-            text: ""
-            id: verticalConstraint
-            style: TogglableButton {
-                icon: " | "
-                iconFont: ""
-            }
+        ToolButton {
+            text: "|"
             onClicked: {
-                checked = !checked
             }
         }
-
-        Button {
-            text: ""
-            id: horizontalConstraint
-            style: TogglableButton {
-                icon: " – "
-                iconFont: ""
-            }
+        ToolButton {
+            text: " – "
             onClicked: {
-                checked = !checked
             }
         }
     }

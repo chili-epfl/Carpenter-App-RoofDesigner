@@ -1,68 +1,62 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.2
-import "." // to import Settings
-
+import QtQuick 2.7
+import QtQuick.Controls 2.1
+import QtQuick.Layouts 1.1
+import QtQuick.Window 2.0
 
 Rectangle {
     id: toolsMenu
-    width: childrenRect.width
-    height: menuItems.count * itemHeight
-
-    property real itemHeight: 72
-
-    function toggleState() {
-        console.log("change state")
-        if(menu.state === "hidden") {
-            menu.state = "visible"
-        }
-        else {
-            menu.state = "hidden"
-        }
-    }
-
-    transitions: Transition {
-        PropertyAnimation { properties: "y"; easing.type: Easing.InOutQuad }
-    }
+    width:Screen.pixelDensity*10+20
+    height: tool_list.model.count * Screen.pixelDensity*10+ 20
 
     ListView {
-        height: toolsMenu.height
-        width: itemHeight
+        id:tool_list
+        anchors.fill: parent
+        anchors.margins: 10
+        clip:true
+        currentIndex:0
 
-        model: menuItems
-        delegate: Rectangle {
-            width: childrenRect.width
-            height: childrenRect.height
-            color: isToolSelected(tool) ? Settings.paletteHighlight : Settings.palette;
-
-            function isToolSelected(tool) {
-                return sketchScreen.state === tool;
+        model:ListModel{
+            ListElement {
+                name: "SelectTool"
+                icon: "\uf245"
             }
-
-            property color labelColor : isToolSelected(tool) ? Settings.selectedToolColor : Settings.toolColor
-            property int labelFontSize : 24
-
+            ListElement {
+                name: "InsertTool"
+                icon: "\uf040"
+            }
+            ListElement {
+                name: "MoveTool"
+                icon: "\uf047"
+            }
+            ListElement {
+                name: "DeleteTool"
+                icon: "\uf00d"
+            }
+        }
+        delegate: Rectangle {
+            width: Screen.pixelDensity*10
+            height: width
+            color: ListView.isCurrentItem ? "#40404040": "#20000000"
             Label {
                 text: icon
-                font.family: fontName
-                font.pointSize: labelFontSize
-                color: labelColor
-                height: toolsMenu.itemHeight
-                width: toolsMenu.width
+                font.family: "FontAwesome"
+                font.pointSize: 24
+                color: ListView.isCurrentItem ? "#444444" : "black"
+                anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: sketchScreen.changeTool(tool, name)
+                onClicked: {
+                    sketchScreen.toolName=name
+                    tool_list.currentIndex=index
+                }
             }
         }
     }
 
-    MenuItem{
-        id: menuItems
-    }
 }
 
 

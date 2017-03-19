@@ -7,7 +7,6 @@ import QtMultimedia 5.5
 import QtGraphicalEffects 1.0
 
 Rectangle {
-    anchors.fill: parent
     color: "white"
 
     Label {
@@ -91,9 +90,8 @@ Rectangle {
         running: true
 
         onTriggered: {
-            sketchScreenLoader.source = "qrc:/SketchScreen.qml"
-            menuBarLoader.source = "qrc:/TopMenuBar.qml"
-            splashScreenLoader.source = ""
+            stack_view.pop();
+            stack_view.push("qrc:/WelcomeScreen.qml")
         }
     }
 

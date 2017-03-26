@@ -17,7 +17,7 @@ JSONSketch::JSONSketch(QObject *parent):QObject(parent){}
 
 QString JSONSketch::loadSketch(const QString url, QObject* sketch)
 {
-    QFile file("/Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/Carpenter-App-RoofDesigner/jsontestwrite");
+    QFile file(url);
 
     if (!file.open(QIODevice::ReadOnly)) {
         return "cannot open the JSON file";
@@ -126,7 +126,7 @@ void JSONSketch::generateSketch(QObject* sketch) {
 }
 
 QString JSONSketch::exportJSONSketch(const QString url) const{
-    QFile file("/Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/Carpenter-App-RoofDesigner/jsontestwrite");
+    QFile file(url);
 
     if (!file.open(QIODevice::WriteOnly)) {
         return "cannot open the JSON file";

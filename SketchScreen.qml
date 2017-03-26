@@ -11,10 +11,11 @@ Page {
         id: json_sketch
     }
 
-    property string sketch_file:"jsontest"
+    property string sketch_folder: "/Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/Carpenter-App-RoofDesigner/"
+    property string sketch_file: "jsontest"
 
     Component.onCompleted: {
-        console.log(json_sketch.loadSketch(sketch_file, sketch))
+        console.log(json_sketch.loadSketch(sketch_folder + sketch_file, sketch))
     }
 
     property alias aux_loader:aux_loader

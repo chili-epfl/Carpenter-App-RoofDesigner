@@ -1,9 +1,10 @@
 import QtQuick 2.7
 import QtQuick.Window 2.0
+
 Item {
     width: 10000
     height: 10000
-
+    anchors.fill:parent
     x:-(width-parent.width)/2
     y:-(height-parent.height)/2
 
@@ -73,6 +74,4 @@ Item {
                 parent.scale=Math.max(0.25, -parent.scale*(0.75*wheel.angleDelta.y/120))
         }
     }
-
-
 }

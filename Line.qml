@@ -2,8 +2,9 @@ import QtQuick 2.0
 
 Rectangle {
 
-    property Point p1;
-    property Point p2;
+    property var p1;
+    property var p2;
+
     readonly property string class_type: "Line"
 
     visible: p1 && p2 ? existing && p1.existing && p2.existing: existing
@@ -12,6 +13,9 @@ Rectangle {
 
     property var undo_buffer:[]
     property var redo_buffer:[]
+
+    property int id;
+
     Connections{
         ignoreUnknownSignals: false
         target: parent
@@ -61,13 +65,15 @@ Rectangle {
             else existing=false
         }
     }
+
     Connections{
         ignoreUnknownSignals: true
         target: p2
         onReplaceMe: {
-            if (p1!=p2)
-                p2=replacement
-            else existing=false
+            if (p1 != p2)
+                p2 = replacement
+            else
+                existing=false
         }
     }
 

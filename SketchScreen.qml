@@ -1,10 +1,21 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Window 2.0
+import JSONSketch 1.0
 import "." // to import Settings
 
 Page {
     id: sketchScreen
+
+    JSONSketch {
+        id: json_sketch
+    }
+
+    property string sketch_file:"jsontest"
+
+    Component.onCompleted: {
+        console.log(json_sketch.loadSketch(sketch_file, sketch))
+    }
 
     property alias aux_loader:aux_loader
 
@@ -15,7 +26,9 @@ Page {
     property alias visibleGrid: backgroundgrid.visible
 
     property string toolName: "SelectTool"
-    property var current_tool: toolName=="SelectTool"? select_tool:  toolName=="InsertTool"? insert_tool:  toolName=="MoveTool"? move_tool: delete_tool
+    property var current_tool: toolName == "SelectTool" ? select_tool :
+                                                          toolName == "InsertTool" ? insert_tool :
+                                                                                     toolName == "MoveTool"? move_tool : delete_tool
 
     property alias sketch: sketch
 
@@ -23,6 +36,7 @@ Page {
         height: Screen.pixelDensity*10
         visible: aux_loader.status!=Loader.Ready
     }
+
     footer: BottomToolBar{
         height: Screen.pixelDensity*10
         visible: aux_loader.status!=Loader.Ready

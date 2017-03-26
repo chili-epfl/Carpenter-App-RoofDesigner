@@ -64,6 +64,12 @@ ToolBar {
             fillMode: Image.PreserveAspectFit
             height: menuBar.height-10
             anchors.verticalCenter: parent.verticalCenter
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    console.log(json_sketch.exportJSONSketch(sketch_file, sketch))
+                }
+            }
         }
         ToolSeparator{height: menuBar.height}
         ToolButton{

@@ -17,7 +17,8 @@ SOURCES += constrainedline.cpp \
     sketchmesh.cpp \
     sketchpoint.cpp \
     sketchstaticsexporter.cpp \
-    solve.cpp
+    solve.cpp \
+    jsonsketch.cpp
 
 HEADERS += constrainedline.h \
     constrainedpoint.h \
@@ -32,7 +33,8 @@ HEADERS += constrainedline.h \
     sketchmesh.h \
     sketchpoint.h \
     sketchstaticsexporter.h \
-    solve.h
+    solve.h \
+    jsonsketch.h
 
 RESOURCES += qml.qrc
 

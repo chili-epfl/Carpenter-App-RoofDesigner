@@ -20,7 +20,7 @@ Page {
         model:ListModel{
             ListElement{
                 picture_url:"qrc:/icons/icons/plus-1270001_1280.png"
-                sketch_file:""
+                sketch_file:"jsontest"
             }
         }
         delegate:Rectangle{
@@ -36,23 +36,25 @@ Page {
             }
             MouseArea{
                 anchors.fill: parent
-                onDoubleClicked: {loading_indicator.visible=true;stack_view.push("qrc:/SketchScreen.qml",{"sketch_file":sketch_file})}
+                onDoubleClicked: {
+                    loading_indicator.visible=true;
+                    stack_view.push("qrc:/SketchScreen.qml",{"sketch_file":sketch_file});
+                }
             }
         }
-    }
-    BusyIndicator {
-        id:loading_indicator
-        visible:false
-        Timer{
-            interval: 2000
-            repeat: false
-            running: loading_indicator.visible
-            onTriggered: loading_indicator.visible=false
+        BusyIndicator {
+            id:loading_indicator
+            visible:false
+            Timer{
+                interval: 2000
+                repeat: false
+                running: loading_indicator.visible
+                onTriggered: loading_indicator.visible=false
+            }
+            anchors.centerIn: parent
+            running: true
+
         }
-        anchors.centerIn: parent
-        running: true
 
     }
-
 }
-

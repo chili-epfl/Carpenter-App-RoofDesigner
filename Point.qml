@@ -17,8 +17,6 @@ Rectangle {
     property var undo_buffer:[]
     property var redo_buffer:[]
 
-    property int id;
-
     Connections{
         ignoreUnknownSignals: false
         target: parent

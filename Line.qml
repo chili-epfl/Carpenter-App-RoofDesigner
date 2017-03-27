@@ -1,7 +1,6 @@
 import QtQuick 2.0
 
 Rectangle {
-
     property var p1;
     property var p2;
 
@@ -14,7 +13,6 @@ Rectangle {
     property var undo_buffer:[]
     property var redo_buffer:[]
 
-    property int id;
 
     Connections{
         ignoreUnknownSignals: false
@@ -60,7 +58,7 @@ Rectangle {
         ignoreUnknownSignals: true
         target: p1
         onReplaceMe: {
-            if (p1!=p2)
+            if (p1!==p2)
                 p1=replacement
             else existing=false
         }
@@ -70,7 +68,7 @@ Rectangle {
         ignoreUnknownSignals: true
         target: p2
         onReplaceMe: {
-            if (p1 != p2)
+            if (p1 !== p2)
                 p2 = replacement
             else
                 existing=false

@@ -13,7 +13,8 @@
 
 #include "jsonsketch.h"
 
-JSONSketch::JSONSketch(QObject *parent):QObject(parent){}
+JSONSketch::JSONSketch(QObject *parent): QObject(parent), nextPointId(0),
+    nextLineId(0), nb_points(0), nb_lines(0) {}
 
 QString JSONSketch::loadSketch(const QString url, QObject* sketch)
 {
@@ -125,7 +126,7 @@ void JSONSketch::generateSketch(QObject* sketch) {
     }
 }
 
-QString JSONSketch::exportJSONSketch(const QString url) const{
+QString JSONSketch::exportJSONSketch(const QString url, QObject* sketch) {
     QFile file(url);
 
     if (!file.open(QIODevice::WriteOnly)) {
@@ -133,7 +134,7 @@ QString JSONSketch::exportJSONSketch(const QString url) const{
     }
 
     QJsonObject object;
-    write(object);
+    write(object, sketch);
     QJsonDocument doc(object);
     file.write(doc.toJson());
 
@@ -142,35 +143,57 @@ QString JSONSketch::exportJSONSketch(const QString url) const{
     return "true";
 }
 
-QString JSONSketch::write(QJsonObject &json) const
+QString JSONSketch::write(QJsonObject &json, QObject* sketch)
 {
-    json["nb_points"] = nb_points;
-    json["nb_lines"] = nb_lines;
+    nextPointId = 0;
+    nextLineId = 0;
+    nb_points = 0;
+    nb_lines = 0;
 
     QJsonObject qPoints;
     QJsonArray qPid;
-    foreach (int pid, points.keys()) {
-        qPid.append(pid);
-        QJsonArray currPoint;
-        currPoint.append(points[pid].x());
-        currPoint.append(points[pid].y());
-        qPoints.insert(QString::number(pid), currPoint);
-    }
-    json["pid"] = qPid;
-    json["points"] = qPoints;
-
 
     QJsonObject qLines;
     QJsonArray qLid;
-    foreach (int lid, lines.keys()) {
-        qLid.append(lid);
-        QJsonArray currLine;
-        currLine.append(lines[lid].x());
-        currLine.append(lines[lid].y());
-        qLines.insert(QString::number(lid), currLine);
+
+    foreach (QObject* child, sketch->children()) {
+        if (!QString::compare(child->property("class_type").toString(), "Point")
+                && child->property("existing").toBool()) {
+            int id = addPoint(child->property("x").toInt(), child->property("y").toInt());
+            child->setProperty("id", id);
+            qPid.append(id);
+            QJsonArray currPoint;
+            currPoint.append(child->property("x").toInt());
+            currPoint.append(child->property("y").toInt());
+            qPoints.insert(QString::number(id), currPoint);
+        }
     }
+    foreach (QObject* child, sketch->children()) {
+        if (!QString::compare(child->property("class_type").toString(), "Line")
+                && child->property("existing").toBool()) {
+            QObject* p1 = qvariant_cast<QObject*>(child->property("p1"));
+            QObject* p2 = qvariant_cast<QObject*>(child->property("p2"));
+            if(p1 != nullptr && p2 !=nullptr){
+                int id = addLine(p1->property("id").toInt(), p2->property("id").toInt());
+                qLid.append(id);
+                QJsonArray currLine;
+                currLine.append(p1->property("id").toInt());
+                currLine.append(p2->property("id").toInt());
+                qLines.insert(QString::number(id), currLine);
+            } else {
+                child->setProperty("existing", false);
+            }
+        }
+    }
+
+    json["pid"] = qPid;
+    json["points"] = qPoints;
+
     json["lid"] = qLid;
     json["lines"] = qLines;
+
+    json["nb_points"] = nb_points;
+    json["nb_lines"] = nb_lines;
 
     return "true";
 }
@@ -189,23 +212,6 @@ int JSONSketch::addLine(int p1, int p2) {
     return id;
 }
 
-void JSONSketch::removePoint(int id) {
-    if (points.contains(id)) {
-        points.remove(id);
-        nb_points--;
-    } else {
-        qDebug() << "Try to remove inexisting point with id: " << id;
-    }
-}
-
-void JSONSketch::removeLine(int id) {
-    if (lines.contains(id)) {
-        lines.remove(id);
-        nb_lines--;
-    } else {
-        qDebug() << "Try to remove inexisting line with id: " << id;
-    }
-}
 int JSONSketch::incrementPointsId() {
     return nextPointId++;
 }

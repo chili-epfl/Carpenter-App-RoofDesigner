@@ -5,13 +5,12 @@ import QtQuick.Window 2.0
 
 Rectangle {
     id: toolsMenu
-    width:Screen.pixelDensity*10+20
-    height: tool_list.model.count * Screen.pixelDensity*10+ 20
+    width:Screen.pixelDensity*10
+    height: tool_list.model.count * Screen.pixelDensity*10
 
     ListView {
         id:tool_list
         anchors.fill: parent
-        anchors.margins: 10
         clip:true
         currentIndex:0
 

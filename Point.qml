@@ -63,6 +63,7 @@ Rectangle {
     function kill(){
         existing=false
     }
+
     function showContextMenu(x, y){
         context_menu.x=x
         context_menu.y=y

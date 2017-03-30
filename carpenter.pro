@@ -18,7 +18,21 @@ SOURCES += constrainedline.cpp \
     sketchpoint.cpp \
     sketchstaticsexporter.cpp \
     solve.cpp \
-    jsonsketch.cpp
+    jsonsketch.cpp \
+    constraints.cpp \
+    quazip/JlCompress.cpp \
+    quazip/qioapi.cpp \
+    quazip/quaadler32.cpp \
+    quazip/quacrc32.cpp \
+    quazip/quagzipfile.cpp \
+    quazip/quaziodevice.cpp \
+    quazip/quazip.cpp \
+    quazip/quazipdir.cpp \
+    quazip/quazipfile.cpp \
+    quazip/quazipfileinfo.cpp \
+    quazip/quazipnewinfo.cpp \
+    quazip/unzip.c \
+    quazip/zip.c \
 
 HEADERS += constrainedline.h \
     constrainedpoint.h \
@@ -34,7 +48,77 @@ HEADERS += constrainedline.h \
     sketchpoint.h \
     sketchstaticsexporter.h \
     solve.h \
-    jsonsketch.h
+    jsonsketch.h \
+    constraints.h \
+    assimp/Compiler/poppack1.h \
+    assimp/Compiler/pstdint.h \
+    assimp/Compiler/pushpack1.h \
+    assimp/port/AndroidJNI/AndroidJNIIOSystem.h \
+    assimp/ai_assert.h \
+    assimp/anim.h \
+    assimp/camera.h \
+    assimp/cexport.h \
+    assimp/cfileio.h \
+    assimp/cimport.h \
+    assimp/color4.h \
+    assimp/config.h \
+    assimp/DefaultLogger.hpp \
+    assimp/defs.h \
+    assimp/Exporter.hpp \
+    assimp/Importer.hpp \
+    assimp/importerdesc.h \
+    assimp/IOStream.hpp \
+    assimp/IOSystem.hpp \
+    assimp/light.h \
+    assimp/Logger.hpp \
+    assimp/LogStream.hpp \
+    assimp/material.h \
+    assimp/matrix3x3.h \
+    assimp/matrix4x4.h \
+    assimp/mesh.h \
+    assimp/metadata.h \
+    assimp/NullLogger.hpp \
+    assimp/postprocess.h \
+    assimp/ProgressHandler.hpp \
+    assimp/quaternion.h \
+    assimp/scene.h \
+    assimp/texture.h \
+    assimp/types.h \
+    assimp/vector2.h \
+    assimp/vector3.h \
+    assimp/version.h \
+    quazip/0.7.3/include/quazip/crypt.h \
+    quazip/0.7.3/include/quazip/ioapi.h \
+    quazip/0.7.3/include/quazip/JlCompress.h \
+    quazip/0.7.3/include/quazip/quaadler32.h \
+    quazip/0.7.3/include/quazip/quachecksum32.h \
+    quazip/0.7.3/include/quazip/quacrc32.h \
+    quazip/0.7.3/include/quazip/quagzipfile.h \
+    quazip/0.7.3/include/quazip/quaziodevice.h \
+    quazip/0.7.3/include/quazip/quazip.h \
+    quazip/0.7.3/include/quazip/quazip_global.h \
+    quazip/0.7.3/include/quazip/quazipdir.h \
+    quazip/0.7.3/include/quazip/quazipfile.h \
+    quazip/0.7.3/include/quazip/quazipfileinfo.h \
+    quazip/0.7.3/include/quazip/quazipnewinfo.h \
+    quazip/0.7.3/include/quazip/unzip.h \
+    quazip/0.7.3/include/quazip/zip.h \
+    quazip/crypt.h \
+    quazip/ioapi.h \
+    quazip/JlCompress.h \
+    quazip/quaadler32.h \
+    quazip/quachecksum32.h \
+    quazip/quacrc32.h \
+    quazip/quagzipfile.h \
+    quazip/quaziodevice.h \
+    quazip/quazip.h \
+    quazip/quazip_global.h \
+    quazip/quazipdir.h \
+    quazip/quazipfile.h \
+    quazip/quazipfileinfo.h \
+    quazip/quazipnewinfo.h \
+    quazip/unzip.h \
+    quazip/zip.h \
 
 RESOURCES += qml.qrc
 
@@ -67,9 +151,6 @@ QML_IMPORT_PATH =
 
 # Default rules for deployment.
 include(deployment.pri)
-
-DISTFILES += \
-    qmldir
 
 #QMAKE_CC=/usr/local/Cellar/gcc/5.2.0/bin/g++-5
 #QMAKE_CXX=/usr/local/Cellar/gcc/5.2.0/bin/g++-5

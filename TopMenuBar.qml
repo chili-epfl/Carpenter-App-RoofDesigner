@@ -67,7 +67,7 @@ ToolBar {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    console.log(json_sketch.exportJSONSketch(sketch_folder + sketch_file + "write", sketch))
+                    console.log(json_sketch.exportJSONSketch(sketch_folder + sketch_file, sketch))
                 }
             }
         }

@@ -158,7 +158,7 @@ QString JSONSketch::write(QJsonObject &json, QObject* sketch)
 
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Point")
-                && child->property("existing").toBool()) {
+                && child->property("visible").toBool()) {
             int id = addPoint(child->property("x").toInt(), child->property("y").toInt());
             child->setProperty("id", id);
             qPid.append(id);
@@ -170,7 +170,7 @@ QString JSONSketch::write(QJsonObject &json, QObject* sketch)
     }
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Line")
-                && child->property("existing").toBool()) {
+                && child->property("visible").toBool()) {
             QObject* p1 = qvariant_cast<QObject*>(child->property("p1"));
             QObject* p2 = qvariant_cast<QObject*>(child->property("p2"));
             if(p1 != nullptr && p2 !=nullptr){

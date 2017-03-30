@@ -4,6 +4,7 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
 
+import Constraints 1.0
 import SketchConverter 1.0
 import SketchStaticsExporter 1.0
 
@@ -110,6 +111,7 @@ ToolBar {
                 MenuItem {
                     text: "Apply constraints"
                     onTriggered: {
+                        constraints.apply();
                         //                        var solveResult = mouseArea.constraintsSolver.solve()
                         //                        console.log("solveResult: ", solveResult);
                         //                        if(solveResult === true) {
@@ -121,7 +123,6 @@ ToolBar {
                         //                        }
                     }
                 }
-
             }
         }
     }

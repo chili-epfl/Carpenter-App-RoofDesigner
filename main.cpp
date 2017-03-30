@@ -7,6 +7,7 @@
 #include <sketchstaticsexporter.h>
 #include <displaykeyboard.h>
 #include <jsonsketch.h>
+#include <constraints.h>
 
 #include <QSharedPointer>
 #include <QSharedDataPointer>
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<DisplayKeyboard>("DisplayKeyboard", 1, 0, "DisplayKeyboard");
     qmlRegisterType<RealtoExporter>("RealtoExporter", 1, 0, "RealtoExporter");
     qmlRegisterType<JSONSketch>("JSONSketch", 1, 0, "JSONSketch");
+    qmlRegisterType<Constraints>("Constraints", 1, 0, "Constraints");
 
     engine.rootContext()->setContextProperty("scenariosPath", "file://"+scenariosDir);
 

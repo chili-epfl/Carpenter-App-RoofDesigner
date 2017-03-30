@@ -6,7 +6,7 @@
 #include <QJsonObject>
 #include <QQuickItem>
 
-class JSONSketch  : public QObject
+class JSONSketch : public QObject
 {
     Q_OBJECT
 public:

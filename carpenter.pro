@@ -131,7 +131,8 @@ DEFINES += CARPENTER_USE_SKETCHJOINT
 
 LIBS += -lassimp
 LIBS += -lquazip -lz
-
+    LIBS += -L/Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/solvespace/build/install/lib
+    LIBS += -lslvs
 linux {
 #    INCLUDEPATH += /usr/local/include/
 

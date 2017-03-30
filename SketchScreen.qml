@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Window 2.0
+import Constraints 1.0
 import JSONSketch 1.0
 import "." // to import Settings
 
@@ -9,6 +10,10 @@ Page {
 
     JSONSketch {
         id: json_sketch
+    }
+
+    Constraints {
+        id: constraints
     }
 
     property string sketch_folder: "/Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/Carpenter-App-RoofDesigner/"

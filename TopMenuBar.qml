@@ -111,7 +111,7 @@ ToolBar {
                 MenuItem {
                     text: "Apply constraints"
                     onTriggered: {
-                        constraints.apply();
+                        constraints.apply(sketch);
                         //                        var solveResult = mouseArea.constraintsSolver.solve()
                         //                        console.log("solveResult: ", solveResult);
                         //                        if(solveResult === true) {

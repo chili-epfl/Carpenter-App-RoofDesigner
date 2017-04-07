@@ -73,14 +73,18 @@ Page {
     }
 
 
-    ToolsMenu{
+    ToolsMenu {
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.margins: 10
     }
 
-
-
+    ConstraintsPanel {
+        id: constraintsPanel
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        anchors.margins: 10
+    }
 
     Loader{
         id:aux_loader

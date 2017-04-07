@@ -107,6 +107,6 @@ Rectangle {
     }
 
     LineContextMenu{
-        id:context_menu
+        id: context_menu
     }
 }

@@ -197,27 +197,26 @@ void Constraints::compute2d(QObject* sketch) {
     const int entityOriginId = 1;
     const int entityQuaternionId = 2;
     const int entityPlanId = 3;
-    int entityLineId = 100; // Up to 300 visible lines available
-    int entityPointId = 400;
-    QMap<QVector2D, int> pointIdsFromPosition;
+    int entityId = 100;
+    int constId = 1;
     double qw, qx, qy, qz;
 
     g = 1;
     /* First, we create our workplane. Its origin corresponds to the origin
      * of our base frame (x y z) = (0 0 0) */
-    sys.param[sys.params++] = Slvs_MakeParam(paramId, g, 0.0);
-    sys.param[sys.params++] = Slvs_MakeParam(paramId + 1, g, 0.0);
-    sys.param[sys.params++] = Slvs_MakeParam(paramId + 2, g, 0.0);
-    sys.entity[sys.entities++] = Slvs_MakePoint3d(entityOriginId, g, paramId++, paramId++, paramId++);
+    sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, 0.0);
+    sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, 0.0);
+    sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, 0.0);
+    sys.entity[sys.entities++] = Slvs_MakePoint3d(entityOriginId, g, paramId - 3, paramId - 2, paramId - 1);
     /* and it is parallel to the xy plane, so it has basis vectors (1 0 0)
      * and (0 1 0). */
     Slvs_MakeQuaternion(1, 0, 0,
                         0, 1, 0, &qw, &qx, &qy, &qz);
-    sys.param[sys.params++] = Slvs_MakeParam(paramId, g, qw);
-    sys.param[sys.params++] = Slvs_MakeParam(paramId + 1, g, qx);
-    sys.param[sys.params++] = Slvs_MakeParam(paramId + 2, g, qy);
-    sys.param[sys.params++] = Slvs_MakeParam(paramId + 3, g, qz);
-    sys.entity[sys.entities++] = Slvs_MakeNormal3d(entityQuaternionId, g, paramId++, paramId++, paramId++, paramId++);
+    sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, qw);
+    sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, qx);
+    sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, qy);
+    sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, qz);
+    sys.entity[sys.entities++] = Slvs_MakeNormal3d(entityQuaternionId, g, paramId - 4, paramId - 3, paramId - 2, paramId - 1);
 
     sys.entity[sys.entities++] = Slvs_MakeWorkplane(entityPlanId, g, entityOriginId, entityQuaternionId);
 
@@ -230,12 +229,15 @@ void Constraints::compute2d(QObject* sketch) {
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Point")
                 && child->property("visible").toBool()) {
-            pointIdsFromPosition.insert(QVector2D(child->property("x").toInt(), child->property("y").toInt()), entityPointId);
-            sys.param[sys.params++] = Slvs_MakeParam(paramId, g, child->property("x").toInt());
-            sys.param[sys.params++] = Slvs_MakeParam(paramId + 1, g, child->property("y").toInt());
-            sys.entity[sys.entities++] = Slvs_MakePoint2d(entityPointId++, g, entityPlanId, paramId++, paramId++);
+            pointIdsFromPosition.insert(QVector2D(child->property("x").toInt(), child->property("y").toInt()), entityId);
+            sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, child->property("x").toInt());
+            sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, child->property("y").toInt());
+            sys.entity[sys.entities++] = Slvs_MakePoint2d(entityId++, g, entityPlanId, paramId - 2, paramId - 1);
         }
     }
+
+    // Make line ids begin at the next thousand
+    entityId += 1000 - entityId % 1000;
 
     /* And we create a line segment with those endpoints which are mapped
      * to their ids by their position in pointIdsFromPosition. The map needs
@@ -243,31 +245,94 @@ void Constraints::compute2d(QObject* sketch) {
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Line")
                 && child->property("visible").toBool()) {
-            QObject* p1 = qvariant_cast<QObject*>(child->property("p1"));
-            QObject* p2 = qvariant_cast<QObject*>(child->property("p2"));
-            int p1Id = pointIdsFromPosition[QVector2D(p1->property("x").toInt(), p1->property("y").toInt())];
-            int p2Id = pointIdsFromPosition[QVector2D(p2->property("x").toInt(), p2->property("y").toInt())];
-            sys.param[sys.params++] = Slvs_MakeParam(paramId, g, p1Id);
-            sys.param[sys.params++] = Slvs_MakeParam(paramId + 1, g, p2Id);
-            sys.entity[sys.entities++] = Slvs_MakeLineSegment(entityLineId++, g, entityPlanId, paramId++, paramId++);
+            int p1Id = getP1Id(child);
+            int p2Id = getP2Id(child);
+            linesIdsFromPointIds.insert(QVector2D(p1Id, p2Id), entityId);
+            sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, p1Id);
+            sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, p2Id);
+            sys.entity[sys.entities++] = Slvs_MakeLineSegment(entityId++, g, entityPlanId, paramId - 2, paramId - 1);
         }
     }
 
-    /* This loop prints points and lines parameters value to check if all
-     * is correctly stored. */
-    for (int i = 0; i < sys.entities; i++) {
-        Slvs_Entity entity = sys.entity[i];
-        /* sys.param[sys.entity[i].param[0] - 1]: it's needed to decrease the index
-         * of sys.param since the param with handle 0 is reserved but not stored in the array.*/
-        if (entity.type == SLVS_E_POINT_IN_2D){
-            std::cout << "P " << sys.entity[i].h << " = (" << sys.param[sys.entity[i].param[0] - 1].val
-                    << ", " << sys.param[sys.entity[i].param[1] - 1].val << ")" << std::endl;
+    /* Now we iterate over all children again, in order to make specified
+     * constraints.*/
+    foreach (QObject* child, sketch->children()){
+        if (!QString::compare(child->property("class_type").toString(), "Point")
+                && child->property("visible").toBool()) {
+
         }
-        if (entity.type == SLVS_E_LINE_SEGMENT) {
-            std::cout << "L " << sys.entity[i].h << " = (" << sys.param[sys.entity[i].point[0] - 1].val
-                    << ", " << sys.param[sys.entity[i].point[1] - 1].val << ")" << std::endl;
+
+        if (!QString::compare(child->property("class_type").toString(), "Line")
+                && child->property("visible").toBool()) {
+            double length = child->property("length_constrained").toDouble();
+            if (length > 0) {
+                sys.constraint[sys.constraints++] = Slvs_MakeConstraint(
+                            constId++, g, SLVS_C_PT_PT_DISTANCE, entityPlanId,
+                            length, getP1Id(child), getP2Id(child), 0, 0);
+            }
+            if (child->property("horizontally_constrained").toBool()) {
+                sys.constraint[sys.constraints++] = Slvs_MakeConstraint(
+                            constId++, g, SLVS_C_HORIZONTAL, entityPlanId,
+                            0.0, 0, 0, linesIdsFromPointIds[QVector2D(getP1Id(child), getP2Id(child))], 0);
+            }
+            if (child->property("vertically_constrained").toBool()) {
+                sys.constraint[sys.constraints++] = Slvs_MakeConstraint(
+                            constId++, g, SLVS_C_VERTICAL, entityPlanId,
+                            0.0, 0, 0, linesIdsFromPointIds[QVector2D(getP1Id(child), getP2Id(child))], 0);
+            }
         }
     }
+
+    /* If the solver fails, then ask it to report which constraints caused
+     * the problem. */
+    sys.calculateFaileds = 1;
+
+    /* And solve. */
+    Slvs_Solve(&sys, g);
+
+    if(sys.result == SLVS_RESULT_OKAY) {
+        /* This loop prints points and lines parameters value to check if all
+         * is correctly stored. */
+        for (int i = 0; i < sys.entities; i++) {
+            Slvs_Entity entity = sys.entity[i];
+            /* sys.param[sys.entity[i].param[0] - 1]: it's needed to decrease the index
+             * of sys.param since the param with handle 0 is reserved but not stored in the array.*/
+            if (entity.type == SLVS_E_POINT_IN_2D){
+                std::cout << "P " << sys.entity[i].h << " = (" << sys.param[sys.entity[i].param[0] - 1].val
+                        << ", " << sys.param[sys.entity[i].param[1] - 1].val << ")" << std::endl;
+            }
+            if (entity.type == SLVS_E_LINE_SEGMENT) {
+                std::cout << "L " << sys.entity[i].h << " = (" << sys.param[sys.entity[i].point[0] - 1].val
+                        << ", " << sys.param[sys.entity[i].point[1] - 1].val << ")" << std::endl;
+            }
+        }
+    } else {
+        int i;
+        printf("solve failed: problematic constraints are:");
+        for(i = 0; i < sys.faileds; i++) {
+            printf(" %d", sys.failed[i]);
+        }
+        printf("\n");
+        if(sys.result == SLVS_RESULT_INCONSISTENT) {
+            printf("system inconsistent\n");
+        } else {
+            printf("system nonconvergent\n");
+        }
+    }
+}
+
+int Constraints::getP1Id(QObject* line) {
+    QObject* p1 = qvariant_cast<QObject*>(line->property("p1"));
+    int p1x = p1->property("x").toInt();
+    int p1y = p1->property("y").toInt();
+    return pointIdsFromPosition[QVector2D(p1x, p1y)];
+}
+
+int Constraints::getP2Id(QObject* line) {
+    QObject* p2 = qvariant_cast<QObject*>(line->property("p2"));
+    int p2x = p2->property("x").toInt();
+    int p2y = p2->property("y").toInt();
+    return pointIdsFromPosition[QVector2D(p2x, p2y)];
 }
 
 void Constraints::apply(QObject* sketch = nullptr)

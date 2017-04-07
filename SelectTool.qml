@@ -17,8 +17,19 @@ QtObject{
 
     function onClicked(target,mouse){
         if(target.class_type=="Point" || target.class_type=="Line"){
-            target.showContextMenu(mouse.x,mouse.y);
+            target.showContextMenu(mouse.x,mouse.y)
+            var data = {"object": target}
+            var removed = false
+            for(var i = 0; i < constraintsPanel.listEntities.count; i++){
+                if (constraintsPanel.listEntities.get(i).object == target){
+                    constraintsPanel.listEntities.remove(i)
+                    removed = true
+                    break
+                }
+            }
+            if (!removed){
+                constraintsPanel.listEntities.append(data)
+            }
         }
     }
-
 }

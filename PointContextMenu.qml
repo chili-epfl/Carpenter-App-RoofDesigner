@@ -17,36 +17,38 @@ Popup {
             id: cx
             text: "\uf023 x"
             font.family: "FontAwesome"
-
+            checkable: true
         }
         ToolButton {
             id: cy
             text: "\uf023 y"
             font.family: "FontAwesome"
+            checkable: true
         }
         ToolButton {
             id: cz
             text: "\uf023 z"
             font.family: "FontAwesome"
+            checkable: true
         }
 
         ToolButton {
             id: mx
             text: "\uf01e x"
             font.family: "FontAwesome"
-
+            checkable: true
         }
         ToolButton {
             id: my
             text: "\uf01e y"
             font.family: "FontAwesome"
-
+            checkable: true
         }
         ToolButton {
             id: mz
             text: "\uf01e z"
             font.family: "FontAwesome"
-
+            checkable: true
         }
     }
 }

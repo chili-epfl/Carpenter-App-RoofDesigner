@@ -23,7 +23,9 @@ Page {
         console.log(json_sketch.loadSketch(sketch_folder + sketch_file, sketch))
     }
 
-    property alias aux_loader:aux_loader
+    property alias aux_loader: aux_loader
+
+    property alias constraintsPanel: constraintsPanel
 
     property bool isBackgroundSet: (background_picture_url!="")
     property alias visibleBackground: backgroundImage.visible

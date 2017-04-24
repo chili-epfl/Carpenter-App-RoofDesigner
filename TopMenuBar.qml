@@ -109,18 +109,26 @@ ToolBar {
                 }
 
                 MenuItem {
+                    text: "Apply EXAMPLE constraints"
+                    onTriggered: {
+                        constraints.apply()
+                    }
+                }
+
+                MenuItem {
                     text: "Apply constraints"
                     onTriggered: {
-                        constraints.apply(sketch);
-                        //                        var solveResult = mouseArea.constraintsSolver.solve()
-                        //                        console.log("solveResult: ", solveResult);
-                        //                        if(solveResult === true) {
-                        //                            mouseArea.constraintsSolver.applyOnSketch();
-                        //                            message.displaySuccessMessage("Constraints application succeed")
-                        //                        }
-                        //                        else {
-                        //                            message.displayErrorMessage("Constraints application failed : " + solveResult)
-                        //                        }
+                        var array = [constraintsPanel.horz_const.checked,
+                                     constraintsPanel.vert_const.checked,
+                                     constraintsPanel.leng_const.checked,
+                                     constraintsPanel.equL_const.checked,
+                                     constraintsPanel.dist_const.checked,
+                                     constraintsPanel.para_const.checked,
+                                     constraintsPanel.perp_const.checked,
+                                     constraintsPanel.angl_const.checked,
+                                     constraintsPanel.midP_const.checked]
+                        console.log(array)
+                        constraints.apply(sketch, sketchScreen.constraintsPanel.listEntities, array)
                     }
                 }
             }

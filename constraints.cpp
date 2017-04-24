@@ -5,6 +5,10 @@
 #include <QString>
 #include <QQmlComponent>
 #include <QVector2D>
+#include <QObject>
+#include <QList>
+#include <QAbstractListModel>
+#include <QDebug>
 
 static Slvs_System sys;
 
@@ -191,7 +195,7 @@ void Constraints::Example2d() {
     }
 }
 
-void Constraints::compute2d(QObject* sketch) {
+void Constraints::compute2d(QObject* sketch, QVariant selectedEntities = QVariant(), QList<bool> constraints = QList<bool>()) {
     Slvs_hGroup g;
     int paramId = 1;
     const int entityOriginId = 1;
@@ -256,39 +260,101 @@ void Constraints::compute2d(QObject* sketch) {
 
     /* Now we iterate over all children again, in order to make specified
      * constraints.*/
-    foreach (QObject* child, sketch->children()){
-        if (!QString::compare(child->property("class_type").toString(), "Point")
-                && child->property("visible").toBool()) {
+    QAbstractListModel* entities = qvariant_cast<QAbstractListModel*>(selectedEntities);
 
-        }
+    QList<int> constraintCodes({
+                                   SLVS_C_HORIZONTAL,
+                                   SLVS_C_VERTICAL,
+                                   SLVS_C_PT_PT_DISTANCE,
+                                   SLVS_C_EQUAL_LENGTH_LINES,
+                                   SLVS_C_PT_PT_DISTANCE,
+                                   SLVS_C_PARALLEL,
+                                   SLVS_C_PERPENDICULAR,
+                                   SLVS_C_ANGLE,
+                                   SLVS_C_AT_MIDPOINT});
 
-        if (!QString::compare(child->property("class_type").toString(), "Line")
-                && child->property("visible").toBool()) {
-            double length = child->property("length_constrained").toDouble();
-            if (length > 0) {
-                sys.constraint[sys.constraints++] = Slvs_MakeConstraint(
-                            constId++, g, SLVS_C_PT_PT_DISTANCE, entityPlanId,
-                            length, getP1Id(child), getP2Id(child), 0, 0);
-            }
-            if (child->property("horizontally_constrained").toBool()) {
-                sys.constraint[sys.constraints++] = Slvs_MakeConstraint(
-                            constId++, g, SLVS_C_HORIZONTAL, entityPlanId,
-                            0.0, 0, 0, linesIdsFromPointIds[QVector2D(getP1Id(child), getP2Id(child))], 0);
-            }
-            if (child->property("vertically_constrained").toBool()) {
-                sys.constraint[sys.constraints++] = Slvs_MakeConstraint(
-                            constId++, g, SLVS_C_VERTICAL, entityPlanId,
-                            0.0, 0, 0, linesIdsFromPointIds[QVector2D(getP1Id(child), getP2Id(child))], 0);
+
+    QObject* base;
+    int baseId;
+
+    for (int c = 0; c < constraints.length(); c++){
+        if (constraints[c]) {
+            switch (c) {
+            case 0:
+            case 1:
+                for (int i = 0; i < entities->rowCount(); i++){
+                    QObject* entity = qvariant_cast<QObject*>(entities->data(entities->index(i),0));
+                    int entityId = linesIdsFromPointIds[
+                            QVector2D(getP1Id(entity), getP2Id(entity))];
+                    qDebug() << constraints << ", "  << c << ", " <<entityId;
+                    qDebug() << sys.constraints;
+                    sys.constraint[sys.constraints++] =
+                            Slvs_MakeConstraint(constId++, g, constraintCodes[i],
+                                        entityPlanId, 0.0, 0, 0, entityId, 0);
+                }
+                break;
+            case 2:
+            case 4:
+                // need to implement the distance getter
+                break;
+            case 3:
+                base = qvariant_cast<QObject*>(entities->data(entities->index(0),0));
+                baseId = linesIdsFromPointIds[
+                        QVector2D(getP1Id(base), getP2Id(base))];
+                for (int i = 1; i < entities->rowCount(); i++){
+                    QObject* entity = qvariant_cast<QObject*>(entities->data(entities->index(i),0));
+                    int entityId = linesIdsFromPointIds[
+                            QVector2D(getP1Id(entity), getP2Id(entity))];
+                    sys.constraint[sys.constraints++] =
+                            Slvs_MakeConstraint(constId++, g, constraintCodes[i],
+                                                entityPlanId, 0.0, 0, 0, entityId, baseId);
+                }
+                break;
+            default:
+                break;
             }
         }
     }
+
+    /*for (int i = 0; i < entities->rowCount(); i++){
+        QObject* entity = qvariant_cast<QObject*>(entities->data(entities->index(i),0));
+
+        if (!QString::compare(entity->property("class_type").toString(), "Point")
+                && entity->property("visible").toBool()) {
+
+        }
+
+        if (!QString::compare(entity->property("class_type").toString(), "Line")
+                && entity->property("visible").toBool()) {
+            double length = entity->property("length_constrained").toDouble();
+            if (length > 0) {
+                sys.constraint[sys.constraints++] = Slvs_MakeConstraint(
+                            constId++, g, SLVS_C_PT_PT_DISTANCE, entityPlanId,
+                            length, getP1Id(entity), getP2Id(entity), 0, 0);
+            }
+            if (entity->property("horizontally_constrained").toBool()) {
+                sys.constraint[sys.constraints++] = Slvs_MakeConstraint(
+                            constId++, g, SLVS_C_HORIZONTAL, entityPlanId,
+                            0.0, 0, 0, linesIdsFromPointIds[QVector2D(getP1Id(entity), getP2Id(entity))], 0);
+            }
+            if (entity->property("vertically_constrained").toBool()) {
+                sys.constraint[sys.constraints++] = Slvs_MakeConstraint(
+                            constId++, g, SLVS_C_VERTICAL, entityPlanId,
+                            0.0, 0, 0, linesIdsFromPointIds[QVector2D(getP1Id(entity), getP2Id(entity))], 0);
+            }
+        }
+    }*/
 
     /* If the solver fails, then ask it to report which constraints caused
      * the problem. */
     sys.calculateFaileds = 1;
 
+    qDebug() << "TEST";
+
     /* And solve. */
     Slvs_Solve(&sys, g);
+
+    qDebug() << "TEST2";
 
     if(sys.result == SLVS_RESULT_OKAY) {
         /* This loop prints points and lines parameters value to check if all
@@ -335,7 +401,7 @@ int Constraints::getP2Id(QObject* line) {
     return pointIdsFromPosition[QVector2D(p2x, p2y)];
 }
 
-void Constraints::apply(QObject* sketch = nullptr)
+void Constraints::apply(QObject* sketch, QVariant selectedEntities, QList<bool> constraints)
 {
     std::cout << "Constraints start" << std::endl;
 
@@ -346,8 +412,10 @@ void Constraints::apply(QObject* sketch = nullptr)
     sys.failed  = (Slvs_hConstraint*)CheckMalloc(50*sizeof(sys.failed[0]));
     sys.faileds = 50;
 
+    qDebug() << constraints;
+
     for(;;) {
-        sketch == nullptr ? Example2d(): compute2d(sketch);
+        sketch == nullptr ? Example2d(): compute2d(sketch, selectedEntities, constraints);
         sys.params = sys.constraints = sys.entities = 0;
         break;
     }

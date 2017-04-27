@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Window 2.0
+import Constraints 1.0
 
 Item {
     width: 10000
@@ -12,6 +13,8 @@ Item {
 
     property alias mouse_area: mouse_area
     property alias pinch_area: pinch_area
+
+    property alias constraints: constraints
 
     readonly property string class_type: "Sketch"
 
@@ -73,5 +76,10 @@ Item {
             else if(wheel.angleDelta.y<0)
                 parent.scale=Math.max(0.25, -parent.scale*(0.75*wheel.angleDelta.y/120))
         }
+    }
+
+    Constraints {
+        id: constraints
+
     }
 }

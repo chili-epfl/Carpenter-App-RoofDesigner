@@ -24,8 +24,8 @@ QtObject{
             sketch.store_state(sketch.undo_buffer.length+1);
         }
     }
-    function onClicked(target,mouse){
 
+    function onClicked(target,mouse){
 
     }
 

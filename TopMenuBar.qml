@@ -111,7 +111,7 @@ ToolBar {
                 MenuItem {
                     text: "Apply EXAMPLE constraints"
                     onTriggered: {
-                        constraints.apply()
+                        sketch.constraints.apply()
                     }
                 }
 
@@ -128,7 +128,7 @@ ToolBar {
                                      constraintsPanel.angl_const.checked,
                                      constraintsPanel.midP_const.checked]
                         console.log(array)
-                        constraints.apply(sketch, sketchScreen.constraintsPanel.listEntities, array)
+                        sketch.constraints.apply(sketch, sketchScreen.constraintsPanel.listEntities, array)
                     }
                 }
             }

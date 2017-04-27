@@ -196,6 +196,8 @@ void Constraints::Example2d() {
 }
 
 void Constraints::compute2d(QObject* sketch, QVariant selectedEntities = QVariant(), QList<bool> constraints = QList<bool>()) {
+    QMap<int, QObject*> entityObjects;
+
     Slvs_hGroup g;
     int paramId = 1;
     const int entityOriginId = 1;
@@ -236,7 +238,8 @@ void Constraints::compute2d(QObject* sketch, QVariant selectedEntities = QVarian
             pointIdsFromPosition.insert(QVector2D(child->property("x").toInt(), child->property("y").toInt()), entityId);
             sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, child->property("x").toInt());
             sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, child->property("y").toInt());
-            sys.entity[sys.entities++] = Slvs_MakePoint2d(entityId++, g, entityPlanId, paramId - 2, paramId - 1);
+            sys.entity[sys.entities] = Slvs_MakePoint2d(entityId++, g, entityPlanId, paramId - 2, paramId - 1);
+            entityObjects.insert(sys.entities++, child);
         }
     }
 
@@ -252,9 +255,8 @@ void Constraints::compute2d(QObject* sketch, QVariant selectedEntities = QVarian
             int p1Id = getP1Id(child);
             int p2Id = getP2Id(child);
             linesIdsFromPointIds.insert(QVector2D(p1Id, p2Id), entityId);
-            sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, p1Id);
-            sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, p2Id);
-            sys.entity[sys.entities++] = Slvs_MakeLineSegment(entityId++, g, entityPlanId, paramId - 2, paramId - 1);
+            sys.entity[sys.entities] = Slvs_MakeLineSegment(entityId++, g, entityPlanId, p1Id, p2Id);
+            entityObjects.insert(sys.entities++, child);
         }
     }
 
@@ -280,16 +282,14 @@ void Constraints::compute2d(QObject* sketch, QVariant selectedEntities = QVarian
     for (int c = 0; c < constraints.length(); c++){
         if (constraints[c]) {
             switch (c) {
-            case 0:
-            case 1:
+            case 0: // Horizontally constrainted
+            case 1: // Vertically constrainted
                 for (int i = 0; i < entities->rowCount(); i++){
                     QObject* entity = qvariant_cast<QObject*>(entities->data(entities->index(i),0));
                     int entityId = linesIdsFromPointIds[
                             QVector2D(getP1Id(entity), getP2Id(entity))];
-                    qDebug() << constraints << ", "  << c << ", " <<entityId;
-                    qDebug() << sys.constraints;
                     sys.constraint[sys.constraints++] =
-                            Slvs_MakeConstraint(constId++, g, constraintCodes[i],
+                            Slvs_MakeConstraint(constId++, g, constraintCodes[c],
                                         entityPlanId, 0.0, 0, 0, entityId, 0);
                 }
                 break;
@@ -297,7 +297,7 @@ void Constraints::compute2d(QObject* sketch, QVariant selectedEntities = QVarian
             case 4:
                 // need to implement the distance getter
                 break;
-            case 3:
+            case 3: // Equal length constrainted
                 base = qvariant_cast<QObject*>(entities->data(entities->index(0),0));
                 baseId = linesIdsFromPointIds[
                         QVector2D(getP1Id(base), getP2Id(base))];
@@ -306,7 +306,7 @@ void Constraints::compute2d(QObject* sketch, QVariant selectedEntities = QVarian
                     int entityId = linesIdsFromPointIds[
                             QVector2D(getP1Id(entity), getP2Id(entity))];
                     sys.constraint[sys.constraints++] =
-                            Slvs_MakeConstraint(constId++, g, constraintCodes[i],
+                            Slvs_MakeConstraint(constId++, g, constraintCodes[c],
                                                 entityPlanId, 0.0, 0, 0, entityId, baseId);
                 }
                 break;
@@ -359,17 +359,20 @@ void Constraints::compute2d(QObject* sketch, QVariant selectedEntities = QVarian
     if(sys.result == SLVS_RESULT_OKAY) {
         /* This loop prints points and lines parameters value to check if all
          * is correctly stored. */
+        qDebug() << entityObjects;
         for (int i = 0; i < sys.entities; i++) {
             Slvs_Entity entity = sys.entity[i];
             /* sys.param[sys.entity[i].param[0] - 1]: it's needed to decrease the index
              * of sys.param since the param with handle 0 is reserved but not stored in the array.*/
             if (entity.type == SLVS_E_POINT_IN_2D){
+                entityObjects[i]->setProperty("x", sys.param[sys.entity[i].param[0] - 1].val);
+                entityObjects[i]->setProperty("y", sys.param[sys.entity[i].param[1] - 1].val);
                 std::cout << "P " << sys.entity[i].h << " = (" << sys.param[sys.entity[i].param[0] - 1].val
                         << ", " << sys.param[sys.entity[i].param[1] - 1].val << ")" << std::endl;
             }
             if (entity.type == SLVS_E_LINE_SEGMENT) {
-                std::cout << "L " << sys.entity[i].h << " = (" << sys.param[sys.entity[i].point[0] - 1].val
-                        << ", " << sys.param[sys.entity[i].point[1] - 1].val << ")" << std::endl;
+                std::cout << "L " << sys.entity[i].h << " = (" << sys.entity[i].point[0]
+                        << ", " << sys.entity[i].point[1] << ")" << std::endl;
             }
         }
     } else {

@@ -12,10 +12,11 @@ class Constraints : public QObject
 {
     Q_OBJECT
 public:
-    Q_INVOKABLE void apply(QObject* sketch = nullptr, QVariant selectedEntities = QVariant(), QList<bool> constraints = QList<bool>());
+    Q_INVOKABLE void apply(QObject* sketch = nullptr);
+
 private:
     void *CheckMalloc(size_t n);
-    void compute2d(QObject* sketch, QVariant selectedEntities, QList<bool> constraints);
+    void compute2d(QObject* sketch);
     void Example2d();
     int getP1Id(QObject* line);
     int getP2Id(QObject* line);

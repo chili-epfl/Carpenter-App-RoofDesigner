@@ -3,7 +3,8 @@ import QtQuick.Controls 1.4
 
 Rectangle {
     id: constraintsPanel
-    height: (listEntities.count + checkBoxes.visibleChildren.length + 2) * 20
+    height: 30 + listRect.height +
+            constraintButtons.visibleChildren.length * horz_const.height
     width: 300
     color: "#999999"
     anchors.margins: 10
@@ -21,6 +22,7 @@ Rectangle {
     property alias no_const: no_const
 
     Rectangle {
+        id: listRect
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.margins: 10
@@ -41,74 +43,120 @@ Rectangle {
     }
 
     Column {
-        id: checkBoxes
+        id: constraintButtons
         anchors.bottom: parent.bottom
         anchors.left: parent.left
+        anchors.right: parent.right
         anchors.margins: 10
 
-        CheckBox {
+        Button {
             id: horz_const
             text: "Horizonally constrained"
+            checkable: true
             checked: false
             visible: false
             onVisibleChanged: this.checked = false
         }
-        CheckBox {
+        Button {
             id: vert_const
             text: "Vertically constrained"
+            checkable: true
             checked: false
             visible: false
             onVisibleChanged: this.checked = false
         }
-        CheckBox {
-            id: leng_const
-            text: "Length constrained"
-            checked: false
-            visible: false
-            onVisibleChanged: this.checked = false
+        Item {
+            height: leng_const.height
+            visible: leng_const.visible
+            Button {
+                id: leng_const
+                text: "Length constrained"
+                checkable: true
+                checked: false
+                visible: false
+                onVisibleChanged: this.checked = false
+            }
+            TextField {
+                id: leng_const_length
+                enabled: true
+                validator: RegExpValidator {
+                    regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
+                }
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                placeholderText: "Initial scale"
+                width: implicitWidth
+                font.pointSize: 14
+            }
         }
-        CheckBox {
+        Button {
             id: equL_const
             text: "Equal length constrained"
+            checkable: true
             checked: false
             visible: false
             onVisibleChanged: this.checked = false
         }
-        CheckBox {
+        Button {
             id: dist_const
             text: "Distance constrained"
+            checkable: true
             checked: false
             visible: false
             onVisibleChanged: this.checked = false
         }
-        CheckBox {
+        Button {
             id: para_const
             text: "Parallel constrained"
+            checkable: true
             checked: false
             visible: false
             onVisibleChanged: this.checked = false
         }
-        CheckBox {
+        Button {
             id: perp_const
             text: "Perpendicular constrained"
+            checkable: true
             checked: false
             visible: false
             onVisibleChanged: this.checked = false
         }
-        CheckBox {
+        Button {
             id: angl_const
             text: "Angle constrained"
+            checkable: true
             checked: false
             visible: false
             onVisibleChanged: this.checked = false
         }
-        CheckBox {
+        Button {
             id: midP_const
             text: "Mid point constrained"
+            checkable: true
             checked: false
             visible: false
             onVisibleChanged: this.checked = false
         }
+        Button {
+            id: validate
+            text: "Validate constraints"
+            anchors.right: parent.right
+            visible: !no_const.visible
+            onClicked: {
+                sketch.constraints.add()
+                listEntities.clear()
+                horz_const.visible = false
+                vert_const.visible = false
+                leng_const.visible = false
+                equL_const.visible = false
+                dist_const.visible = false
+                para_const.visible = false
+                perp_const.visible = false
+                angl_const.visible = false
+                midP_const.visible = false
+                no_const.visible = true
+            }
+        }
+
         Text {
             id: no_const
             text: "No constrains available"

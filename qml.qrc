@@ -26,6 +26,7 @@
         <file>DeleteTool.qml</file>
         <file>SelectTool.qml</file>
         <file>ConstraintsPanel.qml</file>
+        <file>Constraint.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/minus_pressed.png</file>

@@ -58,15 +58,17 @@ QtObject{
                 constraintsPanel.equL_const.visible = true
                 constraintsPanel.para_const.visible = true
                 if (lineCount == 2){
-                    constraintsPanel.angl_const.visible = true
                     constraintsPanel.perp_const.visible = true
+                    constraintsPanel.angl_const.visible = true
                 } else {
-                    constraintsPanel.angl_const.visible = false
                     constraintsPanel.perp_const.visible = false
+                    constraintsPanel.angl_const.visible = false
                 }
             } else {
                 constraintsPanel.equL_const.visible = false
                 constraintsPanel.para_const.visible = false
+                constraintsPanel.perp_const.visible = false
+                constraintsPanel.angl_const.visible = false
             }
             constraintsPanel.midP_const.visible = false
             constraintsPanel.no_const.visible = false
@@ -103,7 +105,5 @@ QtObject{
             constraintsPanel.midP_const.visible = false
             constraintsPanel.no_const.visible = true
         }
-
-
     }
 }

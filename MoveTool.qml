@@ -1,8 +1,6 @@
 import QtQuick 2.0
 
 QtObject{
-
-
     function onPressed(target,mouse){
         if(target.class_type=="Point"){
             target.mouse_area.drag.target=target
@@ -23,6 +21,7 @@ QtObject{
             target.mouse_area.drag.target=undefined;
             sketch.store_state(sketch.undo_buffer.length+1);
         }
+
     }
 
     function onClicked(target,mouse){

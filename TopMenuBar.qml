@@ -118,17 +118,20 @@ ToolBar {
                 MenuItem {
                     text: "Apply constraints"
                     onTriggered: {
-                        var array = [constraintsPanel.horz_const.checked,
-                                     constraintsPanel.vert_const.checked,
-                                     constraintsPanel.leng_const.checked,
-                                     constraintsPanel.equL_const.checked,
-                                     constraintsPanel.dist_const.checked,
-                                     constraintsPanel.para_const.checked,
-                                     constraintsPanel.perp_const.checked,
-                                     constraintsPanel.angl_const.checked,
-                                     constraintsPanel.midP_const.checked]
-                        console.log(array)
-                        sketch.constraints.apply(sketch, sketchScreen.constraintsPanel.listEntities, array)
+                        /*
+                            var array = [constraintsPanel.horz_const.checked,
+                                         constraintsPanel.vert_const.checked,
+                                         constraintsPanel.leng_const.checked,
+                                         constraintsPanel.equL_const.checked,
+                                         constraintsPanel.dist_const.checked,
+                                         constraintsPanel.para_const.checked,
+                                         constraintsPanel.perp_const.checked,
+                                         constraintsPanel.angl_const.checked,
+                                         constraintsPanel.midP_const.checked]
+                            console.log(array)
+                            sketch.constraints.apply(sketch, sketchScreen.constraintsPanel.listEntities, array)
+                        */
+                        sketch.constraints.apply(sketch)
                     }
                 }
             }

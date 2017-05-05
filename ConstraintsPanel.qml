@@ -65,27 +65,37 @@ Rectangle {
             visible: false
             onVisibleChanged: this.checked = false
         }
-        Item {
-            height: leng_const.height
-            visible: leng_const.visible
+        Label {
+            id: leng_const
+            property bool checked: leng_const_button.checked
+            property double value: leng_const_value.text
+            width: parent.width
+            height: leng_const_button.height
+            visible: false
             Button {
-                id: leng_const
+                id: leng_const_button
                 text: "Length constrained"
                 checkable: true
                 checked: false
-                visible: false
+                visible: parent.visible
                 onVisibleChanged: this.checked = false
             }
             TextField {
-                id: leng_const_length
+                id: leng_const_value
+                anchors.left: leng_const_button.right
+                anchors.right: parent.right
                 enabled: true
                 validator: RegExpValidator {
                     regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
                 }
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
-                placeholderText: "Initial scale"
+                placeholderText: "Length"
                 width: implicitWidth
                 font.pointSize: 14
+                text: "5.0"
+                horizontalAlignment: TextInput.AlignRight
+                visible: parent.visible
+                onVisibleChanged: text = "5.0"
             }
         }
         Button {
@@ -96,13 +106,38 @@ Rectangle {
             visible: false
             onVisibleChanged: this.checked = false
         }
-        Button {
+        Label {
             id: dist_const
-            text: "Distance constrained"
-            checkable: true
-            checked: false
+            property bool checked: dist_const_button.checked
+            property double value: dist_const_value.text
+            width: parent.width
+            height: dist_const_button.height
             visible: false
-            onVisibleChanged: this.checked = false
+            Button {
+                id: dist_const_button
+                text: "Distance constrained"
+                checkable: true
+                checked: false
+                visible: parent.visible
+                onVisibleChanged: this.checked = false
+            }
+            TextField {
+                id: dist_const_value
+                anchors.left: dist_const_button.right
+                anchors.right: parent.right
+                enabled: true
+                validator: RegExpValidator {
+                    regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
+                }
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                placeholderText: "Distance"
+                width: implicitWidth
+                font.pointSize: 14
+                text: "5.0"
+                horizontalAlignment: TextInput.AlignRight
+                visible: parent.visible
+                onVisibleChanged: text = "5.0"
+            }
         }
         Button {
             id: para_const
@@ -120,13 +155,38 @@ Rectangle {
             visible: false
             onVisibleChanged: this.checked = false
         }
-        Button {
+        Label {
             id: angl_const
-            text: "Angle constrained"
-            checkable: true
-            checked: false
+            property bool checked: angl_const_button.checked
+            property double value: angl_const_value.text
+            width: parent.width
+            height: angl_const_button.height
             visible: false
-            onVisibleChanged: this.checked = false
+            Button {
+                id: angl_const_button
+                text: "Angle constrained"
+                checkable: true
+                checked: false
+                visible: parent.visible
+                onVisibleChanged: this.checked = false
+            }
+            TextField {
+                id: angl_const_value
+                anchors.left: angl_const_button.right
+                anchors.right: parent.right
+                enabled: true
+                validator: RegExpValidator {
+                    regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
+                }
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                placeholderText: "Distance"
+                width: implicitWidth
+                font.pointSize: 14
+                text: "5.0"
+                horizontalAlignment: TextInput.AlignRight
+                visible: parent.visible
+                onVisibleChanged: text = "90"
+            }
         }
         Button {
             id: midP_const

@@ -1,9 +1,9 @@
 import QtQuick 2.0
-
+import QtQuick.Window 2.0
 Rectangle {
 
-    width: 25
-    height: 25
+    width: Screen.pixelDensity*5
+    height: Screen.pixelDensity*5
     radius: width/2
     color: "red"
     z:1

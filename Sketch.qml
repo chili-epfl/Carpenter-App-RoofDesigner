@@ -50,18 +50,9 @@ Item {
         redo_buffer=[]
     }
 
-    PinchArea{
-        id:pinch_area
-        anchors.fill: parent
-        enabled: false
-        onPinchUpdated: {
-            if(pinch.scale>0)
-                ( parent.scale=Math.max(0.25, parent.scale*(pinch.scale/pinch.previousScale) ) )
-        }
-    }
-
     MouseArea{
         id:mouse_area
+        enabled: !pinch_area.pinch.active
         anchors.fill: parent
         drag.smoothed: false
         scrollGestureEnabled:false
@@ -78,6 +69,17 @@ Item {
                 parent.scale=Math.max(0.25, -parent.scale*(0.75*wheel.angleDelta.y/120))
         }
     }
+    PinchArea{
+        id:pinch_area
+        anchors.fill: parent
+        enabled: false
+        onPinchUpdated: {
+            if(pinch.scale>0)
+                ( parent.scale=Math.max(0.25, parent.scale*(pinch.scale/pinch.previousScale) ) )
+        }
+    }
+
+
 
     Constraints {
         id: constraints

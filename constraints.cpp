@@ -1,5 +1,5 @@
 #include "constraints.h"
-#include <../solvespace/include/slvs.h>
+#include <slvs.h>
 #include <iostream>
 #include <QMap>
 #include <QString>
@@ -187,7 +187,7 @@ void Constraints::Example2d() {
             printf(" %d", sys.failed[i]);
         }
         printf("\n");
-        if(sys.result == SLVS_RESULT_INCONSISTENT) {
+        if(sys.result !=0) {
             printf("system inconsistent\n");
         } else {
             printf("system nonconvergent\n");
@@ -337,7 +337,7 @@ void Constraints::compute2d(QObject* sketch) {
             printf(" %d", sys.failed[i]);
         }
         printf("\n");
-        if(sys.result == SLVS_RESULT_INCONSISTENT) {
+        if(sys.result !=0) {
             printf("system inconsistent\n");
         } else {
             printf("system nonconvergent\n");

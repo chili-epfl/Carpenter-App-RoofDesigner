@@ -1,5 +1,5 @@
 import QtQuick 2.0
-
+import QtQuick.Window 2.0
 Rectangle {
     property var p1;
     property var p2;
@@ -94,7 +94,7 @@ Rectangle {
     antialiasing: true
     color:"grey"
 
-    height: 20
+    height: Screen.pixelDensity*2
     width: p1 && p2? Math.sqrt(Math.pow((p1.x-p2.x),2)+Math.pow((p1.y-p2.y),2)) :0
 
     MouseArea{

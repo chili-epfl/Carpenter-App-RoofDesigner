@@ -36,12 +36,12 @@ Page {
     property alias sketch: sketch
 
     header: TopMenuBar{
-        height: Screen.pixelDensity*10
+        height: Screen.pixelDensity*5*scalePixelFactor
         visible: aux_loader.status!=Loader.Ready
     }
 
     footer: BottomToolBar{
-        height: Screen.pixelDensity*10
+        height: Screen.pixelDensity*5*scalePixelFactor
         visible: aux_loader.status!=Loader.Ready
     }
 

@@ -109,8 +109,9 @@ Item {
                 for(var e = 0; e < constraintsPanel.listEntities.count; e++){
                     var c = constraint_component.createObject(sketch)
                     c.type = 2
-                    c.valA = 0 //TODO
-                    c.entityA = constraintsPanel.listEntities.get(e).object
+                    c.valA = constraintsPanel.leng_const.value
+                    c.ptA = constraintsPanel.listEntities.get(e).object.p1
+                    c.ptB = constraintsPanel.listEntities.get(e).object.p2
                 }
             }
             if (constraintsPanel.equL_const.checked) {
@@ -122,9 +123,9 @@ Item {
                 }
             }
             if (constraintsPanel.dist_const.checked) {
-                var c = constraint_component.createObject(sketch).object
+                var c = constraint_component.createObject(sketch)
                 c.type = 4
-                c.valA = 0 //TODO
+                c.valA = constraintsPanel.dist_const.value
                 c.ptA = constraintsPanel.listEntities.get(0).object
                 c.ptB = constraintsPanel.listEntities.get(1).object
             }
@@ -145,12 +146,12 @@ Item {
             if (constraintsPanel.angl_const.checked) {
                 var c = constraint_component.createObject(sketch)
                 c.type = 7
-                c.valA = 0 //TODO
-                c.entityA = constraintsPanel.listEntities.get(2).object
+                c.valA = 180 - constraintsPanel.angl_const.value
+                c.entityA = constraintsPanel.listEntities.get(0).object
                 c.entityB = constraintsPanel.listEntities.get(1).object
             }
             if (constraintsPanel.midP_const.checked) {
-                pId = constraintsPanel.listEntities.get(0).object.class_type == "Point" ? 0 : 1
+                var pId = constraintsPanel.listEntities.get(0).object.class_type == "Point" ? 0 : 1
                 var c = constraint_component.createObject(sketch)
                 c.type = 8
                 c.ptA = constraintsPanel.listEntities.get(pId).object

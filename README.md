@@ -44,9 +44,9 @@ Headers and libs will be copied in the path [Path_to_Assimp_Folder]/build-androi
 
 ### Build Quazip
 ```bash
-git https://github.com/lorenzolightsgdwarf/quazip
+git clone https://github.com/lorenzolightsgdwarf/quazip
 ```
-Quazip is Qt project, so just open it in QtCreator. The project is composed by two subprojects, quazip and qztest. Compilation errors coming from the secodn project can be ignored.
+Quazip is Qt project, so just open it in QtCreator. It requires zlib to be installed and available to the linker (add the path to LIBS if necessary). The project is composed by two subprojects, quazip and qztest. Compilation errors coming from the second project can be ignored.
 
 Configure the kit that you need and remember to add "make install" as build step.
 For Android, remember also to disable the build step "Make Install" and "Build Android APK".
@@ -64,7 +64,7 @@ Headers are located in the folder [Path_to_solvespace]/include/
 mkdir build-unix
 cd build-unix
 cmake ..
-make
+make -DCMAKE_CXX_FLAGS=-std=c++11
 ```
 Libs will be located in [Path_to_solvespace]/build-unix/src
 

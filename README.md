@@ -63,8 +63,8 @@ Headers are located in the folder [Path_to_solvespace]/include/
 ```bash
 mkdir build-unix
 cd build-unix
-cmake ..
-make -DCMAKE_CXX_FLAGS=-std=c++11
+cmake .. -DCMAKE_CXX_FLAGS=-std=c++11
+make 
 ```
 Libs will be located in [Path_to_solvespace]/build-unix/src
 

@@ -31,7 +31,8 @@ make install
 Headers and libs will be copied in the path [Path_to_Assimp_Folder]/build-unix/install 
 #### Android systems
 
-If you haven't done yet, download and install Android NDK 13d. We will refer to NDK folder as ANDROID_NDK_FOLDER. 
+If you haven't done yet, download and install Android NDK 13d or later. We will refer to NDK folder as ANDROID_NDK_FOLDER.
+If using CMake 3.7+ change the android.chaintool.cmake according to [here](https://github.com/a252539783/aosp-platform-ndk/blob/e14807b36bca5a3348cbd6211a62d527276fe82a/build/cmake/android.toolchain.cmake).
 
 ```bash
 mkdir build-android
@@ -69,8 +70,9 @@ make
 Libs will be located in [Path_to_solvespace]/build-unix/src
 
 #### Andorid systems 
-If you haven't done yet, download and install Android NDK 13d. We will refer to NDK folder as ANDROID_NDK_FOLDER. 
 
+If you haven't done yet, download and install Android NDK 13d or later. We will refer to NDK folder as ANDROID_NDK_FOLDER.
+If using CMake 3.7+ change the android.chaintool.cmake according to [here](https://github.com/a252539783/aosp-platform-ndk/blob/e14807b36bca5a3348cbd6211a62d527276fe82a/build/cmake/android.toolchain.cmake).
 ```bash
 mkdir build-android
 cd build-android

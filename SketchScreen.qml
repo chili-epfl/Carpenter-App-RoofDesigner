@@ -11,11 +11,13 @@ Page {
         id: json_sketch
     }
 
-    property string sketch_folder: "/Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/Carpenter-App-RoofDesigner/"
-    property string sketch_file: "jsontest"
+    property string sketch_to_load
 
     Component.onCompleted: {
-        console.log(json_sketch.loadSketch(sketch_folder + sketch_file, sketch))
+        if(sketch_to_load.length>0){
+            console.log(json_sketch.loadSketch(Settings.exportPath + sketch_to_load+ ".json", sketch))
+            top_menu_bar.sketch_name=sketch_to_load;
+        }
     }
 
     property alias aux_loader: aux_loader
@@ -36,6 +38,7 @@ Page {
     property alias sketch: sketch
 
     header: TopMenuBar{
+        id:top_menu_bar
         height: Screen.pixelDensity*5*scalePixelFactor
         visible: aux_loader.status!=Loader.Ready
     }

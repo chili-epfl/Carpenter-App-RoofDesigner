@@ -26,7 +26,7 @@ private:
     QMap<int, QVector2D> lines;
     QString read(const QJsonObject json, QObject* sketch);
     void generateSketch(QObject* sketch);
-    QString write(QJsonObject &json, QObject* sketch);
+    bool write(QJsonObject &json, QObject* sketch);
     int incrementPointsId();
     int incrementLinesId();
 };

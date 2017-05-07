@@ -36,6 +36,12 @@ QString JSONSketch::read(const QJsonObject json, QObject* sketch)
 {
     qDebug()<<json;
 
+    int json_sketch_width=json["sketch_width"].toInt();
+    int json_sketch_height=json["sketch_height"].toInt();
+
+    qreal scale_w=(qreal)sketch->property("width").toInt()/json_sketch_width;
+    qreal scale_h=(qreal)sketch->property("height").toInt()/json_sketch_height;
+
     QJsonArray qPid = json["pid"].toArray();
     QJsonArray qLid = json["lid"].toArray();
     QJsonObject qPoints = json["points"].toObject();
@@ -63,7 +69,7 @@ QString JSONSketch::read(const QJsonObject json, QObject* sketch)
         if (currPoint.size() != 2){
             return "corrupted point with id: " + QString::number(intPid);
         }
-        points.insert(intPid, QVector2D(currPoint[0].toInt(), currPoint[1].toInt()));
+        points.insert(intPid, QVector2D(currPoint[0].toInt()*scale_w, currPoint[1].toInt()*scale_h));
     }
 
 
@@ -127,23 +133,26 @@ void JSONSketch::generateSketch(QObject* sketch) {
 }
 
 QString JSONSketch::exportJSONSketch(const QString url, QObject* sketch) {
+
+    QJsonObject object;
+    if(!write(object, sketch)){
+        return "Empty skecth";
+    }
+
     QFile file(url);
 
     if (!file.open(QIODevice::WriteOnly)) {
         return "cannot open the JSON file";
     }
 
-    QJsonObject object;
-    write(object, sketch);
     QJsonDocument doc(object);
     file.write(doc.toJson());
-
     file.close();
 
     return "true";
 }
 
-QString JSONSketch::write(QJsonObject &json, QObject* sketch)
+bool JSONSketch::write(QJsonObject &json, QObject* sketch)
 {
     nextPointId = 0;
     nextLineId = 0;
@@ -186,6 +195,9 @@ QString JSONSketch::write(QJsonObject &json, QObject* sketch)
         }
     }
 
+    json["sketch_width"] = sketch->property("width").toInt();
+    json["sketch_height"] = sketch->property("height").toInt();
+
     json["pid"] = qPid;
     json["points"] = qPoints;
 
@@ -195,7 +207,8 @@ QString JSONSketch::write(QJsonObject &json, QObject* sketch)
     json["nb_points"] = nb_points;
     json["nb_lines"] = nb_lines;
 
-    return "true";
+    if(nb_points>0) return true;
+    else return false;
 }
 
 int JSONSketch::addPoint(int x, int y) {

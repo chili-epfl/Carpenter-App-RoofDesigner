@@ -10,6 +10,23 @@ import SketchStaticsExporter 1.0
 
 ToolBar {
     id: menuBar
+    property alias sketch_name:title_field.text
+    TextField{
+        id:title_field
+        background: Rectangle{color: "transparent"}
+        anchors.left: parent.left
+        anchors.topMargin: 5
+        anchors.bottomMargin: 5
+        anchors.leftMargin: 15
+        anchors.top:parent.top
+        anchors.bottom: parent.bottom
+        placeholderText: "Title: "+ default_title
+        property string default_title
+        Component.onCompleted: {
+            var date=new Date()
+            default_title= date.toLocaleString(Qt.locale("en_GB"),"dd-MMM-yy_hh-mm")
+        }
+    }
     Row{
         anchors.centerIn: parent
         spacing: 10
@@ -22,6 +39,9 @@ ToolBar {
                 anchors.fill: parent
                 onClicked: {
                     //Add code to save
+                    title_field.text.trim().length>0 ?
+                                json_sketch.exportJSONSketch(title_field.text.trim()+".json",sketch):
+                                json_sketch.exportJSONSketch(title_field.default_title+".json",sketch)
                     stack_view.pop()
                 }
             }

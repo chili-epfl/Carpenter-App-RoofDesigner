@@ -2,8 +2,9 @@ import QtQuick 2.0
 import QtQuick.Window 2.0
 Rectangle {
 
-    width: Screen.pixelDensity*5
-    height: Screen.pixelDensity*5
+    width: parent.class_type ? Screen.pixelDensity*5 : 10
+    height: width
+
     radius: width/2
     color: "red"
     z:1
@@ -78,6 +79,7 @@ Rectangle {
         onPressed: {current_tool.onPressed(parent,mouse);}
         onReleased: {current_tool.onReleased(parent,mouse);}
         onClicked: {current_tool.onClicked(parent,mouse);}
+        enabled: parent.class_type
     }
 
     PointContextMenu{

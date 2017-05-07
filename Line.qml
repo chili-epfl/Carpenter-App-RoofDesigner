@@ -21,6 +21,7 @@ Rectangle {
         onUndo: undo()
         onRedo: redo()
     }
+
     function undo(){
         if(undo_buffer.length>0){
             redo_buffer.push(undo_buffer.pop())
@@ -94,7 +95,7 @@ Rectangle {
     antialiasing: true
     color:"grey"
 
-    height: Screen.pixelDensity*2
+    height: parent.class_type ? Screen.pixelDensity*2 : 3
     width: p1 && p2? Math.sqrt(Math.pow((p1.x-p2.x),2)+Math.pow((p1.y-p2.y),2)) :0
 
     MouseArea{
@@ -104,6 +105,7 @@ Rectangle {
         onPressed: {current_tool.onPressed(parent,mouse);}
         onReleased: {current_tool.onReleased(parent,mouse);}
         onClicked: {current_tool.onClicked(parent,mouse);}
+        enabled: parent.class_type
     }
 
     LineContextMenu{

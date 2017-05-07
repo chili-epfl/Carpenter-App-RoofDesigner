@@ -54,7 +54,12 @@ Page {
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
         source: background_picture_url
-        transform: sketch.transform
+        transform:  Scale{
+            origin.x:sketch.zoom_origin_x
+            origin.y:sketch.zoom_origin_y
+            xScale: sketch.zoomFactor
+            yScale: sketch.zoomFactor
+        }
 
     }
 
@@ -64,7 +69,12 @@ Page {
         fillMode: Image.Tile
         opacity: 0.42
         source: "pictures/background_grid.png"
-        transform: sketch.transform
+        transform:  Scale{
+            origin.x:sketch.zoom_origin_x
+            origin.y:sketch.zoom_origin_y
+            xScale: sketch.zoomFactor
+            yScale: sketch.zoomFactor
+        }
         mipmap: true
     }
 
@@ -84,9 +94,10 @@ Page {
 
     ConstraintsPanel {
         id: constraintsPanel
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
-        anchors.margins: 10
+        x:parent.width-(width+10)
+        y:parent.height/2-height/2
+        height: parent.height-10
+        width: Screen.pixelDensity*50
     }
 
     Loader{

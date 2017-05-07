@@ -1,15 +1,52 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.4
-
+import QtQuick.Controls 2.1
+import QtQuick.Window 2.0
+import QtQuick.Layouts 1.1
 Rectangle {
     id: constraintsPanel
-    height: 30 + listRect.height +
-            constraintButtons.visibleChildren.length * horz_const.height
-    width: 300
     color: "#999999"
-    anchors.margins: 10
 
+    Drag.active: drag_area.drag.active
+
+    Rectangle{
+        color: "white"
+        border.color: "black"
+        border.width: 2
+        Text {
+            anchors.fill: parent
+            text: "\uf047"
+            font.family: "FontAwesome"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+        anchors.verticalCenter: parent.verticalCenter
+        width: Screen.pixelDensity*5
+        height: width
+        anchors.right: parent.left
+        radius: width/2
+        MouseArea{
+            id:drag_area
+            anchors.fill: parent
+            drag.target: constraintsPanel
+            drag.onActiveChanged: {
+                if(!drag.active){
+                    var x_anchor=constraintsPanel.x
+                    var y_anchor=constraintsPanel.y+0.5*constraintsPanel.height
+                    if(x_anchor<Screen.pixelDensity*10 ||
+                            x_anchor>constraintsPanel.parent.width-Screen.pixelDensity*10 ||
+                            y_anchor<Screen.pixelDensity*10 ||
+                            y_anchor>constraintsPanel.parent.height-Screen.pixelDensity*10
+                            ){
+                        constraintsPanel.x=constraintsPanel.parent.width
+                        constraintsPanel.y=constraintsPanel.parent.height/2-constraintsPanel.height/2
+                    }
+                }
+
+            }
+        }
+    }
     property ListModel listEntities: listEntities
+
     property alias horz_const: horz_const
     property alias vert_const: vert_const
     property alias leng_const: leng_const
@@ -19,208 +56,258 @@ Rectangle {
     property alias perp_const: perp_const
     property alias angl_const: angl_const
     property alias midP_const: midP_const
-    property alias no_const: no_const
 
-    Rectangle {
-        id: listRect
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.margins: 10
-        color: "white"
-        border.width: 1
-        height: (listEntities.count + 1) * 20
-        width: parent.width - 20
-        ListView {
-            anchors.fill: parent
-            anchors.margins: 10
-            model: ListModel{
-                id: listEntities
+    ColumnLayout{
+        anchors.fill: parent
+        anchors.margins: 5
+        Rectangle {
+            id: listRect
+            color: "white"
+            border.width: 1
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.maximumHeight: parent.height/2
+            Layout.minimumHeight: Screen.pixelDensity*5
+            ListView {
+                anchors.fill: parent
+                clip: true
+                model: ListModel{
+                    id: listEntities
+                }
+                delegate: Text {
+                    width: listRect.width
+                    height: Screen.pixelDensity*5
+                    text: "" + object
+                    fontSizeMode: Text.Fit
+                    minimumPixelSize: 10;
+                }
             }
-            delegate: Text {
-                text: "" + object
+        }
+        GridLayout{
+            id: constraintButtons
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: Screen.pixelDensity*5*2
+            Layout.maximumHeight: parent.width
+            columns: 3
+            Item{
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Button {
+                    id: horz_const
+                    anchors.centerIn: parent
+                    width: height
+                    height: Math.min(parent.width,parent.height)
+                    text: "\u2015"
+                    checkable: true
+                    checked: false
+                    enabled: false
+                    onEnabledChanged: this.checked = false
+                }
+            }
+            Item{
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Button {
+                    id: vert_const
+                    text: "\u007C"
+                    anchors.centerIn: parent
+                    width: height
+                    height: Math.min(parent.width,parent.height)
+                    checkable: true
+                    checked: false
+                    enabled: false
+                    onEnabledChanged: this.checked = false
+                }
+            }
+            Item{
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Button {
+                    id: equL_const
+                    text: "\uFF1D"
+                    anchors.centerIn: parent
+                    width: height
+                    height: Math.min(parent.width,parent.height)
+                    checkable: true
+                    checked: false
+                    enabled: false
+                    onEnabledChanged: this.checked = false
+                }
+
+            }
+            Item{
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Button {
+                     id: para_const
+                     text: "\u2225"
+                     anchors.centerIn: parent
+                     width: height
+                     height: Math.min(parent.width,parent.height)
+                     checkable: true
+                     checked: false
+                     enabled: false
+                     onEnabledChanged: this.checked = false
+                 }
+
+            }
+            Item{
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Button {
+                    id: perp_const
+                    text: "\u27C2"
+                    anchors.centerIn: parent
+                    width: height
+                    height: Math.min(parent.width,parent.height)
+                    checkable: true
+                    checked: false
+                    enabled: false
+                    onEnabledChanged: this.checked = false
+                }
+
+            }
+            Item{
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Button {
+                    id: midP_const
+                    text: "\u237F"
+                    anchors.centerIn: parent
+                    width: height
+                    height: Math.min(parent.width,parent.height)
+                    checkable: true
+                    checked: false
+                    enabled: false
+                    onEnabledChanged: this.checked = false
+                }
+
             }
         }
-    }
-
-    Column {
-        id: constraintButtons
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 10
-
-        Button {
-            id: horz_const
-            text: "Horizonally constrained"
-            checkable: true
-            checked: false
-            visible: false
-            onVisibleChanged: this.checked = false
-        }
-        Button {
-            id: vert_const
-            text: "Vertically constrained"
-            checkable: true
-            checked: false
-            visible: false
-            onVisibleChanged: this.checked = false
-        }
-        Label {
+        Item {
             id: leng_const
             property bool checked: leng_const_button.checked
             property double value: leng_const_value.text
-            width: parent.width
-            height: leng_const_button.height
-            visible: false
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: Screen.pixelDensity*5
+            Layout.maximumHeight: Screen.pixelDensity*10
+            enabled: false
             Button {
                 id: leng_const_button
-                text: "Length constrained"
+                text: "Length:"
+                height: parent.height
                 checkable: true
                 checked: false
-                visible: parent.visible
-                onVisibleChanged: this.checked = false
+                enabled: parent.enabled
+                onEnabledChanged: this.checked = false
             }
             TextField {
                 id: leng_const_value
+                height: parent.height
                 anchors.left: leng_const_button.right
                 anchors.right: parent.right
-                enabled: true
                 validator: RegExpValidator {
                     regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
                 }
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 placeholderText: "Length"
-                width: implicitWidth
-                font.pointSize: 14
                 text: "5.0"
                 horizontalAlignment: TextInput.AlignRight
-                visible: parent.visible
-                onVisibleChanged: text = "5.0"
+                enabled: parent.enabled
+                onEnabledChanged: text = "5.0"
             }
         }
-        Button {
-            id: equL_const
-            text: "Equal length constrained"
-            checkable: true
-            checked: false
-            visible: false
-            onVisibleChanged: this.checked = false
-        }
-        Label {
+        Item {
             id: dist_const
             property bool checked: dist_const_button.checked
             property double value: dist_const_value.text
-            width: parent.width
-            height: dist_const_button.height
-            visible: false
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: Screen.pixelDensity*5
+            Layout.maximumHeight: Screen.pixelDensity*10
+            enabled: false
             Button {
                 id: dist_const_button
-                text: "Distance constrained"
+                height: parent.height
+                text: "Distance"
                 checkable: true
                 checked: false
-                visible: parent.visible
-                onVisibleChanged: this.checked = false
+                enabled: parent.enabled
+                onEnabledChanged: this.checked = false
             }
             TextField {
                 id: dist_const_value
                 anchors.left: dist_const_button.right
                 anchors.right: parent.right
-                enabled: true
+                height: parent.height
                 validator: RegExpValidator {
                     regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
                 }
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 placeholderText: "Distance"
-                width: implicitWidth
-                font.pointSize: 14
                 text: "5.0"
                 horizontalAlignment: TextInput.AlignRight
-                visible: parent.visible
-                onVisibleChanged: text = "5.0"
+                enabled: parent.enabled
+                onEnabledChanged: text = "5.0"
             }
         }
-        Button {
-            id: para_const
-            text: "Parallel constrained"
-            checkable: true
-            checked: false
-            visible: false
-            onVisibleChanged: this.checked = false
-        }
-        Button {
-            id: perp_const
-            text: "Perpendicular constrained"
-            checkable: true
-            checked: false
-            visible: false
-            onVisibleChanged: this.checked = false
-        }
-        Label {
+        Item {
             id: angl_const
             property bool checked: angl_const_button.checked
             property double value: angl_const_value.text
-            width: parent.width
-            height: angl_const_button.height
-            visible: false
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: Screen.pixelDensity*5
+            Layout.maximumHeight: Screen.pixelDensity*10
+            enabled: false
             Button {
                 id: angl_const_button
-                text: "Angle constrained"
+                text: "Angle"
                 checkable: true
+                height: parent.height
                 checked: false
-                visible: parent.visible
-                onVisibleChanged: this.checked = false
+                enabled: parent.enabled
+                onEnabledChanged: this.checked = false
             }
             TextField {
                 id: angl_const_value
                 anchors.left: angl_const_button.right
                 anchors.right: parent.right
-                enabled: true
+                height: parent.height
                 validator: RegExpValidator {
                     regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
                 }
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 placeholderText: "Distance"
-                width: implicitWidth
-                font.pointSize: 14
                 text: "5.0"
                 horizontalAlignment: TextInput.AlignRight
-                visible: parent.visible
-                onVisibleChanged: text = "90"
+                enabled: parent.enabled
+                onEnabledChanged: text = "90"
             }
-        }
-        Button {
-            id: midP_const
-            text: "Mid point constrained"
-            checkable: true
-            checked: false
-            visible: false
-            onVisibleChanged: this.checked = false
         }
         Button {
             id: validate
             text: "Validate constraints"
-            anchors.right: parent.right
-            visible: !no_const.visible
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: Screen.pixelDensity*5
+            Layout.maximumHeight: Screen.pixelDensity*10
             onClicked: {
                 sketch.constraints.add()
                 listEntities.clear()
-                horz_const.visible = false
-                vert_const.visible = false
-                leng_const.visible = false
-                equL_const.visible = false
-                dist_const.visible = false
-                para_const.visible = false
-                perp_const.visible = false
-                angl_const.visible = false
-                midP_const.visible = false
-                no_const.visible = true
+                horz_const.enabled = false
+                vert_const.enabled = false
+                leng_const.enabled = false
+                equL_const.enabled = false
+                dist_const.enabled = false
+                para_const.enabled = false
+                perp_const.enabled = false
+                angl_const.enabled = false
+                midP_const.enabled = false
             }
         }
-
-        Text {
-            id: no_const
-            text: "No constrains available"
-            visible: true
-        }
     }
+
 }

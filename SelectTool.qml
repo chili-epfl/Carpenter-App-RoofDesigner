@@ -43,6 +43,9 @@ Item{
                 constraintsPanel.listEntities.append(data)
             }
             constraintsVisibility()
+        }else{
+//            constraintsPanel.listEntities.clear()
+//            constraintsVisibility()
         }
     }
 
@@ -62,60 +65,56 @@ Item{
             }
         }
         if (pointCount == 0 && lineCount > 0){
-            constraintsPanel.horz_const.visible = true
-            constraintsPanel.vert_const.visible = true
-            constraintsPanel.leng_const.visible = true
-            constraintsPanel.dist_const.visible = false
+            constraintsPanel.horz_const.enabled = true
+            constraintsPanel.vert_const.enabled = true
+            constraintsPanel.leng_const.enabled = true
+            constraintsPanel.dist_const.enabled = false
             if (lineCount > 1) {
-                constraintsPanel.equL_const.visible = true
-                constraintsPanel.para_const.visible = true
+                constraintsPanel.equL_const.enabled = true
+                constraintsPanel.para_const.enabled = true
                 if (lineCount == 2){
-                    constraintsPanel.perp_const.visible = true
-                    constraintsPanel.angl_const.visible = true
+                    constraintsPanel.perp_const.enabled = true
+                    constraintsPanel.angl_const.enabled = true
                 } else {
-                    constraintsPanel.perp_const.visible = false
-                    constraintsPanel.angl_const.visible = false
+                    constraintsPanel.perp_const.enabled = false
+                    constraintsPanel.angl_const.enabled = false
                 }
             } else {
-                constraintsPanel.equL_const.visible = false
-                constraintsPanel.para_const.visible = false
-                constraintsPanel.perp_const.visible = false
-                constraintsPanel.angl_const.visible = false
+                constraintsPanel.equL_const.enabled = false
+                constraintsPanel.para_const.enabled = false
+                constraintsPanel.perp_const.enabled = false
+                constraintsPanel.angl_const.enabled = false
             }
-            constraintsPanel.midP_const.visible = false
-            constraintsPanel.no_const.visible = false
+            constraintsPanel.midP_const.enabled = false
         } else if (pointCount == 1 && lineCount == 1){
-            constraintsPanel.horz_const.visible = false
-            constraintsPanel.vert_const.visible = false
-            constraintsPanel.leng_const.visible = false
-            constraintsPanel.equL_const.visible = false
-            constraintsPanel.dist_const.visible = false
-            constraintsPanel.para_const.visible = false
-            constraintsPanel.perp_const.visible = false
-            constraintsPanel.angl_const.visible = false
-            constraintsPanel.midP_const.visible = true
-            constraintsPanel.no_const.visible = false
+            constraintsPanel.horz_const.enabled = false
+            constraintsPanel.vert_const.enabled = false
+            constraintsPanel.leng_const.enabled = false
+            constraintsPanel.equL_const.enabled = false
+            constraintsPanel.dist_const.enabled = false
+            constraintsPanel.para_const.enabled = false
+            constraintsPanel.perp_const.enabled = false
+            constraintsPanel.angl_const.enabled = false
+            constraintsPanel.midP_const.enabled = true
         }  else if (pointCount == 2 && lineCount == 0){
-            constraintsPanel.horz_const.visible = false
-            constraintsPanel.vert_const.visible = false
-            constraintsPanel.leng_const.visible = false
-            constraintsPanel.equL_const.visible = false
-            constraintsPanel.dist_const.visible = true
-            constraintsPanel.para_const.visible = false
-            constraintsPanel.perp_const.visible = false
-            constraintsPanel.angl_const.visible = false
-            constraintsPanel.no_const.visible = false
+            constraintsPanel.horz_const.enabled = false
+            constraintsPanel.vert_const.enabled = false
+            constraintsPanel.leng_const.enabled = false
+            constraintsPanel.equL_const.enabled = false
+            constraintsPanel.dist_const.enabled = true
+            constraintsPanel.para_const.enabled = false
+            constraintsPanel.perp_const.enabled = false
+            constraintsPanel.angl_const.enabled = false
         } else {
-            constraintsPanel.horz_const.visible = false
-            constraintsPanel.vert_const.visible = false
-            constraintsPanel.leng_const.visible = false
-            constraintsPanel.equL_const.visible = false
-            constraintsPanel.dist_const.visible = false
-            constraintsPanel.para_const.visible = false
-            constraintsPanel.perp_const.visible = false
-            constraintsPanel.angl_const.visible = false
-            constraintsPanel.midP_const.visible = false
-            constraintsPanel.no_const.visible = true
+            constraintsPanel.horz_const.enabled = false
+            constraintsPanel.vert_const.enabled = false
+            constraintsPanel.leng_const.enabled = false
+            constraintsPanel.equL_const.enabled = false
+            constraintsPanel.dist_const.enabled = false
+            constraintsPanel.para_const.enabled = false
+            constraintsPanel.perp_const.enabled = false
+            constraintsPanel.angl_const.enabled = false
+            constraintsPanel.midP_const.enabled = false
         }
     }
 }

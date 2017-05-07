@@ -1,6 +1,6 @@
 import QtQuick 2.7
 
-QtObject{
+Item{
     property var current_target:undefined;
 
     function onPressed(target,mouse){

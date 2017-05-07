@@ -1,6 +1,6 @@
 import QtQuick 2.0
 
-QtObject{
+Item{
     property var point_component
     property var line_component
 

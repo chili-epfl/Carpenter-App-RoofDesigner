@@ -1,5 +1,4 @@
 #include "constraints.h"
-#include <slvs.h>
 #include <iostream>
 #include <QMap>
 #include <QString>
@@ -10,7 +9,6 @@
 #include <QAbstractListModel>
 #include <QDebug>
 
-static Slvs_System sys;
 
 void *Constraints::CheckMalloc(size_t n) {
     void *r = malloc(n);
@@ -199,6 +197,7 @@ void Constraints::compute2d(QObject* sketch) {
     QMap<int, QObject*> entityObjects;
 
     Slvs_hGroup g;
+
     int paramId = 1;
     const int entityOriginId = 1;
     const int entityQuaternionId = 2;
@@ -362,19 +361,36 @@ int Constraints::getP2Id(QObject* line) {
 void Constraints::apply(QObject* sketch)
 {
     std::cout << "Constraints start" << std::endl;
-
-    sys.param      = (Slvs_Param*)CheckMalloc(50*sizeof(sys.param[0]));
-    sys.entity     = (Slvs_Entity*)CheckMalloc(50*sizeof(sys.entity[0]));
-    sys.constraint = (Slvs_Constraint*)CheckMalloc(50*sizeof(sys.constraint[0]));
-
-    sys.failed  = (Slvs_hConstraint*)CheckMalloc(50*sizeof(sys.failed[0]));
-    sys.faileds = 50;
-
-    for(;;) {
-        sketch == nullptr ? Example2d(): compute2d(sketch);
-        sys.params = sys.constraints = sys.entities = 0;
-        break;
+    int estimated_memory_need=sketch->children().length()*3;
+    if(m_allocated_memory<estimated_memory_need){
+        m_allocated_memory=estimated_memory_need*3;
+        sys.param      = (Slvs_Param*)CheckMalloc(m_allocated_memory*sizeof(sys.param[0]));
+        sys.entity     = (Slvs_Entity*)CheckMalloc(m_allocated_memory*sizeof(sys.entity[0]));
+        sys.constraint = (Slvs_Constraint*)CheckMalloc(m_allocated_memory*sizeof(sys.constraint[0]));
+        sys.failed  = (Slvs_hConstraint*)CheckMalloc(m_allocated_memory*sizeof(sys.failed[0]));
     }
 
+    sys.faileds = m_allocated_memory;
+    sys.dragged[0]=sys.dragged[1]=sys.dragged[2]=sys.dragged[3]=0;
+    sys.params = sys.constraints = sys.entities = 0;
+
+    sketch == nullptr ? Example2d(): compute2d(sketch);
+
     std::cout << "Constraints end" << std::endl;
+}
+
+Constraints::Constraints(QObject *parent):
+    QObject(parent)
+{
+    m_allocated_memory=0;
+}
+
+Constraints::~Constraints()
+{
+    if(m_allocated_memory>0){
+        free(sys.param);
+        free(sys.entity);
+        free(sys.constraint);
+        free(sys.failed);
+    }
 }

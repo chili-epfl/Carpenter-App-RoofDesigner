@@ -9,6 +9,23 @@ QtObject{
         point_component = Qt.createComponent("Point.qml");
     }
 
+    property var unfinished_p1: undefined
+    property var unfinished_p2: undefined
+    property var unfinished_line: undefined
+
+    function abort(){
+        if(unfinished_p1!==undefined)
+            unfinished_p1.destroy()
+        if(unfinished_p2!==undefined)
+            unfinished_p2.destroy()
+        if(unfinished_line!==undefined)
+            unfinished_line.destroy()
+
+        unfinished_p1= undefined
+        unfinished_p2= undefined
+        unfinished_line= undefined
+
+    }
 
     function onPressed(target,mouse){
         var p1;
@@ -16,6 +33,7 @@ QtObject{
             p1=point_component.createObject(sketch)
             p1.x=mouse.x-p1.width/2
             p1.y=mouse.y-p1.width/2
+            unfinished_p1=p1
         }
         else if(target.class_type=="Point"){
             p1=target
@@ -28,6 +46,9 @@ QtObject{
         var line=line_component.createObject(sketch)
         line.p1=p1
         line.p2=p2
+        unfinished_p2=p2
+        unfinished_line=line
+
     }
 
     function onReleased(target,mouse){
@@ -42,6 +63,9 @@ QtObject{
         }
         target.mouse_area.drag.target=undefined;
         sketch.store_state(sketch.undo_buffer.length+1);
+        unfinished_p1= undefined
+        unfinished_p2= undefined
+        unfinished_line= undefined
     }
 
     function onClicked(target,mouse){

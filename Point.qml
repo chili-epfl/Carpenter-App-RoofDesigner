@@ -2,10 +2,11 @@ import QtQuick 2.0
 import QtQuick.Window 2.0
 Rectangle {
 
-    width: parent.class_type ? Screen.pixelDensity*5 : 10
+    width: parent.class_type ? Screen.pixelDensity*5*1/(parent.zoomFactor) : 10
     height: width
+    radius: 0.5*width
+    antialiasing: true
 
-    radius: width/2
     color: "red"
     z:1
     visible: existing
@@ -79,6 +80,7 @@ Rectangle {
         onPressed: {current_tool.onPressed(parent,mouse);}
         onReleased: {current_tool.onReleased(parent,mouse);}
         onClicked: {current_tool.onClicked(parent,mouse);}
+        onCanceled: {current_tool.abort();}
         enabled: parent.class_type
     }
 

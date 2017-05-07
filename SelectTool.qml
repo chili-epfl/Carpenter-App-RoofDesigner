@@ -1,10 +1,13 @@
 import QtQuick 2.7
 
 QtObject{
+    property var current_target:undefined;
+
     function onPressed(target,mouse){
         if(target.class_type=="Sketch" ){
             target.pinch_area.pinch.target=target
             target.mouse_area.drag.target=target
+            current_target=target;
         }
     }
 
@@ -12,7 +15,16 @@ QtObject{
         if(target.class_type=="Sketch" ){
             target.pinch_area.pinch.target=undefined
             target.mouse_area.drag.target=undefined
+            current_target=undefined;
         }
+    }
+
+    function abort(){
+        if(current_target!==undefined){
+            current_target.pinch_area.pinch.target=undefined
+            current_target.mouse_area.drag.target=undefined
+        }
+        current_target=undefined
     }
 
     function onClicked(target,mouse){

@@ -13,11 +13,10 @@ ToolBar {
         "km"
     ]
 
-    property real scaleFactor: sketch.scaleFactor*sketch.scale
+    property real scaleFactor: sketch.scaleFactor
 
     property real ruler_length : 1
     property int  ruler_order: 0
-
 
     onScaleFactorChanged: {
         var ratio=scaleFactor/Screen.pixelDensity
@@ -36,7 +35,7 @@ ToolBar {
     }
 
     Rectangle{
-        width: ruler_length
+        width: sketch.zoomFactor*ruler_length
         height: Screen.pixelDensity
         color: "black"
         anchors.right: parent.right

@@ -54,7 +54,8 @@ Page {
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
         source: background_picture_url
-        scale: Math.max(1,sketch.scale)
+        transform: sketch.transform
+
     }
 
     Image {
@@ -63,12 +64,14 @@ Page {
         fillMode: Image.Tile
         opacity: 0.42
         source: "pictures/background_grid.png"
+        transform: sketch.transform
+        mipmap: true
     }
 
     Sketch{
         id:sketch
-        mouse_area.enabled: Qt.platform.os=="android"? current_tool!==select_tool : true
-        pinch_area.enabled: Qt.platform.os=="android" ? current_tool===select_tool : false
+//        mouse_area.enabled: Qt.platform.os=="android"? current_tool!==select_tool : true
+//        pinch_area.enabled: Qt.platform.os=="android" ? current_tool===select_tool : false
 
     }
 

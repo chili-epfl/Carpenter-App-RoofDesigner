@@ -3,14 +3,22 @@ import QtQuick.Window 2.0
 import Constraints 1.0
 
 Item {
-    width: 10000
-    height: 10000
+
     anchors.fill:parent
-    x:-(width-parent.width)/2
-    y:-(height-parent.height)/2
 
     property real scaleFactor: Screen.pixelDensity
 
+    property real zoomFactor: 1
+    property int zoom_origin_x: width/2
+    property int zoom_origin_y: height/2
+
+    transformOrigin: Item.TopLeft
+    transform: Scale{
+        origin.x:zoom_origin_x
+        origin.y:zoom_origin_y
+        xScale: zoomFactor
+        yScale: zoomFactor
+    }
     property alias mouse_area: mouse_area
     property alias pinch_area: pinch_area
 
@@ -50,35 +58,57 @@ Item {
         redo_buffer=[]
     }
 
-    MouseArea{
-        id:mouse_area
-        enabled: !pinch_area.pinch.active
-        anchors.fill: parent
-        drag.smoothed: false
-        scrollGestureEnabled:false
-        onPressed: {
-            current_tool.onPressed(parent,mouse);
-        }
-        onReleased: {current_tool.onReleased(parent,mouse);}
-        onClicked: {current_tool.onClicked(parent,mouse);}
-        onWheel: {
-            parent.x=wheel.x-parent.width/2
-            if(wheel.angleDelta.y>0)
-                parent.scale=Math.max(0.25, parent.scale*(1.25*wheel.angleDelta.y/120))
-            else if(wheel.angleDelta.y<0)
-                parent.scale=Math.max(0.25, -parent.scale*(0.75*wheel.angleDelta.y/120))
-        }
-    }
     PinchArea{
         id:pinch_area
         anchors.fill: parent
-        enabled: false
         onPinchUpdated: {
-            if(pinch.scale>0)
-                ( parent.scale=Math.max(0.25, parent.scale*(pinch.scale/pinch.previousScale) ) )
+            if(pinch.scale>0){
+                var new_scale=Math.max(1, parent.zoomFactor*(pinch.scale/pinch.previousScale));
+                new_scale=Math.min(3, new_scale);
+                parent.zoomFactor=new_scale;
+                parent.zoom_origin_x=pinch.startCenter.x
+                parent.zoom_origin_y=pinch.startCenter.y
+            }
+        }
+
+        MouseArea{
+            id:mouse_area
+            anchors.fill: parent
+            drag.smoothed: false
+            scrollGestureEnabled:false
+            hoverEnabled:  Qt.platform.os!="android"
+            enabled: true
+            onPressed: {
+                current_tool.onPressed(parent.parent,mouse);
+            }
+            onReleased: {
+                current_tool.onReleased(parent.parent,mouse);
+            }
+            onClicked: {
+                current_tool.onClicked(parent.parent,mouse)
+            }
+            onCanceled: current_tool.abort()
+            onWheel: {
+                parent.parent.x=wheel.x-parent.parent.width/2
+                var new_scale
+                if(wheel.angleDelta.y>0){
+                   new_scale=Math.max(1, parent.parent.zoomFactor*(1.25*wheel.angleDelta.y/120))
+                   new_scale=Math.min(3, new_scale);
+                   parent.parent.zoomFactor=new_scale
+                   parent.parent.zoom_origin_x=mouse_area.mouseX
+                   parent.parent.zoom_origin_y=mouse_area.mouseY
+
+                }
+                else if(wheel.angleDelta.y<0){
+                    new_scale=Math.max(1, -parent.parent.zoomFactor*(0.75*wheel.angleDelta.y/120))
+                    new_scale=Math.min(3, new_scale);
+                    parent.parent.zoomFactor=new_scale
+                    parent.parent.zoom_origin_x=mouse_area.mouseX
+                    parent.parent.zoom_origin_y=mouse_area.mouseY
+                }
+            }
         }
     }
-
 
 
     Constraints {

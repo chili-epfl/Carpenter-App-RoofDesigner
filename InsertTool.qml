@@ -54,8 +54,9 @@ Item{
     function onReleased(target,mouse){
         var p2=target.mouse_area.drag.target
         for(var i=0;i<sketch.children.length;i++){
-            if(p2!==sketch.children[i] && sketch.children[i].class_type=="Point"
-                    && Math.abs((p2.x-sketch.children[i].x))<10 &&
+            if(p2!==sketch.children[i] && sketch.children[i].class_type=="Point"                     
+                    && sketch.children[i].existing &&
+                    Math.abs((p2.x-sketch.children[i].x))<10 &&
                        Math.abs((p2.y-sketch.children[i].y))<10){
                 p2.replaceMe(sketch.children[i])
                 break;

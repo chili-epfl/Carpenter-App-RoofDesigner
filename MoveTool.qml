@@ -38,7 +38,7 @@ Item{
                     p.replaceMe(sketch.children[i])
                     break;
                 }else if(sketch.children[i].class_type=="Line" &&
-                         sketch.children[i].existing
+                         sketch.children[i].visible
                          ){
                     if(target!==sketch.children[i].p1 &&
                             target!==sketch.children[i].p2)
@@ -133,7 +133,7 @@ Item{
         id:apply_constraint_timer
         interval: 100
         running: false
-        onTriggered: sketch.constraints.solve();
+        onTriggered: sketch.constraints.apply(sketch);
     }
 
     function checkIntersection(point, e1, e2){

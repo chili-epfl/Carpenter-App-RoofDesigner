@@ -28,8 +28,11 @@ Item{
     }
 
     function onClicked(target,mouse){
-        if(target.class_type=="Point" || target.class_type=="Line"){
+        if(target.class_type=="Point") {
             target.showContextMenu(mouse.x,mouse.y)
+        }
+
+        if(target.class_type=="Point" || target.class_type=="Line"){
             var data = {"object": target}
             var removed = false
             for(var i = 0; i < constraintsPanel.listEntities.count; i++){

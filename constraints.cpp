@@ -151,12 +151,12 @@ void Constraints::compute2d(QObject* sketch) {
             if (entity.type == SLVS_E_POINT_IN_2D){
                 entityObjects[i]->setProperty("x", sys.param[sys.entity[i].param[0] - 1].val);
                 entityObjects[i]->setProperty("y", sys.param[sys.entity[i].param[1] - 1].val);
-                std::cout << "P " << sys.entity[i].h << " = (" << sys.param[sys.entity[i].param[0] - 1].val
-                        << ", " << sys.param[sys.entity[i].param[1] - 1].val << ")" << std::endl;
+                qDebug() << "P " << sys.entity[i].h << " = (" << sys.param[sys.entity[i].param[0] - 1].val
+                        << ", " << sys.param[sys.entity[i].param[1] - 1].val << ")";
             }
             if (entity.type == SLVS_E_LINE_SEGMENT) {
-                std::cout << "L " << sys.entity[i].h << " = (" << sys.entity[i].point[0]
-                          << ", " << sys.entity[i].point[1] << ")" << std::endl;
+                qDebug() << "L " << sys.entity[i].h << " = (" << sys.entity[i].point[0]
+                          << ", " << sys.entity[i].point[1] << ")";
             }
         }
     } else {
@@ -190,7 +190,7 @@ int Constraints::getP2Id(QObject* line) {
 
 void Constraints::apply(QObject* sketch)
 {
-    std::cout << "Constraints start" << std::endl;
+    qDebug()  << "Constraints start";
     int estimated_memory_need=sketch->children().length()*3;
     if(m_allocated_memory<estimated_memory_need){
         m_allocated_memory=estimated_memory_need*3;
@@ -207,10 +207,10 @@ void Constraints::apply(QObject* sketch)
     if (sketch) {
         compute2d(sketch);
     } else {
-        std::cout << "Null sketch" << std::endl;
+        qDebug() << "Null sketch";
     }
 
-    std::cout << "Constraints end" << std::endl;
+    qDebug()  << "Constraints end";
 }
 
 Constraints::Constraints(QObject *parent):

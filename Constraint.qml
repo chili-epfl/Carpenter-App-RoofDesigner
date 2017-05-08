@@ -3,7 +3,17 @@ import QtQuick 2.0
 Item {
     readonly property string class_type: "Constraint"
 
-    property bool existing: true
+    property bool existing: private_existing ? (
+        type===0 || type===1 ? entityA.visible :
+        type===2 ? ptA.existing && ptB.existing :
+        type===3 ? entityA.visible && entityB.existing :
+        type===4 ? ptA.existing && ptB.existing :
+        type===5 ? entityA.visible && entityB.existing :
+        type===6 ? entityA.visible && entityB.existing :
+        type===7 ? entityA.visible && entityB.existing :
+        type===8 ? ptA.existing && entityA.existing : false) :false
+
+    property bool private_existing: true
 
     property int type: -1
     property double valA: -1.0
@@ -79,6 +89,6 @@ Item {
     }
 
     function kill(){
-        existing=false
+        private_existing=false
     }
 }

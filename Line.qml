@@ -91,8 +91,6 @@ Rectangle {
     antialiasing: true
     color:"grey"
 
-
-
     MouseArea{
         id:mouse_area
         drag.smoothed: false

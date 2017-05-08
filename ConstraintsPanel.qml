@@ -213,10 +213,10 @@ Rectangle {
                 }
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 placeholderText: "Length"
-                text: "5.0"
+                text: "100.0"
                 horizontalAlignment: TextInput.AlignRight
                 enabled: parent.enabled
-                onEnabledChanged: text = "5.0"
+                onTextChanged: leng_const_button.checked = true
             }
         }
         Item {
@@ -247,10 +247,10 @@ Rectangle {
                 }
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 placeholderText: "Distance"
-                text: "5.0"
+                text: "100.0"
                 horizontalAlignment: TextInput.AlignRight
                 enabled: parent.enabled
-                onEnabledChanged: text = "5.0"
+                onTextChanged: dist_const_button.checked = true
             }
         }
         Item {
@@ -280,11 +280,11 @@ Rectangle {
                     regExp: /^([0-9]*)\.([0-9]*)|([0-9]+)$/
                 }
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
-                placeholderText: "Distance"
-                text: "5.0"
+                placeholderText: "Angle"
+                text: "90"
                 horizontalAlignment: TextInput.AlignRight
                 enabled: parent.enabled
-                onEnabledChanged: text = "90"
+                onTextChanged: angl_const_button.checked = true
             }
         }
         Button {

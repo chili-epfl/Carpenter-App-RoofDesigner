@@ -14,21 +14,21 @@ class Constraints : public QObject
     Q_OBJECT
 public:
     Q_INVOKABLE void apply(QObject* sketch);
+    Q_INVOKABLE void solve();
     Constraints(QObject* parent=Q_NULLPTR);
     ~Constraints();
 private:
 
     void *CheckMalloc(size_t n);
     void compute2d(QObject* sketch);
-    int getP1Id(QObject* line);
-    int getP2Id(QObject* line);
+    int getPointId(QObject* line, const char* pointPropertyName) const;
 
     QMap<QVector2D, int> pointIdsFromPosition;
     QMap<QVector2D, int> linesIdsFromPointIds;
 
     int m_allocated_memory;
     Slvs_System sys;
-
+    QMap<int, QObject*> entityObjects;
 };
 
 #endif // CONSTRAINTS_H

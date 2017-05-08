@@ -66,9 +66,9 @@ Item {
                 var new_scale=Math.max(1, parent.zoomFactor*(pinch.scale/pinch.previousScale));
                 new_scale=Math.min(3, new_scale);
                 parent.zoomFactor=new_scale;
-                parent.zoom_origin_x=pinch.startCenter.x
-                parent.zoom_origin_y=pinch.startCenter.y
             }
+            parent.zoom_origin_x=pinch.center.x
+            parent.zoom_origin_y=pinch.center.y
         }
 
         MouseArea{

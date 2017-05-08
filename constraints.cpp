@@ -286,10 +286,10 @@ void Constraints::compute2d(QObject* sketch) {
             QObject* entityB = qvariant_cast<QObject*>(child->property("entityB"));
             int hEntityB = entityB ? linesIdsFromPointIds[QVector2D(getP1Id(entityB), getP2Id(entityB))] : 0;
 
-            qDebug() << "(" << constraintCodes[child->property("type").toInt()]
-                     << ", " << child->property("valA").toDouble() << ", "
-                     << hPtA << ", " << hPtB << ", " << hEntityA << ", "
-                     << hEntityB << ")";
+//            qDebug() << "(" << constraintCodes[child->property("type").toInt()]
+//                     << ", " << child->property("valA").toDouble() << ", "
+//                     << hPtA << ", " << hPtB << ", " << hEntityA << ", "
+//                     << hEntityB << ")";
 
             sys.constraint[sys.constraints++] =
                     Slvs_MakeConstraint(
@@ -360,7 +360,7 @@ int Constraints::getP2Id(QObject* line) {
 
 void Constraints::apply(QObject* sketch)
 {
-    std::cout << "Constraints start" << std::endl;
+//    std::cout << "Constraints start" << std::endl;
     int estimated_memory_need=sketch->children().length()*3;
     if(m_allocated_memory<estimated_memory_need){
         m_allocated_memory=estimated_memory_need*3;
@@ -376,7 +376,7 @@ void Constraints::apply(QObject* sketch)
 
     sketch == nullptr ? Example2d(): compute2d(sketch);
 
-    std::cout << "Constraints end" << std::endl;
+//    std::cout << "Constraints end" << std::endl;
 }
 
 Constraints::Constraints(QObject *parent):

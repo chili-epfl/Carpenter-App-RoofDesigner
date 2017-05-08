@@ -127,20 +127,6 @@ ToolBar {
                         //                        sketchScreenLoader.source = ""
                     }
                 }
-
-                MenuItem {
-                    text: "Apply EXAMPLE constraints"
-                    onTriggered: {
-                        sketch.constraints.apply()
-                    }
-                }
-
-                MenuItem {
-                    text: "Apply constraints"
-                    onTriggered: {
-                        sketch.constraints.apply(sketch)
-                    }
-                }
             }
         }
     }

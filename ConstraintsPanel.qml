@@ -306,6 +306,7 @@ Rectangle {
                 perp_const.enabled = false
                 angl_const.enabled = false
                 midP_const.enabled = false
+                sketch.constraints.apply(sketch)
             }
         }
     }

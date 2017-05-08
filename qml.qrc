@@ -14,7 +14,6 @@
         <file>MessageBox.qml</file>
         <file>BottomToolBar.qml</file>
         <file>PointContextMenu.qml</file>
-        <file>LineContextMenu.qml</file>
         <file>SplashScreen.qml</file>
         <file>WelcomeScreen.qml</file>
         <file>LoginForm.qml</file>

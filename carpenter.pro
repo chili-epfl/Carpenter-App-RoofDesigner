@@ -3,9 +3,9 @@ TEMPLATE = app
 QT += qml quick multimedia 3dcore 3drender 3dinput 3dquick
 CONFIG += c++11
 
-ASSIMP_DIR=/home/chili/test/assimp
+ASSIMP_DIR= /Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/assimp
 
-SOLVESPACE_DIR=/home/chili/test/solvespace
+SOLVESPACE_DIR= /Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/solvespace
 
 SOURCES += constrainedline.cpp \
     constrainedpoint.cpp \
@@ -51,10 +51,10 @@ DEFINES += CARPENTER_DEBUG
 # enable using SketchJoint as joint component
 DEFINES += CARPENTER_USE_SKETCHJOINT
 
-LIBS += -lassimp -lquazip -lz -lslvs
+LIBS += -lassimp.3.1.1 -lquazip -lz -lslvs
 
 INCLUDEPATH += $$SOLVESPACE_DIR/include/
-
+INCLUDEPATH += /Applications/Qt/5.8/clang_64/include
 unix {
     INCLUDEPATH += $$ASSIMP_DIR/build-unix/install/include/
     LIBS += -L/usr/local/lib/

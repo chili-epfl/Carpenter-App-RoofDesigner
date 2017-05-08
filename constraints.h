@@ -13,14 +13,13 @@ class Constraints : public QObject
 {
     Q_OBJECT
 public:
-    Q_INVOKABLE void apply(QObject* sketch = nullptr);
+    Q_INVOKABLE void apply(QObject* sketch);
     Constraints(QObject* parent=Q_NULLPTR);
     ~Constraints();
 private:
 
     void *CheckMalloc(size_t n);
     void compute2d(QObject* sketch);
-    void Example2d();
     int getP1Id(QObject* line);
     int getP2Id(QObject* line);
 

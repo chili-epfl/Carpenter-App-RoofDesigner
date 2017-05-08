@@ -21,7 +21,7 @@ Rectangle {
 
     Connections{
         ignoreUnknownSignals: false
-        target: parent
+        target: parent && parent.class_type ? parent : null
         onStore_state: store_state(epoch)
         onUndo: undo()
         onRedo: redo()

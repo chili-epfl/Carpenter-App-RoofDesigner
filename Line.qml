@@ -19,7 +19,7 @@ Rectangle {
 
     Connections{
         ignoreUnknownSignals: false
-        target: parent
+        target: parent && parent.class_type ? parent : null
         onStore_state: store_state(epoch)
         onUndo: undo()
         onRedo: redo()
@@ -60,7 +60,7 @@ Rectangle {
 
     Connections{
         ignoreUnknownSignals: true
-        target: p1
+        target: p1 ? p1:null
         onReplaceMe: {
             if (p1!==p2)
                 p1=replacement
@@ -70,7 +70,7 @@ Rectangle {
 
     Connections{
         ignoreUnknownSignals: true
-        target: p2
+        target: p2 ? p2:null
         onReplaceMe: {
             if (p1 !== p2)
                 p2 = replacement

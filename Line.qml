@@ -83,13 +83,6 @@ Rectangle {
         existing=false
     }
 
-    function showContextMenu(x,y){
-        context_menu.x=x
-        context_menu.y=y
-        context_menu.visible=true
-
-    }
-
     anchors.left: if(p1) return p1.horizontalCenter
     anchors.verticalCenter: if(p1) return p1.verticalCenter
     transformOrigin: Item.Left
@@ -97,8 +90,6 @@ Rectangle {
 
     antialiasing: true
     color:"grey"
-
-
 
     MouseArea{
         id:mouse_area
@@ -109,9 +100,5 @@ Rectangle {
         onClicked: {current_tool.onClicked(parent,mouse);}
         onCanceled: {current_tool.abort();}
         enabled: parent.class_type
-    }
-
-    LineContextMenu{
-        id: context_menu
     }
 }

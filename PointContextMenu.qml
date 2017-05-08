@@ -9,6 +9,13 @@ Popup {
     height: Screen.pixelDensity*10 +20
     visible: false
 
+    property bool cx: cx.checked
+    property bool cy: cy.checked
+    property bool cz: cz.checked
+    property bool mx: mx.checked
+    property bool my: my.checked
+    property bool mz: mz.checked
+
     RowLayout {
         anchors.fill: parent
         spacing: 0

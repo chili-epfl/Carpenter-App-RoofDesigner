@@ -35,8 +35,7 @@ Rectangle {
                 x=state.x
                 y=state.y
                 existing=state.existing
-            }
-            else
+            } else
                 existing=false;
         }
     }

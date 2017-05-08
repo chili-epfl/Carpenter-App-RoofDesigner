@@ -133,7 +133,7 @@ Item{
         id:apply_constraint_timer
         interval: 100
         running: false
-        onTriggered: sketch.constraints.apply(sketch)
+        onTriggered: sketch.constraints.solve();
     }
 
     function checkIntersection(point, e1, e2){

@@ -75,6 +75,7 @@ Item {
             id:mouse_area
             anchors.fill: parent
             drag.smoothed: false
+            preventStealing:true
             scrollGestureEnabled:false
             hoverEnabled:  Qt.platform.os!="android"
             enabled: true

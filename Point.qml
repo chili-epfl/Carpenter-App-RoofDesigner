@@ -77,6 +77,7 @@ Rectangle {
         id:mouse_area
         drag.smoothed: false
         anchors.fill: parent
+        preventStealing:true
         onPressed: {current_tool.onPressed(parent,mouse);}
         onReleased: {current_tool.onReleased(parent,mouse);}
         onClicked: {current_tool.onClicked(parent,mouse);}

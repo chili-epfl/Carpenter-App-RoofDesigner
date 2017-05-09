@@ -16,8 +16,10 @@ Rectangle {
 
     property var undo_buffer:[]
     property var redo_buffer:[]
-    Component.onCompleted: antialiasing=true
-
+    Component.onCompleted: {
+        console.log("new line")
+        antialiasing=true
+    }
     height: parent.class_type ? Screen.pixelDensity*2*1/(parent.zoomFactor) : 3
     width: p1 && p2? Math.sqrt(Math.pow((p1.x-p2.x),2)+Math.pow((p1.y-p2.y),2)) :0
 
@@ -93,6 +95,7 @@ Rectangle {
     MouseArea{
         id:mouse_area
         drag.smoothed: false
+        preventStealing:true
         anchors.fill: parent
         onPressed: {current_tool.onPressed(parent,mouse);}
         onReleased: {current_tool.onReleased(parent,mouse);}

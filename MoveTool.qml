@@ -43,8 +43,8 @@ Item{
                 }else if(sketch.children[i].class_type=="Line" &&
                          sketch.children[i].existing
                          ){
-                    if(target!==sketch.children[i].p1 &&
-                            target!==sketch.children[i].p2)
+                    if(p!==sketch.children[i].p1 &&
+                            p!==sketch.children[i].p2)
                         lines_not_belonging.push(sketch.children[i])
                     else
                         lines_belonging.push(sketch.children[i])
@@ -56,17 +56,17 @@ Item{
             }
             for(i=0;i<lines_not_belonging.length;i++){
                 var line=lines_not_belonging[i]
-                var intersection=checkIntersection(Qt.vector2d(target.x,target.y),
+                var intersection=checkIntersection(Qt.vector2d(p.x,p.y),
                                                    Qt.vector2d(line.p1.x,line.p1.y),
                                                    Qt.vector2d(line.p2.x,line.p2.y)
                                                    )
                 if(intersection!==false){
                     var line_s1=line_component.createObject(sketch)
                     line_s1.p1=line.p1;
-                    line_s1.p2=target
+                    line_s1.p2=p
                     var line_s2=line_component.createObject(sketch)
                     line_s2.p2=line.p2;
-                    line_s2.p1=target
+                    line_s2.p1=p
                     //Propagate constraints: the "equal length" is no longer valid
                     var need_collinearity=true
                     for(var c=0;c<constraints.length;c++){
@@ -152,8 +152,8 @@ Item{
 
         var dot = v2.dotProduct(v3);
 
-        var t1 = v2.times(v1).times(1/dot).length();
-        var t2 = (v1.times(v3)).times( 1/dot).length();
+        var t1 = v2.times(v1).length()*(1/dot);
+        var t2 = (v1.dotProduct(v3))*( 1/dot);
 
         if (t1 >= 0.0 && (t2 >= 0.0 && t2 <= 1.0))
             return true;
@@ -162,8 +162,8 @@ Item{
 
         dot = v2.dotProduct(v3);
 
-        t1 = v2.times(v1).times( 1/dot).length();
-        t2 = (v1.times(v3)).times( 1/dot).length();
+        t1 = v2.times(v1).length()*(1/dot);
+        t2 = (v1.dotProduct(v3))*( 1/dot);
 
         if (t1 >= 0.0 && (t2 >= 0.0 && t2 <= 1.0))
             return true;

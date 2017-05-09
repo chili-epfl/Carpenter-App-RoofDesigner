@@ -151,6 +151,9 @@ Item{
         }
 
         //Intersection checks for p1
+        lines_not_belonging=[]
+        lines_belonging=[]
+        constraints=[]
         for(var i=0;i<sketch.children.length;i++){
             if(sketch.children[i].class_type=="Line" &&
                      sketch.children[i].existing
@@ -252,8 +255,8 @@ Item{
 
         var dot = v2.dotProduct(v3);
 
-        var t1 = v2.times(v1).times(1/dot).length();
-        var t2 = (v1.times(v3)).times( 1/dot).length();
+        var t1 = v2.times(v1).length()*(1/dot);
+        var t2 = (v1.dotProduct(v3))*( 1/dot);
 
         if (t1 >= 0.0 && (t2 >= 0.0 && t2 <= 1.0))
             return true;
@@ -262,8 +265,8 @@ Item{
 
         dot = v2.dotProduct(v3);
 
-        t1 = v2.times(v1).times( 1/dot).length();
-        t2 = (v1.times(v3)).times( 1/dot).length();
+        t1 = v2.times(v1).length()*(1/dot);
+        t2 = (v1.dotProduct(v3))*( 1/dot);
 
         if (t1 >= 0.0 && (t2 >= 0.0 && t2 <= 1.0))
             return true;

@@ -171,6 +171,7 @@ Rectangle {
             Item{
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+                visible:false
                 Button {
                     id: midP_const
                     text: "\u237F"

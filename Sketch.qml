@@ -183,11 +183,11 @@ Item {
                 c.entityB = constraintsPanel.listEntities.get(1).object
             }
             if (constraintsPanel.midP_const.checked) {
-                var pId = constraintsPanel.listEntities.get(0).object.class_type == "Point" ? 0 : 1
-                var c = constraint_component.createObject(sketch)
-                c.type = 8
-                c.ptA = constraintsPanel.listEntities.get(pId).object
-                c.entityA = constraintsPanel.listEntities.get(1 - pId).object
+//                var pId = constraintsPanel.listEntities.get(0).object.class_type == "Point" ? 0 : 1
+//                var c = constraint_component.createObject(sketch)
+//                c.type = 8
+//                c.ptA = constraintsPanel.listEntities.get(pId).object
+//                c.entityA = constraintsPanel.listEntities.get(1 - pId).object
             }
         }
     }

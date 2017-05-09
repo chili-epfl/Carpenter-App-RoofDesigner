@@ -105,9 +105,9 @@ void Constraints::compute2d(QObject* sketch) {
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Constraint")) {
             if (child->property("existing").toBool() &&
-                    child->property("type").isValid() && child->property("type") >= 0 && child->property("type") < constraintCodes.length()){
-
-                qDebug()<<child->property("type").toInt();
+                    child->property("type").isValid()
+                    && child->property("type").toInt() >= 0 &&
+                    child->property("type").toInt() < constraintCodes.length()){
 
                 int hPtA = 0, hPtB = 0, hEntityA = 0, hEntityB = 0;
 

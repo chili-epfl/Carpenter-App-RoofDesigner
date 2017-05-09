@@ -36,6 +36,9 @@ Item{
                         && Math.abs((p.x-sketch.children[i].x))<10 &&
                         Math.abs((p.y-sketch.children[i].y))<10){
                     p.replaceMe(sketch.children[i])
+                    lines_not_belonging=[]
+                    lines_belonging=[]
+                    constraints=[]
                     break;
                 }else if(sketch.children[i].class_type=="Line" &&
                          sketch.children[i].existing
@@ -58,37 +61,33 @@ Item{
                                                    Qt.vector2d(line.p2.x,line.p2.y)
                                                    )
                 if(intersection!==false){
-                    console.log("new")
                     var line_s1=line_component.createObject(sketch)
                     line_s1.p1=line.p1;
                     line_s1.p2=target
                     var line_s2=line_component.createObject(sketch)
                     line_s2.p2=line.p2;
                     line_s2.p1=target
-                    //Propagate constraints: the "equal length" is broken
+                    //Propagate constraints: the "equal length" is no longer valid
                     var need_collinearity=true
                     for(var c=0;c<constraints.length;c++){
                         var constraint=constraints[c]
                         if(constraint.entityA===line || constraint.entityB===line){
-                            if(constraint.type!=4 && constraint.type!=8){
-                                if(constraint.type==0 ||
-                                        constraint.type==1 ||
-                                        constraint.type==5 ||
-                                        constraint.type==6 ||
-                                        constraint.type==7){
-                                    var constr_s1=constraint_component.createObject(sketch)
-                                    var constr_s2=constraint_component.createObject(sketch)
-                                    constr_s1.type=constraint.type;
-                                    constr_s2.type=constraint.type;
-                                    constr_s1.entityA=line_s1;
-                                    constr_s2.entityA=line_s2;
-                                    constr_s1.entityB=constraint.entityB!==line ? constraint.entityB :constraint.entityA
-                                    constr_s2.entityB=constraint.entityB!==line ? constraint.entityB :constraint.entityA
-                                    constr_s1.valA=constraint.valA
-                                    constr_s2.valA=constraint.valA
-                                    need_collinearity=false
-                                }
-                                constraint.kill();
+                            if(constraint.type==0 ||
+                                    constraint.type==1 ||
+                                    constraint.type==5 ||
+                                    constraint.type==6 ||
+                                    constraint.type==7){
+                                var constr_s1=constraint_component.createObject(sketch)
+                                var constr_s2=constraint_component.createObject(sketch)
+                                constr_s1.type=constraint.type;
+                                constr_s2.type=constraint.type;
+                                constr_s1.entityA=line_s1;
+                                constr_s2.entityA=line_s2;
+                                constr_s1.entityB=constraint.entityB!==line ? constraint.entityB :constraint.entityA
+                                constr_s2.entityB=constraint.entityB!==line ? constraint.entityB :constraint.entityA
+                                constr_s1.valA=constraint.valA
+                                constr_s2.valA=constraint.valA
+                                need_collinearity=false
                             }
                         }
                     }
@@ -100,6 +99,7 @@ Item{
                         constr_collinear.entityB=line_s2
                     }
                     for(var j=0;j<lines_belonging.length;j++){
+                        //Remove Duplicates
                         //For these lines they vanish and  we just break the constraints
                         if((line_s1.p1===lines_belonging[j].p1 && line_s1.p2===lines_belonging[j].p2)
                                 || (line_s1.p1===lines_belonging[j].p2 && line_s1.p2===lines_belonging[j].p1) )

@@ -98,7 +98,14 @@ Rectangle {
                     anchors.centerIn: parent
                     width: height
                     height: Math.min(parent.width,parent.height)
-                    text: "\u2015"
+                    Text{
+                        text: "\u2015"
+                        font.family: "FontAwesome"
+                        anchors.fill: parent
+                        fontSizeMode:Text.Fit
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
                     checkable: true
                     checked: false
                     enabled: false
@@ -110,7 +117,15 @@ Rectangle {
                 Layout.fillWidth: true
                 Button {
                     id: vert_const
-                    text: "\u007C"
+                    Text{
+                        text: "\u007C"
+                        font.family: "FontAwesome"
+                        anchors.fill: parent
+                        fontSizeMode:Text.Fit
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
                     anchors.centerIn: parent
                     width: height
                     height: Math.min(parent.width,parent.height)
@@ -125,7 +140,14 @@ Rectangle {
                 Layout.fillWidth: true
                 Button {
                     id: equL_const
-                    text: "\uFF1D"
+                    Text{
+                        text: "\uFF1D"
+                        font.family: "FontAwesome"
+                        anchors.fill: parent
+                        fontSizeMode:Text.Fit
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
                     anchors.centerIn: parent
                     width: height
                     height: Math.min(parent.width,parent.height)
@@ -141,7 +163,15 @@ Rectangle {
                 Layout.fillWidth: true
                 Button {
                      id: para_const
-                     text: "\u2225"
+                     Text{
+                         text: "\u2225"
+                         font.family: "FontAwesome"
+                         anchors.fill: parent
+                         fontSizeMode:Text.Fit
+                         horizontalAlignment:Text.AlignHCenter
+                         verticalAlignment: Text.AlignVCenter
+                     }
+
                      anchors.centerIn: parent
                      width: height
                      height: Math.min(parent.width,parent.height)
@@ -157,7 +187,15 @@ Rectangle {
                 Layout.fillWidth: true
                 Button {
                     id: perp_const
-                    text: "\u27C2"
+                    Text{
+                        text: "\u27C2"
+                        font.family: "FontAwesome"
+                        anchors.fill: parent
+                        fontSizeMode:Text.Fit
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
                     anchors.centerIn: parent
                     width: height
                     height: Math.min(parent.width,parent.height)
@@ -174,7 +212,14 @@ Rectangle {
                 visible:false
                 Button {
                     id: midP_const
-                    text: "\u237F"
+                    Text{
+                        text: "\u237F"
+                        font.family: "FontAwesome"
+                        anchors.fill: parent
+                        fontSizeMode:Text.Fit
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
                     anchors.centerIn: parent
                     width: height
                     height: Math.min(parent.width,parent.height)
@@ -197,7 +242,14 @@ Rectangle {
             enabled: false
             Button {
                 id: leng_const_button
-                text: "Length:"
+                Text{
+                    text: "Length"
+                    font.family: "FontAwesome"
+                    anchors.fill: parent
+                    fontSizeMode:Text.Fit
+                    horizontalAlignment:Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
                 height: parent.height
                 checkable: true
                 checked: false
@@ -232,7 +284,14 @@ Rectangle {
             Button {
                 id: dist_const_button
                 height: parent.height
-                text: "Distance"
+                Text{
+                    text: "Distance"
+                    font.family: "FontAwesome"
+                    anchors.fill: parent
+                    fontSizeMode:Text.Fit
+                    horizontalAlignment:Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
                 checkable: true
                 checked: false
                 enabled: parent.enabled
@@ -265,7 +324,14 @@ Rectangle {
             enabled: false
             Button {
                 id: angl_const_button
-                text: "Angle"
+                Text{
+                    text: "Angle"
+                    font.family: "FontAwesome"
+                    anchors.fill: parent
+                    fontSizeMode:Text.Fit
+                    horizontalAlignment:Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
                 checkable: true
                 height: parent.height
                 checked: false
@@ -290,7 +356,14 @@ Rectangle {
         }
         Button {
             id: validate
-            text: "Validate constraints"
+            Text{
+                text: "Validate constraints"
+                font.family: "FontAwesome"
+                anchors.fill: parent
+                fontSizeMode:Text.Fit
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.minimumHeight: Screen.pixelDensity*5

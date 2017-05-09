@@ -63,7 +63,7 @@ void Constraints::compute2d(QObject* sketch) {
      * workplane, so they need only two parameters each. */
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Point")
-                && child->property("visible").toBool()) {
+                && child->property("existing").toBool()) {
             pointIdsFromPosition.insert(QVector2D(child->property("x").toInt(), child->property("y").toInt()), entityId);
             sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, child->property("x").toInt());
             sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, child->property("y").toInt());
@@ -80,7 +80,7 @@ void Constraints::compute2d(QObject* sketch) {
      * the operator< to be overwritten. */
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Line")
-                && child->property("visible").toBool()) {
+                && child->property("existing").toBool()) {
             int p1Id = getPointId(child, "p1");
             int p2Id = getPointId(child, "p2");
             linesIdsFromPointIds.insert(QVector2D(p1Id, p2Id), entityId);

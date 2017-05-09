@@ -38,7 +38,7 @@ Item{
                     p.replaceMe(sketch.children[i])
                     break;
                 }else if(sketch.children[i].class_type=="Line" &&
-                         sketch.children[i].visible
+                         sketch.children[i].existing
                          ){
                     if(target!==sketch.children[i].p1 &&
                             target!==sketch.children[i].p2)
@@ -58,6 +58,7 @@ Item{
                                                    Qt.vector2d(line.p2.x,line.p2.y)
                                                    )
                 if(intersection!==false){
+                    console.log("new")
                     var line_s1=line_component.createObject(sketch)
                     line_s1.p1=line.p1;
                     line_s1.p2=target

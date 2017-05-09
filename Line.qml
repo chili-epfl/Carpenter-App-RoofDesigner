@@ -6,9 +6,12 @@ Rectangle {
 
     readonly property string class_type: "Line"
 
-    visible: p1 && p2 ? existing && p1.existing && p2.existing: existing
+    visible: existing
 
-    property bool existing: true
+    property bool existing: private_existing ?
+                                ( p1 && p2 &&  p1.existing && p2.existing && p1!==p2):false
+
+    property bool private_existing: true
 
     property var undo_buffer:[]
     property var redo_buffer:[]
@@ -80,7 +83,7 @@ Rectangle {
     }
 
     function kill(){
-        existing=false
+        private_existing=false
     }
 
     anchors.left: if(p1) return p1.horizontalCenter

@@ -9,6 +9,7 @@ Rectangle {
 
     color: "red"
     z:1
+
     visible: existing
 
     property bool existing: true

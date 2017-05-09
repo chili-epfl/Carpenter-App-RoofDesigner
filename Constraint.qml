@@ -4,15 +4,16 @@ Item {
     readonly property string class_type: "Constraint"
 
     property bool existing: private_existing ? (
-        type===0 || type===1 ? entityA.visible :
+        type===0 || type===1 ? entityA.existing :
         type===2 ? ptA.existing && ptB.existing :
-        type===3 ? entityA.visible && entityB.existing :
+        type===3 ? entityA.existing && entityB.existing :
         type===4 ? ptA.existing && ptB.existing :
-        type===5 ? entityA.visible && entityB.existing :
-        type===6 ? entityA.visible && entityB.existing :
-        type===7 ? entityA.visible && entityB.existing :
+        type===5 ? entityA.existing && entityB.existing :
+        type===6 ? entityA.existing && entityB.existing :
+        type===7 ? entityA.existing && entityB.existing :
         type===8 ? ptA.existing && entityA.existing : false) :false
 
+    onExistingChanged: console.log(this,entityA.existing ,entityB.existing )
     property bool private_existing: true
 
     property int type: -1

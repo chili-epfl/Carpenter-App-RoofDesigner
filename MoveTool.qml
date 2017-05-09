@@ -100,7 +100,7 @@ Item{
                         constr_collinear.entityB=line_s2
                     }
                     for(var j=0;j<lines_belonging.length;j++){
-                        //For these lines we just break the constraints
+                        //For these lines they vanish and  we just break the constraints
                         if((line_s1.p1===lines_belonging[j].p1 && line_s1.p2===lines_belonging[j].p2)
                                 || (line_s1.p1===lines_belonging[j].p2 && line_s1.p2===lines_belonging[j].p1) )
                             lines_belonging[j].kill();

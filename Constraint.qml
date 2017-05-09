@@ -4,14 +4,14 @@ Item {
     readonly property string class_type: "Constraint"
 
     property bool existing: private_existing ? (
-        type===0 || type===1 ? entityA.existing :
-        type===2 ? ptA.existing && ptB.existing :
-        type===3 ? entityA.existing && entityB.existing :
-        type===4 ? ptA.existing && ptB.existing :
-        type===5 ? entityA.existing && entityB.existing :
-        type===6 ? entityA.existing && entityB.existing :
-        type===7 ? entityA.existing && entityB.existing :
-        type===8 ? ptA.existing && entityA.existing : false) :false
+        type===0 || type===1 ? entityA!==null && entityA.existing :
+        type===2 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
+        type===3 ? entityA!==null && entityB!==null && entityA!==entityB && entityA.existing && entityB.existing :
+        type===4 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
+        type===5 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
+        type===6 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
+        type===7 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
+        type===8 ? entityA!==null && ptA!==null && ptA.existing && entityA.existing : false) :false
 
     onExistingChanged: console.log(this,entityA.existing ,entityB.existing )
     property bool private_existing: true
@@ -32,6 +32,22 @@ Item {
         onStore_state: store_state(epoch)
         onUndo: undo()
         onRedo: redo()
+    }
+
+    Connections{
+        ignoreUnknownSignals: false
+        target: (type==4 || type==2 || type==8) &&  existing ? ptA : undefined
+        onReplaceMe:{
+            ptA=replacement
+        }
+    }
+
+    Connections{
+        ignoreUnknownSignals: false
+        target: (type==4 || type==2) &&  existing ? ptB : undefined
+        onReplaceMe:{
+            ptB=replacement
+        }
     }
 
     function undo(){

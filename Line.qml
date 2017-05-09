@@ -9,7 +9,7 @@ Rectangle {
     visible: existing
 
     property bool existing: private_existing ?
-                                ( p1 && p2 &&  p1.existing && p2.existing && p1!==p2):false
+                                ( p1 && p2 ?  p1.existing && p2.existing && p1!==p2 : false):false
 
     property bool private_existing: true
 

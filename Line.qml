@@ -35,9 +35,9 @@ Rectangle {
                 var state=undo_buffer[undo_buffer.length-1]
                 p1=state.p1
                 p2=state.p2
-                existing=state.existing
+                private_existing=state.private_existing
             }else
-                existing=false
+                private_existing=false
         }
     }
 
@@ -46,7 +46,7 @@ Rectangle {
             var state=redo_buffer.pop()
             p1=state.p1
             p2=state.p2
-            existing=state.existing
+            private_existing=state.private_existing
             undo_buffer.push(state)
         }
     }
@@ -54,9 +54,9 @@ Rectangle {
     function store_state(epoch){
         if(undo_buffer.length!=epoch-1){
             for(var i=0;i<epoch-1;i++)
-                undo_buffer.push({'p1':null,'p2':null,'existing':false})
+                undo_buffer.push({'p1':null,'p2':null,'private_existing':false})
         }
-        var state={'p1':p1,'p2':p2,'existing':existing}
+        var state={'p1':p1,'p2':p2,'private_existing':private_existing}
         undo_buffer.push(state)
         redo_buffer=[]
     }
@@ -65,9 +65,7 @@ Rectangle {
         ignoreUnknownSignals: true
         target: p1 ? p1:null
         onReplaceMe: {
-            if (p1!==p2)
                 p1=replacement
-            else existing=false
         }
     }
 
@@ -75,10 +73,7 @@ Rectangle {
         ignoreUnknownSignals: true
         target: p2 ? p2:null
         onReplaceMe: {
-            if (p1 !== p2)
                 p2 = replacement
-            else
-                existing=false
         }
     }
 

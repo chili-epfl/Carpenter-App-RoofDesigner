@@ -45,9 +45,9 @@ Item {
                 ptB=state.ptB
                 entityA=state.entityA
                 entityB=state.entityB
-                existing=state.existing
+                private_existing=state.private_existing
             }else
-                existing=false
+                private_existing=false
         }
     }
 
@@ -60,7 +60,7 @@ Item {
             ptB=state.ptB
             entityA=state.entityA
             entityB=state.entityB
-            existing=state.existing
+            private_existing=state.private_existing
             undo_buffer.push(state)
         }
     }
@@ -75,7 +75,7 @@ Item {
                                      'ptB':null,
                                      'entityA':null,
                                      'entityB':null,
-                                     'existing':false})
+                                     'private_existing':false})
         }
         var state={
             'type':type,
@@ -84,7 +84,7 @@ Item {
             'ptB':ptB,
             'entityA':entityA,
             'entityB':entityB,
-            'existing':existing}
+            'private_existing':private_existing}
         undo_buffer.push(state)
         redo_buffer=[]
     }

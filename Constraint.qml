@@ -13,7 +13,6 @@ Item {
         type===7 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
         type===8 ? entityA!==null && ptA!==null && ptA.existing && entityA.existing : false) :false
 
-    onExistingChanged: console.log(this,entityA.existing ,entityB.existing )
     property bool private_existing: true
 
     property int type: -1
@@ -36,7 +35,7 @@ Item {
 
     Connections{
         ignoreUnknownSignals: false
-        target: (type==4 || type==2 || type==8) &&  existing ? ptA : undefined
+        target: (type==4 || type==2 || type==8) &&  existing && ptA!==undefined ? ptA : null
         onReplaceMe:{
             ptA=replacement
         }
@@ -44,7 +43,7 @@ Item {
 
     Connections{
         ignoreUnknownSignals: false
-        target: (type==4 || type==2) &&  existing ? ptB : undefined
+        target: (type==4 || type==2) &&  existing && ptB!==undefined  ? ptB : null
         onReplaceMe:{
             ptB=replacement
         }

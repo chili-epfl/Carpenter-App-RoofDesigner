@@ -17,7 +17,6 @@ Rectangle {
     property var undo_buffer:[]
     property var redo_buffer:[]
     Component.onCompleted: {
-        console.log("new line")
         antialiasing=true
     }
     height: parent.class_type ? Screen.pixelDensity*2*1/(parent.zoomFactor) : 3

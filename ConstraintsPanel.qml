@@ -59,7 +59,55 @@ Rectangle {
             }
         }
     }
-    property ListModel listEntities: listEntities
+    property ListModel listEntities: ListModel{
+    }
+
+    property bool switch_views: true
+    Item{
+        anchors.right: parent.left
+        anchors.top: parent.top
+        transformOrigin: "BottomRight"
+        rotation: -90
+        width: parent.height/3
+        height: Screen.pixelDensity*5
+        RowLayout{
+            anchors.fill: parent
+            Rectangle{
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                color: "red"
+                Text{
+                    text:"Add"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.Fit
+                    anchors.fill: parent
+                }
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: switch_views=true
+                }
+
+            }
+            Rectangle{
+                color:"blue"
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Text{
+                    text:"Edit"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.Fit
+                    anchors.fill: parent
+                }
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: switch_views=false
+                }
+            }
+        }
+    }
+
 
     property alias horz_const: horz_const
     property alias vert_const: vert_const
@@ -71,9 +119,89 @@ Rectangle {
     property alias angl_const: angl_const
     property alias midP_const: midP_const
 
+    Item{
+        anchors.fill: parent
+        anchors.margins: 10
+        visible: !switch_views
+        onVisibleChanged: {
+            if(visible){
+                constrains_list_model.update_model()
+            }
+        }
+
+        ListModel{
+            id:constrains_list_model
+            function update_model(){
+                console.log("In");
+                constrains_list_model.clear()
+                for(var i=0;i<sketch.children.length;i++){
+                    if(sketch.children[i].class_type=="Constraint" && sketch.children[i].existing){
+                        constrains_list_model.append({"constraint":sketch.children[i]})
+                    }
+                }
+            }
+
+        }
+        Connections{
+            target: sketch
+            onUndo:{
+                constrains_list_model.clear()
+                update_timer.start()
+            }
+            onRedo: {
+                constrains_list_model.clear()
+                update_timer.start()
+            }
+        }
+
+        Timer{
+            id:update_timer
+            interval: 200
+            running: false
+            onTriggered: constrains_list_model.update_model()
+
+        }
+        ListView {
+            id:constrains_list_view
+            anchors.fill: parent
+            clip: true
+            model: constrains_list_model
+            spacing: Screen.pixelDensity
+            delegate: Rectangle {
+                border.color: "black"
+                border.width: Screen.pixelDensity*0.5
+                width: constrains_list_view.width
+                height: type_text.implicitHeight+Screen.pixelDensity*5
+                Text{
+                    id:type_text
+                    text: "Type:" + constrains_list_model.get(index).constraint.type
+                    font.pointSize: 12
+                    anchors.top:parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.margins: 5
+                }
+                Button{
+                    anchors.top:parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.right: parent.right
+                    anchors.margins: 5
+                    width: height
+                    text:"d"
+                    onClicked: {
+                        constrains_list_model.get(parent.index).constraint.kill()
+                        constrains_list_model.remove(parent.index)
+                        sketch.store_state(sketch.undo_buffer.length+1);
+                    }
+                }
+            }
+        }
+    }
+
     ColumnLayout{
         anchors.fill: parent
         anchors.margins: 5
+        visible: switch_views
         Rectangle {
             id: listRect
             color: "white"
@@ -85,9 +213,7 @@ Rectangle {
             ListView {
                 anchors.fill: parent
                 clip: true
-                model: ListModel{
-                    id: listEntities
-                }
+                model: listEntities
                 delegate: Text {
                     width: listRect.width
                     height: Screen.pixelDensity*5
@@ -382,7 +508,7 @@ Rectangle {
             Layout.fillHeight: true
             Layout.minimumHeight: Screen.pixelDensity*5
             Layout.maximumHeight: Screen.pixelDensity*10
-            onClicked: {
+            onClicked:{
                 sketch.constraints.add()
                 listEntities.clear()
                 horz_const.enabled = false

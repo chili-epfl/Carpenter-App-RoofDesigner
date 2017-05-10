@@ -95,7 +95,7 @@ Item {
         var state={
             'type':type,
             'valA':valA,
-            'ptA':valA,
+            'ptA':ptA,
             'ptB':ptB,
             'entityA':entityA,
             'entityB':entityB,

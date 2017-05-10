@@ -154,80 +154,81 @@ Item{
         lines_not_belonging=[]
         lines_belonging=[]
         constraints=[]
-        for(var i=0;i<sketch.children.length;i++){
-            if(sketch.children[i].class_type=="Line" &&
-                     sketch.children[i].existing
-                     ){
-                if(unfinished_p1!==sketch.children[i].p1 &&
-                        unfinished_p1!==sketch.children[i].p2)
-                    lines_not_belonging.push(sketch.children[i])
-                else
-                    lines_belonging.push(sketch.children[i])
+        if(unfinished_p1!==undefined){
+            for(var i=0;i<sketch.children.length;i++){
+                if(sketch.children[i].class_type=="Line" &&
+                        sketch.children[i].existing
+                        ){
+                    if(unfinished_p1!==sketch.children[i].p1 &&
+                            unfinished_p1!==sketch.children[i].p2)
+                        lines_not_belonging.push(sketch.children[i])
+                    else
+                        lines_belonging.push(sketch.children[i])
 
-            }else if(sketch.children[i].class_type=="Constraint" &&
-                     sketch.children[i].existing){
-                constraints.push(sketch.children[i])
+                }else if(sketch.children[i].class_type=="Constraint" &&
+                         sketch.children[i].existing){
+                    constraints.push(sketch.children[i])
+                }
             }
-        }
-        for(i=0;i<lines_not_belonging.length;i++){
-            line=lines_not_belonging[i]
-            intersection=checkIntersection(Qt.vector2d(unfinished_p1.x,unfinished_p1.y),
+            for(i=0;i<lines_not_belonging.length;i++){
+                line=lines_not_belonging[i]
+                intersection=checkIntersection(Qt.vector2d(unfinished_p1.x,unfinished_p1.y),
                                                Qt.vector2d(line.p1.x,line.p1.y),
                                                Qt.vector2d(line.p2.x,line.p2.y)
                                                )
-            if(intersection!==false){
-                line_s1=line_component.createObject(sketch)
-                line_s1.p1=line.p1;
-                line_s1.p2=unfinished_p1
-                line_s2=line_component.createObject(sketch)
-                line_s2.p2=line.p2;
-                line_s2.p1=unfinished_p1
-                //Propagate constraints: the "equal length" is no longer valid
-                need_collinearity=true
-                for(var c=0;c<constraints.length;c++){
-                    constraint=constraints[c]
-                    if(constraint.entityA===line || constraint.entityB===line){
-                        if(constraint.type==0 ||
-                                constraint.type==1 ||
-                                constraint.type==5 ||
-                                constraint.type==6 ||
-                                constraint.type==7){
-                            constr_s1=constraint_component.createObject(sketch)
-                            constr_s2=constraint_component.createObject(sketch)
-                            constr_s1.type=constraint.type;
-                            constr_s2.type=constraint.type;
-                            constr_s1.entityA=line_s1;
-                            constr_s2.entityA=line_s2;
-                            constr_s1.entityB=constraint.entityB!==line ? constraint.entityB :constraint.entityA
-                            constr_s2.entityB=constraint.entityB!==line ? constraint.entityB :constraint.entityA
-                            constr_s1.valA=constraint.valA
-                            constr_s2.valA=constraint.valA
-                            need_collinearity=false
+                if(intersection!==false){
+                    line_s1=line_component.createObject(sketch)
+                    line_s1.p1=line.p1;
+                    line_s1.p2=unfinished_p1
+                    line_s2=line_component.createObject(sketch)
+                    line_s2.p2=line.p2;
+                    line_s2.p1=unfinished_p1
+                    //Propagate constraints: the "equal length" is no longer valid
+                    need_collinearity=true
+                    for(var c=0;c<constraints.length;c++){
+                        constraint=constraints[c]
+                        if(constraint.entityA===line || constraint.entityB===line){
+                            if(constraint.type==0 ||
+                                    constraint.type==1 ||
+                                    constraint.type==5 ||
+                                    constraint.type==6 ||
+                                    constraint.type==7){
+                                constr_s1=constraint_component.createObject(sketch)
+                                constr_s2=constraint_component.createObject(sketch)
+                                constr_s1.type=constraint.type;
+                                constr_s2.type=constraint.type;
+                                constr_s1.entityA=line_s1;
+                                constr_s2.entityA=line_s2;
+                                constr_s1.entityB=constraint.entityB!==line ? constraint.entityB :constraint.entityA
+                                constr_s2.entityB=constraint.entityB!==line ? constraint.entityB :constraint.entityA
+                                constr_s1.valA=constraint.valA
+                                constr_s2.valA=constraint.valA
+                                need_collinearity=false
+                            }
                         }
                     }
+                    line.kill();
+                    if(need_collinearity){
+                        constr_collinear=constraint_component.createObject(sketch)
+                        constr_collinear.type=5
+                        constr_collinear.entityA=line_s1
+                        constr_collinear.entityB=line_s2
+                    }
+                    for(var j=0;j<lines_belonging.length;j++){
+                        //Remove Duplicates
+                        //For these lines they vanish and  we just break the constraints
+                        if((line_s1.p1===lines_belonging[j].p1 && line_s1.p2===lines_belonging[j].p2)
+                                || (line_s1.p1===lines_belonging[j].p2 && line_s1.p2===lines_belonging[j].p1) )
+                            lines_belonging[j].kill();
+                        else  if((line_s2.p1===lines_belonging[j].p1 && line_s2.p2===lines_belonging[j].p2)
+                                 || (line_s2.p1===lines_belonging[j].p2 && line_s2.p2===lines_belonging[j].p1) )
+                            lines_belonging[j].kill();
+                    }
+                    break;
                 }
-                line.kill();
-                if(need_collinearity){
-                    constr_collinear=constraint_component.createObject(sketch)
-                    constr_collinear.type=5
-                    constr_collinear.entityA=line_s1
-                    constr_collinear.entityB=line_s2
-                }
-                for(var j=0;j<lines_belonging.length;j++){
-                    //Remove Duplicates
-                    //For these lines they vanish and  we just break the constraints
-                    if((line_s1.p1===lines_belonging[j].p1 && line_s1.p2===lines_belonging[j].p2)
-                            || (line_s1.p1===lines_belonging[j].p2 && line_s1.p2===lines_belonging[j].p1) )
-                        lines_belonging[j].kill();
-                    else  if((line_s2.p1===lines_belonging[j].p1 && line_s2.p2===lines_belonging[j].p2)
-                             || (line_s2.p1===lines_belonging[j].p2 && line_s2.p2===lines_belonging[j].p1) )
-                        lines_belonging[j].kill();
-                }
-                break;
             }
+
         }
-
-
         target.mouse_area.drag.target=undefined;
         sketch.store_state(sketch.undo_buffer.length+1);
         unfinished_p1= undefined

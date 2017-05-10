@@ -17,6 +17,7 @@ Page {
         if(sketch_to_load.length>0){
             console.log(json_sketch.loadSketch(Settings.exportPath + sketch_to_load+ ".json", sketch))
             top_menu_bar.sketch_name=sketch_to_load;
+            sketch.store_state(sketch.undo_buffer.length+1);
         }
     }
 

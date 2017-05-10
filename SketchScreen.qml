@@ -94,6 +94,7 @@ Page {
 
     ConstraintsPanel {
         id: constraintsPanel
+        visible: current_tool===select_tool
         x:parent.width-(width+10)
         y:parent.height/2-height/2
         height: parent.height-10

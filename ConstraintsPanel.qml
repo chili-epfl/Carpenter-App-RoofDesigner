@@ -8,6 +8,20 @@ Rectangle {
 
     Drag.active: drag_area.drag.active
 
+    onVisibleChanged: {
+        listEntities.clear()
+        horz_const.enabled = false
+        vert_const.enabled = false
+        leng_const.enabled = false
+        equL_const.enabled = false
+        dist_const.enabled = false
+        para_const.enabled = false
+        perp_const.enabled = false
+        angl_const.enabled = false
+        midP_const.enabled = false
+
+    }
+
     Rectangle{
         color: "white"
         border.color: "black"

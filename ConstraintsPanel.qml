@@ -395,6 +395,7 @@ Rectangle {
                 angl_const.enabled = false
                 midP_const.enabled = false
                 sketch.constraints.apply(sketch)
+                sketch.store_state(sketch.undo_buffer.length+1);
             }
         }
     }

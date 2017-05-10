@@ -13,12 +13,10 @@ Rectangle {
         focus.focusMode: Camera.FocusContinuous
         captureMode: Camera.CaptureStillImage
         imageCapture {
-            onImageCaptured: {
-                isImageCaptured=true
-                photoPreview.source = preview
-            }
             onImageSaved: {
+                isImageCaptured=true
                 image_path="file://"+path
+                photoPreview.source=image_path
             }
         }
     }

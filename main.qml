@@ -19,7 +19,10 @@ ApplicationWindow {
         name: "FontAwesome";
         source: "qrc:/fonts/FontAwesome.otf"
     }
-
+    FontLoader{
+        name: "Code2000";
+        source: "qrc:/fonts/CODE2000.TTF"
+    }
     StackView{
         id:stack_view
         anchors.fill: parent

@@ -26,6 +26,7 @@
         <file>SelectTool.qml</file>
         <file>ConstraintsPanel.qml</file>
         <file>Constraint.qml</file>
+        <file>fonts/CODE2000.TTF</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/minus_pressed.png</file>

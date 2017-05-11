@@ -66,7 +66,6 @@ Rectangle {
         }
     }
 
-
     property bool switch_views: true
     Item{
         anchors.right: parent.left
@@ -80,12 +79,13 @@ Rectangle {
             Rectangle{
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                color: "red"
+                color: switch_views ? "black" : "white"
                 Text{
                     text:"Add"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     fontSizeMode: Text.Fit
+                    color: switch_views ? "white" : "black"
                     anchors.fill: parent
                 }
                 MouseArea{
@@ -95,7 +95,7 @@ Rectangle {
 
             }
             Rectangle{
-                color:"blue"
+                color: !switch_views ? "black" : "white"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Text{
@@ -103,6 +103,7 @@ Rectangle {
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     fontSizeMode: Text.Fit
+                    color: !switch_views ? "white" : "black"
                     anchors.fill: parent
                 }
                 MouseArea{
@@ -203,28 +204,6 @@ Rectangle {
                 border.width: Screen.pixelDensity*0.5
                 width: constrains_list_view.width
                 height: type_text.implicitHeight+Screen.pixelDensity*5
-                Text{
-                    id:type_text
-                    text: "Type:" + constrains_list_model.get(index).constraint.type
-                    font.pointSize: 12
-                    anchors.top:parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.margins: 5
-                }
-                Button{
-                    anchors.top:parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.right: parent.right
-                    anchors.margins: 5
-                    width: height
-                    text:"\uf057"
-                    onClicked: {
-                        constrains_list_model.get(parent.index).constraint.kill()
-                        constrains_list_model.remove(parent.index)
-                        sketch.store_state(sketch.undo_buffer.length+1);
-                    }
-                }
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
@@ -241,6 +220,30 @@ Rectangle {
 
                     }
                 }
+                Text{
+                    id:type_text
+                    text: "Type:" + constrains_list_model.get(index).constraint.type
+                    font.pointSize: 12
+                    anchors.top:parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.margins: 5
+                }
+                Button{
+                    anchors.top:parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.right: parent.right
+                    anchors.margins: Screen.pixelDensity*0.25
+                    width: height
+                    text:"\uf057"
+                    font.family: "FontAwesome"
+                    onClicked: {
+                        constrains_list_model.get(parent.index).constraint.kill()
+                        constrains_list_model.remove(parent.index)
+                        sketch.store_state(sketch.undo_buffer.length+1);
+                    }
+                }
+
             }
         }
     }
@@ -292,9 +295,10 @@ Rectangle {
                     height: Math.min(parent.width,parent.height)
                     Text{
                         text: "\u2015"
-                        font.family: "FontAwesome"
+                        font.family: "Code2000"
                         anchors.fill: parent
                         fontSizeMode:Text.Fit
+                        font.pixelSize: parent.width
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -311,9 +315,10 @@ Rectangle {
                     id: vert_const
                     Text{
                         text: "\u007C"
-                        font.family: "FontAwesome"
+                        font.family: "Code2000"
                         anchors.fill: parent
                         fontSizeMode:Text.Fit
+                        font.pixelSize: parent.width
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -334,9 +339,10 @@ Rectangle {
                     id: equL_const
                     Text{
                         text: "\uFF1D"
-                        font.family: "FontAwesome"
+                        font.family: "Code2000"
                         anchors.fill: parent
                         fontSizeMode:Text.Fit
+                        font.pixelSize: parent.width
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -357,8 +363,9 @@ Rectangle {
                      id: para_const
                      Text{
                          text: "\u2225"
-                         font.family: "FontAwesome"
+                         font.family: "Code2000"
                          anchors.fill: parent
+                         font.pixelSize: parent.width
                          fontSizeMode:Text.Fit
                          horizontalAlignment:Text.AlignHCenter
                          verticalAlignment: Text.AlignVCenter
@@ -381,9 +388,10 @@ Rectangle {
                     id: perp_const
                     Text{
                         text: "\u27C2"
-                        font.family: "FontAwesome"
+                        font.family: "Code2000"
                         anchors.fill: parent
                         fontSizeMode:Text.Fit
+                        font.pixelSize: parent.width
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -406,9 +414,10 @@ Rectangle {
                     id: midP_const
                     Text{
                         text: "\u237F"
-                        font.family: "FontAwesome"
+                        font.family: "Code2000"
                         anchors.fill: parent
                         fontSizeMode:Text.Fit
+                        font.pixelSize: parent.width
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -436,7 +445,6 @@ Rectangle {
                 id: leng_const_button
                 Text{
                     text: "Length"
-                    font.family: "FontAwesome"
                     anchors.fill: parent
                     fontSizeMode:Text.Fit
                     horizontalAlignment:Text.AlignHCenter
@@ -478,7 +486,6 @@ Rectangle {
                 height: parent.height
                 Text{
                     text: "Distance"
-                    font.family: "FontAwesome"
                     anchors.fill: parent
                     fontSizeMode:Text.Fit
                     horizontalAlignment:Text.AlignHCenter
@@ -518,7 +525,6 @@ Rectangle {
                 id: angl_const_button
                 Text{
                     text: "Angle"
-                    font.family: "FontAwesome"
                     anchors.fill: parent
                     fontSizeMode:Text.Fit
                     horizontalAlignment:Text.AlignHCenter
@@ -550,7 +556,6 @@ Rectangle {
             id: validate
             Text{
                 text: "Validate constraints"
-                font.family: "FontAwesome"
                 anchors.fill: parent
                 fontSizeMode:Text.Fit
                 horizontalAlignment:Text.AlignHCenter

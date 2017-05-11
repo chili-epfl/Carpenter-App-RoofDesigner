@@ -60,7 +60,12 @@ Rectangle {
         }
     }
     property ListModel listEntities: ListModel{
+        onCountChanged:
+        {
+//            constrains_list_model.update_constraint_entity_correspondence()
+        }
     }
+
 
     property bool switch_views: true
     Item{
@@ -131,15 +136,34 @@ Rectangle {
 
         ListModel{
             id:constrains_list_model
+
+            //signal correspondence_changed();
+
             function update_model(){
-                console.log("In");
                 constrains_list_model.clear()
                 for(var i=0;i<sketch.children.length;i++){
                     if(sketch.children[i].class_type=="Constraint" && sketch.children[i].existing){
-                        constrains_list_model.append({"constraint":sketch.children[i]})
+                        constrains_list_model.append({"constraint":sketch.children[i],"selected":false})
                     }
                 }
+//                update_constraint_entity_correspondence()
             }
+//            function update_constraint_entity_correspondence(){
+//                for(var i=0;i<constrains_list_model.count;i++){
+//                    constrains_list_model.get(i).selected=false
+//                }
+//                for(var j=0;j<listEntities.count;j++){
+//                    var e=listEntities.get(j).object
+//                    for(i=0;i<constrains_list_model.count;i++){
+//                        var c=constrains_list_model.get(i).constraint
+//                        if(c.entityA===e || c.entityB===e
+//                                || c.ptA===e || c.ptB===e){
+//                            constrains_list_model.get(i).selected=true
+//                        }
+//                    }
+//                }
+//                correspondence_changed()
+//            }
 
         }
         Connections{
@@ -168,7 +192,14 @@ Rectangle {
             model: constrains_list_model
             spacing: Screen.pixelDensity
             delegate: Rectangle {
-                border.color: "black"
+                border.color:  "black"
+
+                //border.color: constrains_list_model.get(index).selected ? "yellow"  : "black"
+//                Connections{
+//                    target: constrains_list_model
+//                    onCorrespondence_changed: border.color=constrains_list_model.get(index).selected ? "yellow"  : "black"
+
+//                }
                 border.width: Screen.pixelDensity*0.5
                 width: constrains_list_view.width
                 height: type_text.implicitHeight+Screen.pixelDensity*5
@@ -187,11 +218,27 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.margins: 5
                     width: height
-                    text:"d"
+                    text:"\uf057"
                     onClicked: {
                         constrains_list_model.get(parent.index).constraint.kill()
                         constrains_list_model.remove(parent.index)
                         sketch.store_state(sketch.undo_buffer.length+1);
+                    }
+                }
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        listEntities.clear()
+                        var c=constrains_list_model.get(parent.index).constraint
+                        if(c.entityA!==null)
+                            listEntities.append({"object":c.entityA})
+                        if(c.entityB!==null)
+                            listEntities.append({"object":c.entityB})
+                        if(c.ptA!==null)
+                            listEntities.append({"object":c.ptA})
+                        if(c.ptB!==null)
+                            listEntities.append({"object":c.ptB})
+
                     }
                 }
             }
@@ -202,6 +249,11 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 5
         visible: switch_views
+        onVisibleChanged: {
+
+
+
+        }
         Rectangle {
             id: listRect
             color: "white"

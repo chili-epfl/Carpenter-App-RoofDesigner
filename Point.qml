@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Window 2.0
 Rectangle {
-
+    id:_root
     width: parent.class_type ? Screen.pixelDensity*5*1/(parent.zoomFactor) : 10
     height: width
     radius: 0.5*width
@@ -12,6 +12,11 @@ Rectangle {
 
     visible: existing
 
+    border.width: selected ? 2:0
+
+    border.color: "yellow"
+
+    property bool selected: false
     property bool existing: true
 
     readonly property string class_type: "Point"
@@ -20,6 +25,20 @@ Rectangle {
     property var undo_buffer:[]
     property var redo_buffer:[]
 
+    Connections{
+        //Constraint pannel is defined only when the parent is skecth
+        target: parent && parent.class_type ? constraintsPanel.listEntities:null
+        ignoreUnknownSignals: true
+        onCountChanged: {
+            selected=false
+            for(var i=0;i<constraintsPanel.listEntities.count;i++){
+                if(constraintsPanel.listEntities.get(i).object===_root){
+                    selected=true
+                    break;
+                }
+            }
+        }
+    }
     Connections{
         ignoreUnknownSignals: false
         target: parent && parent.class_type ? parent : null

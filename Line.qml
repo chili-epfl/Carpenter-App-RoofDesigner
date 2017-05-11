@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Window 2.0
 Rectangle {
+    id:_root
     property var p1;
     property var p2;
 
@@ -13,6 +14,12 @@ Rectangle {
 
     property bool private_existing: true
     property alias mouse_area:mouse_area
+
+    property bool selected: false
+
+    border.width: selected ? 2:0
+
+    border.color: "yellow"
 
     property var undo_buffer:[]
     property var redo_buffer:[]
@@ -29,6 +36,23 @@ Rectangle {
         onUndo: undo()
         onRedo: redo()
     }
+
+    Connections{
+        //Constraint pannel is defined only when the parent is skecth
+        target: parent && parent.class_type ? constraintsPanel.listEntities:null
+        ignoreUnknownSignals: true
+        onCountChanged: {
+            selected=false
+            for(var i=0;i<constraintsPanel.listEntities.count;i++){
+                if(constraintsPanel.listEntities.get(i).object===_root){
+                    selected=true
+                    break;
+                }
+            }
+        }
+    }
+
+
 
     function undo(){
         if(undo_buffer.length>0){
@@ -67,7 +91,7 @@ Rectangle {
         ignoreUnknownSignals: true
         target: p1 ? p1:null
         onReplaceMe: {
-                p1=replacement
+            p1=replacement
         }
     }
 
@@ -75,7 +99,7 @@ Rectangle {
         ignoreUnknownSignals: true
         target: p2 ? p2:null
         onReplaceMe: {
-                p2 = replacement
+            p2 = replacement
         }
     }
 

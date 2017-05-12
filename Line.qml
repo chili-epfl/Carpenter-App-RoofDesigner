@@ -121,7 +121,16 @@ Rectangle {
 
     antialiasing: true
     color:"grey"
-
+    Text{
+        text: parent.parent.class_type ? (parent.width/sketch.scaleFactor).toFixed(3) :""
+        width: Math.min(implicitWidth,parent.width)
+        anchors.bottom: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        fontSizeMode: Text.Fit
+        minimumPointSize:4
+        font.pointSize: 10
+        rotation: parent.rotation<90 &&parent.rotation>-90 ? 0: 180
+    }
     MouseArea{
         id:mouse_area
         drag.smoothed: false

@@ -23,9 +23,16 @@ Rectangle {
 
     property var undo_buffer:[]
     property var redo_buffer:[]
+    onParentChanged: {
+        if(parent.class_type && parent.class_type=="Sketch"){
+            objectName= parent.index_lines+1
+            parent.index_lines=parent.index_lines+1
+        }
+    }
     Component.onCompleted: {
         antialiasing=true
     }
+
     height: parent.class_type ? Screen.pixelDensity*2*1/(parent.zoomFactor) : 3
     width: p1 && p2? Math.sqrt(Math.pow((p1.x-p2.x),2)+Math.pow((p1.y-p2.y),2)) :0
 

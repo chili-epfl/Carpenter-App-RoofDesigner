@@ -4,17 +4,25 @@ Item {
     readonly property string class_type: "Constraint"
 
     property bool existing: private_existing ? (
-        type===0 || type===1 ? entityA!==null && entityA.existing :
-        type===2 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
-        type===3 ? entityA!==null && entityB!==null && entityA!==entityB && entityA.existing && entityB.existing :
-        type===4 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
-        type===5 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
-        type===6 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
-        type===7 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
-        type===8 ? entityA!==null && ptA!==null && ptA.existing && entityA.existing : false) :false
+                                                   type===0 || type===1 ? entityA!==null && entityA.existing :
+                                                                          type===2 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
+                                                                                     type===3 ? entityA!==null && entityB!==null && entityA!==entityB && entityA.existing && entityB.existing :
+                                                                                                type===4 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
+                                                                                                           type===5 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
+                                                                                                                      type===6 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
+                                                                                                                                 type===7 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
+                                                                                                                                            type===8 ? entityA!==null && ptA!==null && ptA.existing && entityA.existing : false) :false
 
     property bool private_existing: true
 
+    property string type_string: type==0 ? "Horizontal" :
+                                           type==1 ? "Vertical" :
+                                                     type==2 ? "Distance" :
+                                                               type==3 ? "Equal Length" :
+                                                                         type==4 ? "Distance" :
+                                                                                   type==5 ? "Parallel":
+                                                                                             type==6 ?"Perpendicular":
+                                                                                                       type==7 ? "Angle" : "Invalid"
     property int type: -1
     property double valA: -1.0
     property var ptA: null
@@ -24,6 +32,13 @@ Item {
 
     property var undo_buffer:[]
     property var redo_buffer:[]
+
+    onParentChanged: {
+        if(parent.class_type && parent.class_type=="Sketch"){
+            objectName= parent.index_constraints+1
+            parent.index_constraints=parent.index_constraints+1+1
+        }
+    }
 
     Connections{
         ignoreUnknownSignals: false

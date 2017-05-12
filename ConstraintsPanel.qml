@@ -62,7 +62,7 @@ Rectangle {
     property ListModel listEntities: ListModel{
         onCountChanged:
         {
-//            constrains_list_model.update_constraint_entity_correspondence()
+            //            constrains_list_model.update_constraint_entity_correspondence()
         }
     }
 
@@ -147,24 +147,24 @@ Rectangle {
                         constrains_list_model.append({"constraint":sketch.children[i],"selected":false})
                     }
                 }
-//                update_constraint_entity_correspondence()
+                //                update_constraint_entity_correspondence()
             }
-//            function update_constraint_entity_correspondence(){
-//                for(var i=0;i<constrains_list_model.count;i++){
-//                    constrains_list_model.get(i).selected=false
-//                }
-//                for(var j=0;j<listEntities.count;j++){
-//                    var e=listEntities.get(j).object
-//                    for(i=0;i<constrains_list_model.count;i++){
-//                        var c=constrains_list_model.get(i).constraint
-//                        if(c.entityA===e || c.entityB===e
-//                                || c.ptA===e || c.ptB===e){
-//                            constrains_list_model.get(i).selected=true
-//                        }
-//                    }
-//                }
-//                correspondence_changed()
-//            }
+            //            function update_constraint_entity_correspondence(){
+            //                for(var i=0;i<constrains_list_model.count;i++){
+            //                    constrains_list_model.get(i).selected=false
+            //                }
+            //                for(var j=0;j<listEntities.count;j++){
+            //                    var e=listEntities.get(j).object
+            //                    for(i=0;i<constrains_list_model.count;i++){
+            //                        var c=constrains_list_model.get(i).constraint
+            //                        if(c.entityA===e || c.entityB===e
+            //                                || c.ptA===e || c.ptB===e){
+            //                            constrains_list_model.get(i).selected=true
+            //                        }
+            //                    }
+            //                }
+            //                correspondence_changed()
+            //            }
 
         }
         Connections{
@@ -196,14 +196,14 @@ Rectangle {
                 border.color:  "black"
 
                 //border.color: constrains_list_model.get(index).selected ? "yellow"  : "black"
-//                Connections{
-//                    target: constrains_list_model
-//                    onCorrespondence_changed: border.color=constrains_list_model.get(index).selected ? "yellow"  : "black"
+                //                Connections{
+                //                    target: constrains_list_model
+                //                    onCorrespondence_changed: border.color=constrains_list_model.get(index).selected ? "yellow"  : "black"
 
-//                }
+                //                }
                 border.width: Screen.pixelDensity*0.5
                 width: constrains_list_view.width
-                height: type_text.implicitHeight+Screen.pixelDensity*5
+                height: 2*type_text.implicitHeight+Screen.pixelDensity*5
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
@@ -222,20 +222,30 @@ Rectangle {
                 }
                 Text{
                     id:type_text
-                    text: "Type:" + constrains_list_model.get(index).constraint.type
+                    text: "Constraint: " + constrains_list_model.get(index).constraint.objectName
                     font.pointSize: 12
                     anchors.top:parent.top
-                    anchors.bottom: parent.bottom
                     anchors.left: parent.left
+                    anchors.right:delete_button.left
                     anchors.margins: 5
                 }
+                Text{
+                    text: "Type: "+ constrains_list_model.get(index).constraint.type_string
+                    font.pointSize: 12
+                    anchors.bottom: parent.bottom
+                    anchors.right:delete_button.left
+                    anchors.left: parent.left
+                    anchors.margins: 5
+
+                }
                 Button{
+                    id:delete_button
                     anchors.top:parent.top
                     anchors.bottom: parent.bottom
                     anchors.right: parent.right
-                    anchors.margins: Screen.pixelDensity*0.25
                     width: height
                     text:"\uf057"
+                    anchors.margins: Screen.pixelDensity*0.5
                     font.family: "FontAwesome"
                     onClicked: {
                         constrains_list_model.get(parent.index).constraint.kill()
@@ -269,12 +279,31 @@ Rectangle {
                 anchors.fill: parent
                 clip: true
                 model: listEntities
-                delegate: Text {
+                delegate:
+                    Item{
                     width: listRect.width
-                    height: Screen.pixelDensity*5
-                    text: "" + object
-                    fontSizeMode: Text.Fit
-                    minimumPixelSize: 10;
+                    height: Screen.pixelDensity*7
+                    Text {
+                        anchors.margins: 5
+                        height: parent.height
+                        anchors.top:parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: unselect_button.left
+                        text: object.class_type+ " " + object.objectName
+                        fontSizeMode: Text.Fit
+                        minimumPixelSize: 10;
+                    }
+                    Button{
+                        anchors.margins: 5
+                        id:unselect_button
+                        text:"\uf00d"
+                        width: height
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        onClicked: listEntities.remove(parent.index)
+                    }
                 }
             }
         }
@@ -360,25 +389,25 @@ Rectangle {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Button {
-                     id: para_const
-                     Text{
-                         text: "\u2225"
-                         font.family: "Code2000"
-                         anchors.fill: parent
-                         font.pixelSize: parent.width
-                         fontSizeMode:Text.Fit
-                         horizontalAlignment:Text.AlignHCenter
-                         verticalAlignment: Text.AlignVCenter
-                     }
+                    id: para_const
+                    Text{
+                        text: "\u2225"
+                        font.family: "Code2000"
+                        anchors.fill: parent
+                        font.pixelSize: parent.width
+                        fontSizeMode:Text.Fit
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
 
-                     anchors.centerIn: parent
-                     width: height
-                     height: Math.min(parent.width,parent.height)
-                     checkable: true
-                     checked: false
-                     enabled: false
-                     onEnabledChanged: this.checked = false
-                 }
+                    anchors.centerIn: parent
+                    width: height
+                    height: Math.min(parent.width,parent.height)
+                    checkable: true
+                    checked: false
+                    enabled: false
+                    onEnabledChanged: this.checked = false
+                }
 
             }
             Item{

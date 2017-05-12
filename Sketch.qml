@@ -12,6 +12,11 @@ Item {
     property int zoom_origin_x: width/2
     property int zoom_origin_y: height/2
 
+    property int index_lines:0
+    property int index_points: 0
+    property int index_constraints: 0
+
+
     transformOrigin: Item.TopLeft
     transform: Scale{
         origin.x:zoom_origin_x

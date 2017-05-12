@@ -10,6 +10,12 @@ Rectangle {
     color: "red"
     z:1
 
+    onParentChanged: {
+        if(parent.class_type && parent.class_type=="Sketch"){
+            objectName= parent.index_points+1
+            parent.index_points=parent.index_points+1
+        }
+    }
     visible: existing
 
     border.width: selected ? 2:0

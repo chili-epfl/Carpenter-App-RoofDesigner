@@ -36,7 +36,7 @@ Item {
     onParentChanged: {
         if(parent.class_type && parent.class_type=="Sketch"){
             objectName= parent.index_constraints+1
-            parent.index_constraints=parent.index_constraints+1+1
+            parent.index_constraints=parent.index_constraints+1
         }
     }
 

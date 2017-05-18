@@ -60,10 +60,7 @@ Rectangle {
         }
     }
     property ListModel listEntities: ListModel{
-        onCountChanged:
-        {
-            //            constrains_list_model.update_constraint_entity_correspondence()
-        }
+        onCountChanged: {}
     }
 
     property bool switch_views: true
@@ -138,8 +135,6 @@ Rectangle {
         ListModel{
             id:constrains_list_model
 
-            //signal correspondence_changed();
-
             function update_model(){
                 constrains_list_model.clear()
                 for(var i=0;i<sketch.children.length;i++){
@@ -147,25 +142,7 @@ Rectangle {
                         constrains_list_model.append({"constraint":sketch.children[i],"selected":false})
                     }
                 }
-                //                update_constraint_entity_correspondence()
             }
-            //            function update_constraint_entity_correspondence(){
-            //                for(var i=0;i<constrains_list_model.count;i++){
-            //                    constrains_list_model.get(i).selected=false
-            //                }
-            //                for(var j=0;j<listEntities.count;j++){
-            //                    var e=listEntities.get(j).object
-            //                    for(i=0;i<constrains_list_model.count;i++){
-            //                        var c=constrains_list_model.get(i).constraint
-            //                        if(c.entityA===e || c.entityB===e
-            //                                || c.ptA===e || c.ptB===e){
-            //                            constrains_list_model.get(i).selected=true
-            //                        }
-            //                    }
-            //                }
-            //                correspondence_changed()
-            //            }
-
         }
         Connections{
             target: sketch
@@ -195,12 +172,6 @@ Rectangle {
             delegate: Rectangle {
                 border.color:  "black"
 
-                //border.color: constrains_list_model.get(index).selected ? "yellow"  : "black"
-                //                Connections{
-                //                    target: constrains_list_model
-                //                    onCorrespondence_changed: border.color=constrains_list_model.get(index).selected ? "yellow"  : "black"
-
-                //                }
                 border.width: Screen.pixelDensity*0.5
                 width: constrains_list_view.width
                 height: 2*type_text.implicitHeight+Screen.pixelDensity*5
@@ -248,12 +219,11 @@ Rectangle {
                     anchors.margins: Screen.pixelDensity*0.5
                     font.family: "FontAwesome"
                     onClicked: {
-                        constrains_list_model.get(parent.index).constraint.kill()
-                        constrains_list_model.remove(parent.index)
+                        constrains_list_model.get(index).constraint.kill()
+                        constrains_list_model.remove(index)
                         sketch.store_state(sketch.undo_buffer.length+1);
                     }
                 }
-
             }
         }
     }
@@ -284,6 +254,7 @@ Rectangle {
                     Item{
                     width: listRect.width
                     height: Screen.pixelDensity*7
+                    Component.onCompleted: console.log(index)
                     Text {
                         anchors.margins: 5
                         height: parent.height
@@ -298,12 +269,14 @@ Rectangle {
                     Button{
                         anchors.margins: 5
                         id:unselect_button
-                        text:"\uf00d"
+                        text:"\u00d7"
                         width: height
                         anchors.top: parent.top
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
-                        onClicked: listEntities.remove(parent.index)
+                        onClicked: {
+                            listEntities.remove(index)
+                        }
                     }
                 }
             }

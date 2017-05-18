@@ -10,7 +10,7 @@ import SketchStaticsExporter 1.0
 
 ToolBar {
     id: menuBar
-    property alias sketch_name:title_field.text
+    property alias sketch_name: title_field.text
     TextField{
         id:title_field
         background: Rectangle{color: "transparent"}
@@ -88,7 +88,7 @@ ToolBar {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    console.log(json_sketch.exportJSONSketch(sketch_folder + sketch_file, sketch))
+                    console.log(json_sketch.exportJSONSketch(sketch_name + ".json", sketch))
                 }
             }
         }

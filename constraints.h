@@ -16,9 +16,9 @@ public:
     Q_INVOKABLE void apply(QObject* sketch);
     Constraints(QObject* parent=Q_NULLPTR);
     ~Constraints();
-private:
     void solve();
 
+private:
     void *CheckMalloc(size_t n);
     void compute2d(QObject* sketch);
     int getPointId(QObject* line, const char* pointPropertyName) const;

@@ -105,13 +105,14 @@ void Constraints::compute2d(QObject* sketch) {
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Constraint")) {
             if (child->property("existing").toBool() &&
-                    child->property("type").isValid()
-                    && child->property("type").toInt() >= 0 &&
+                    child->property("type").isValid() &&
+                    child->property("type").toInt() >= 0 &&
                     child->property("type").toInt() < constraintCodes.length()){
 
-                int hPtA = 0, hPtB = 0, hEntityA = 0, hEntityB = 0;
+                int hPtA = -1, hPtB = -1, hEntityA = -1, hEntityB = -1;
 
-                double valA = child->property("valA").isValid() ? child->property("valA").toDouble() : 0.0;
+                int type = constraintCodes[child->property("type").toInt()];
+                double valA = child->property("valA").isValid() ? child->property("valA").toDouble() : -1.0;
 
                 QObject* ptA = qvariant_cast<QObject*>(child->property("ptA"));
                 if (ptA && ptA->property("x").isValid() && ptA->property("y").isValid()) {
@@ -133,16 +134,10 @@ void Constraints::compute2d(QObject* sketch) {
                     hEntityB = linesIdsFromPointIds[QVector2D(getPointId(entityB, "p1"), getPointId(entityB, "p2"))];
                 }
 
-                qDebug() << "constraint added: (" << constraintCodes[child->property("type").toInt()]
-                         << ", " << child->property("valA").toDouble() << ", "
-                         << hPtA << ", " << hPtB << ", " << hEntityA << ", "
-                         << hEntityB << ")";
-
                 sys.constraint[sys.constraints++] =
                         Slvs_MakeConstraint(
-                            constId++, g,
-                            constraintCodes[child->property("type").toInt()],
-                        entityPlanId, valA, hPtA, hPtB, hEntityA, hEntityB);
+                            constId++, g, type, entityPlanId, valA,
+                            hPtA, hPtB, hEntityA, hEntityB);
             } else {
                 qDebug() << "INVALID CONSTRAINT: " << child;
             }
@@ -151,12 +146,6 @@ void Constraints::compute2d(QObject* sketch) {
 
     solve();
 }
-
-
-//            qDebug() << "(" << constraintCodes[child->property("type").toInt()]
-//                     << ", " << child->property("valA").toDouble() << ", "
-//                     << hPtA << ", " << hPtB << ", " << hEntityA << ", "
-//                     << hEntityB << ")";
 
 void Constraints::solve(){
     Slvs_hGroup g = 2;
@@ -178,12 +167,8 @@ void Constraints::solve(){
             if (entity.type == SLVS_E_POINT_IN_2D){
                 entityObjects[i]->setProperty("x", sys.param[sys.entity[i].param[0] - 1].val);
                 entityObjects[i]->setProperty("y", sys.param[sys.entity[i].param[1] - 1].val);
-//                qDebug() << "P " << sys.entity[i].h << " = (" << sys.param[sys.entity[i].param[0] - 1].val
-//                        << ", " << sys.param[sys.entity[i].param[1] - 1].val << ")";
-            }
+           }
             if (entity.type == SLVS_E_LINE_SEGMENT) {
-//                qDebug() << "L " << sys.entity[i].h << " = (" << sys.entity[i].point[0]
-//                         << ", " << sys.entity[i].point[1] << ")";
             }
         }
     } else {
@@ -215,8 +200,6 @@ int Constraints::getPointId(QObject* line, const char* pointPropertyName) const 
 
 void Constraints::apply(QObject* sketch)
 {
-
-   // qDebug()  << "Constraints start";
     int estimated_memory_need=sketch->children().length()*3;
     if(m_allocated_memory<estimated_memory_need){
         m_allocated_memory=estimated_memory_need*3;
@@ -235,9 +218,6 @@ void Constraints::apply(QObject* sketch)
     } else {
         qDebug() << "Null sketch";
     }
-
-
-    //qDebug()  << "Constraints end";
 }
 
 Constraints::Constraints(QObject *parent):

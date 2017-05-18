@@ -44,22 +44,30 @@ QString JSONSketch::read(const QJsonObject json, QObject* sketch)
 
     QJsonArray qPid = json["pid"].toArray();
     QJsonArray qLid = json["lid"].toArray();
+    QJsonArray qCid = json["cid"].toArray();
+
     QJsonObject qPoints = json["points"].toObject();
     QJsonObject qLines = json["lines"].toObject();
+    QJsonObject qConstraints = json["constraints"].toObject();
 
     qDebug() << "qPid : " << qPid;
     qDebug() << "qLid : " << qLid;
+    qDebug() << "qCid : " << qCid;
+
     qDebug() << "qPoints : " << qPoints;
     qDebug() << "qLines : " << qLines;
+    qDebug() << "qConstraints : " << qConstraints;
 
     nb_points = json["nb_points"].toInt();
     nb_lines = json["nb_lines"].toInt();
+    nb_constraints = json["nb_constraints"].toInt();
 
     qDebug() << "nb_points : " << nb_points;
     qDebug() << "nb_lines : " << nb_lines;
+    qDebug() << "nb_constraints : " << nb_constraints;
 
-    if(nb_points != qPoints.size() || nb_lines != qLines.size()) {
-        return "corrupted number of points or lines";
+    if(nb_points != qPoints.size() || nb_lines != qLines.size() || nb_constraints != qConstraints.size()) {
+        return "corrupted number of points, lines or constraints";
     }
 
     QJsonArray currPoint;
@@ -71,8 +79,6 @@ QString JSONSketch::read(const QJsonObject json, QObject* sketch)
         }
         points.insert(intPid, QVector2D(currPoint[0].toInt()*scale_w, currPoint[1].toInt()*scale_h));
     }
-
-
 
     QJsonArray currLine;
     for(int l(0); l < nb_lines; l++){
@@ -89,6 +95,19 @@ QString JSONSketch::read(const QJsonObject json, QObject* sketch)
         lines.insert(intLid, QVector2D(currLine[0].toInt(), currLine[1].toInt()));
     }
 
+    QJsonArray currConst;
+    for(int c(0); c < nb_constraints; c++){
+        int intCid = qCid[c].toInt();
+        currConst = qConstraints[QString::number(intCid)].toArray();
+        if (currConst.size() != 6){
+            return "corrupted constraints with id: " + QString::number(intCid);
+        }
+        constraints.insert(intCid, QList<int>(
+        {currConst[0].toInt(), currConst[1].toInt(),
+         currConst[2].toInt(), currConst[3].toInt(),
+         currConst[4].toInt(), currConst[5].toInt()}));
+    }
+
     generateSketch(sketch);
 
     return "true";
@@ -98,7 +117,7 @@ void JSONSketch::generateSketch(QObject* sketch) {
     QQmlComponent point_component(qmlEngine(sketch),sketch);
     point_component.loadUrl(QUrl("qrc:/Point.qml"));
 
-    QMap<int, QQuickItem*> qPoints;
+    QMap<int, QObject*> qPoints;
 
     foreach (int pid, points.keys()) {
         QQmlContext* point_context = new QQmlContext(qmlContext(sketch),sketch);
@@ -110,12 +129,15 @@ void JSONSketch::generateSketch(QObject* sketch) {
 
         point->setParent(sketch);
         point->setParentItem(qobject_cast<QQuickItem*>(sketch));
+        point_component.completeCreate();
 
         qPoints.insert(pid, point);
     }
 
     QQmlComponent line_component(qmlEngine(sketch),sketch);
     line_component.loadUrl(QUrl("qrc:/Line.qml"));
+
+    QMap<int, QObject*> qLines;
 
     foreach (int lid, lines.keys()) {
         QQmlContext* line_context = new QQmlContext(qmlContext(sketch),sketch);
@@ -129,6 +151,29 @@ void JSONSketch::generateSketch(QObject* sketch) {
         line->setParent(sketch);
         line->setParentItem(qobject_cast<QQuickItem*>(sketch));
         line_component.completeCreate();
+
+        qLines.insert(lid, line);
+    }
+
+    QQmlComponent const_component(qmlEngine(sketch),sketch);
+    const_component.loadUrl(QUrl("qrc:/Constraint.qml"));
+
+    foreach (int cid, constraints.keys()) {
+        QQmlContext* const_context = new QQmlContext(qmlContext(sketch),sketch);
+        QQuickItem* constraint = qobject_cast<QQuickItem*>(const_component.beginCreate(const_context));
+
+        const_context->setContextObject(constraint);
+
+        constraint->setParent(sketch);
+        constraint->setParentItem(qobject_cast<QQuickItem*>(sketch));
+        const_component.completeCreate();
+
+        constraint->setProperty("type", constraints[cid][0]);
+        constraint->setProperty("valA", constraints[cid][1]);
+        constraint->setProperty("ptA", qVariantFromValue(constraints[cid][2] == -1 ? nullptr : qPoints[constraints[cid][2]]));
+        constraint->setProperty("ptB", qVariantFromValue(constraints[cid][3] == -1 ? nullptr : qPoints[constraints[cid][3]]));
+        constraint->setProperty("entityA", qVariantFromValue(constraints[cid][4] == -1 ? nullptr : qLines[constraints[cid][4]]));
+        constraint->setProperty("entityB", qVariantFromValue(constraints[cid][5] == -1 ? nullptr : qLines[constraints[cid][5]]));
     }
 }
 
@@ -156,14 +201,19 @@ bool JSONSketch::write(QJsonObject &json, QObject* sketch)
 {
     nextPointId = 0;
     nextLineId = 0;
+    nextConstraintId = 0;
     nb_points = 0;
     nb_lines = 0;
+    nb_constraints = 0;
 
     QJsonObject qPoints;
     QJsonArray qPid;
 
     QJsonObject qLines;
     QJsonArray qLid;
+
+    QJsonObject qConstraints;
+    QJsonArray qCid;
 
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Point")
@@ -184,6 +234,7 @@ bool JSONSketch::write(QJsonObject &json, QObject* sketch)
             QObject* p2 = qvariant_cast<QObject*>(child->property("p2"));
             if(p1 != nullptr && p2 !=nullptr){
                 int id = addLine(p1->property("id").toInt(), p2->property("id").toInt());
+                child->setProperty("id", id);
                 qLid.append(id);
                 QJsonArray currLine;
                 currLine.append(p1->property("id").toInt());
@@ -192,6 +243,34 @@ bool JSONSketch::write(QJsonObject &json, QObject* sketch)
             } else {
                 child->setProperty("existing", false);
             }
+        }
+    }
+
+    foreach (QObject* child, sketch->children()) {
+        if (!QString::compare(child->property("class_type").toString(), "Constraint")
+                && child->property("existing").toBool()) {
+            int type = qvariant_cast<int>(child->property("type"));
+            double valA = qvariant_cast<double>(child->property("valA"));
+            QObject* ptA = qvariant_cast<QObject*>(child->property("ptA"));
+            QObject* ptB = qvariant_cast<QObject*>(child->property("ptB"));
+            QObject* entityA = qvariant_cast<QObject*>(child->property("entityA"));
+            QObject* entityB = qvariant_cast<QObject*>(child->property("entityB"));
+
+            int id = addConstraint(type, valA,
+                                   ptA == nullptr ? -1 : ptA->property("id").toInt(),
+                                   ptB == nullptr ? -1 : ptB->property("id").toInt(),
+                                   entityA == nullptr ? -1 : entityA->property("id").toInt(),
+                                   entityB == nullptr ? -1 : entityB->property("id").toInt());
+            child->setProperty("id", id);
+            qCid.append(id);
+            QJsonArray currConst;
+            currConst.append(type);
+            currConst.append(valA);
+            ptA == nullptr ? currConst.append(-1) : currConst.append(ptA->property("id").toInt());
+            ptB == nullptr ? currConst.append(-1) : currConst.append(ptB->property("id").toInt());
+            entityA == nullptr ? currConst.append(-1) : currConst.append(entityA->property("id").toInt());
+            entityB == nullptr ? currConst.append(-1) : currConst.append(entityB->property("id").toInt());
+            qConstraints.insert(QString::number(id), currConst);
         }
     }
 
@@ -204,11 +283,14 @@ bool JSONSketch::write(QJsonObject &json, QObject* sketch)
     json["lid"] = qLid;
     json["lines"] = qLines;
 
+    json["cid"] = qCid;
+    json["constraints"] = qConstraints;
+
     json["nb_points"] = nb_points;
     json["nb_lines"] = nb_lines;
+    json["nb_constraints"] = nb_constraints;
 
-    if(nb_points>0) return true;
-    else return false;
+    return nb_points > 0;
 }
 
 int JSONSketch::addPoint(int x, int y) {
@@ -225,10 +307,21 @@ int JSONSketch::addLine(int p1, int p2) {
     return id;
 }
 
+int JSONSketch::addConstraint(int type, int valA, int ptA, int ptB, int entityA, int entityB) {
+    int id = incrementConstraintId();
+    constraints.insert(id, QList<int>({type, valA, ptA, ptB, entityA, entityB}));
+    nb_constraints++;
+    return id;
+}
+
 int JSONSketch::incrementPointsId() {
     return nextPointId++;
 }
 
 int JSONSketch::incrementLinesId() {
     return nextLineId++;
+}
+
+int JSONSketch::incrementConstraintId() {
+    return nextConstraintId++;
 }

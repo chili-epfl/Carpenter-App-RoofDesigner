@@ -277,6 +277,7 @@ Rectangle {
             Layout.minimumHeight: Screen.pixelDensity*5
             ListView {
                 anchors.fill: parent
+                anchors.margins: 5
                 clip: true
                 model: listEntities
                 delegate:
@@ -416,7 +417,7 @@ Rectangle {
                 Button {
                     id: perp_const
                     Text{
-                        text: "\u27C2"
+                        text: "\u22A5"
                         font.family: "Code2000"
                         anchors.fill: parent
                         fontSizeMode:Text.Fit
@@ -424,7 +425,6 @@ Rectangle {
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-
                     anchors.centerIn: parent
                     width: height
                     height: Math.min(parent.width,parent.height)

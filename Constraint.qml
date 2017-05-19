@@ -30,6 +30,8 @@ Item {
     property var entityA: null
     property var entityB: null
 
+    property bool conflicting: false
+
     property var undo_buffer:[]
     property var redo_buffer:[]
 
@@ -121,5 +123,6 @@ Item {
 
     function kill(){
         private_existing=false
+
     }
 }

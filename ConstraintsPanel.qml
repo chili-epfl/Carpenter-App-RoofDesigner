@@ -170,11 +170,17 @@ Rectangle {
             model: constrains_list_model
             spacing: Screen.pixelDensity
             delegate: Rectangle {
-                border.color:  "black"
-
+                border.color: "black"
                 border.width: Screen.pixelDensity*0.5
                 width: constrains_list_view.width
                 height: 2*type_text.implicitHeight+Screen.pixelDensity*5
+                Component.onCompleted: {
+                    var c = constrains_list_model.get(index).constraint
+                    color = c.conflicting ||
+                            c.conflicting ||
+                            c.conflicting ||
+                            c.conflicting ? "red" : "white"
+                }
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
@@ -188,7 +194,6 @@ Rectangle {
                             listEntities.append({"object":c.ptA})
                         if(c.ptB!==null)
                             listEntities.append({"object":c.ptB})
-
                     }
                 }
                 Text{
@@ -221,6 +226,7 @@ Rectangle {
                     onClicked: {
                         constrains_list_model.get(index).constraint.kill()
                         constrains_list_model.remove(index)
+                        sketch.constraints.apply(sketch)
                         sketch.store_state(sketch.undo_buffer.length+1);
                     }
                 }
@@ -254,7 +260,6 @@ Rectangle {
                     Item{
                     width: listRect.width
                     height: Screen.pixelDensity*7
-                    Component.onCompleted: console.log(index)
                     Text {
                         anchors.margins: 5
                         height: parent.height

@@ -67,8 +67,8 @@ void Constraints::compute2d(QObject* sketch) {
             pointIdsFromPosition.insert(QVector2D(child->property("x").toInt(), child->property("y").toInt()), entityId);
             sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, child->property("x").toInt());
             sys.param[sys.params++] = Slvs_MakeParam(paramId++, g, child->property("y").toInt());
-            sys.entity[sys.entities] = Slvs_MakePoint2d(entityId++, g, entityPlanId, paramId - 2, paramId - 1);
-            entityObjects.insert(sys.entities++, child);
+            sys.entity[sys.entities++] = Slvs_MakePoint2d(entityId, g, entityPlanId, paramId - 2, paramId - 1);
+            entityObjects.insert(entityId++, child);
         }
     }
 
@@ -84,8 +84,8 @@ void Constraints::compute2d(QObject* sketch) {
             int p1Id = getPointId(child, "p1");
             int p2Id = getPointId(child, "p2");
             linesIdsFromPointIds.insert(QVector2D(p1Id, p2Id), entityId);
-            sys.entity[sys.entities] = Slvs_MakeLineSegment(entityId++, g, entityPlanId, p1Id, p2Id);
-            entityObjects.insert(sys.entities++, child);
+            sys.entity[sys.entities++] = Slvs_MakeLineSegment(entityId, g, entityPlanId, p1Id, p2Id);
+            entityObjects.insert(entityId++, child);
         }
     }
 
@@ -133,11 +133,11 @@ void Constraints::compute2d(QObject* sketch) {
                 if (entityB && getPointId(entityB, "p1") && getPointId(entityB, "p2"))  {
                     hEntityB = linesIdsFromPointIds[QVector2D(getPointId(entityB, "p1"), getPointId(entityB, "p2"))];
                 }
-
                 sys.constraint[sys.constraints++] =
                         Slvs_MakeConstraint(
-                            constId++, g, type, entityPlanId, valA,
+                            constId, g, type, entityPlanId, valA,
                             hPtA, hPtB, hEntityA, hEntityB);
+                constraintObjects.insert(constId++, child);
             } else {
                 qDebug() << "INVALID CONSTRAINT: " << child;
             }
@@ -165,11 +165,17 @@ void Constraints::solve(){
             /* sys.param[sys.entity[i].param[0] - 1]: it's needed to decrease the index
              * of sys.param since the param with handle 0 is reserved but not stored in the array.*/
             if (entity.type == SLVS_E_POINT_IN_2D){
-                entityObjects[i]->setProperty("x", sys.param[sys.entity[i].param[0] - 1].val);
-                entityObjects[i]->setProperty("y", sys.param[sys.entity[i].param[1] - 1].val);
-           }
-            if (entity.type == SLVS_E_LINE_SEGMENT) {
+                entityObjects[entity.h]->setProperty("x", sys.param[entity.param[0] - 1].val);
+                entityObjects[entity.h]->setProperty("y", sys.param[entity.param[1] - 1].val);
+                entityObjects[entity.h]->setProperty("conflicting", false);
             }
+            if (entity.type == SLVS_E_LINE_SEGMENT) {
+                entityObjects[entity.h]->setProperty("conflicting", false);
+            }
+
+        }
+        for (int c = 0; c < sys.constraints; c++) {
+            constraintObjects[sys.constraint[c].h]->setProperty("conflicting", false);
         }
     } else {
         std::cout << "solve failed: problematic constraints are:" << std::endl;
@@ -179,6 +185,14 @@ void Constraints::solve(){
                       << failed.valA << ", " << failed.ptA << ", "
                       << failed.ptB << ", " << failed.entityA << ", "
                       << failed.entityB << ")" << std::endl;
+            constraintObjects[failed.h]->setProperty("conflicting", true);
+            for (int e = 3; e < sys.entities; e++) {
+                Slvs_Entity entity = sys.entity[e];
+                if (entity.h == failed.ptA || entity.h == failed.ptB ||
+                        entity.h == failed.entityA || entity.h == failed.entityB) {
+                    entityObjects[entity.h]->setProperty("conflicting", true);
+                }
+            }
         }
         if(sys.result != 0) {
             std::cout << ("system inconsistent\n") << std::endl;

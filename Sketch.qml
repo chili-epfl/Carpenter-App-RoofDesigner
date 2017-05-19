@@ -124,6 +124,7 @@ Item {
 
         Component.onCompleted:  {
             constraint_component = Qt.createComponent("Constraint.qml");
+            constraints.apply(this)
         }
 
         property ListModel list: ListModel {}

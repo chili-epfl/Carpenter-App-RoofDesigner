@@ -7,7 +7,7 @@ Rectangle {
     radius: 0.5*width
     antialiasing: true
 
-    color: "red"
+    color: "blue"
     z:1
 
     onParentChanged: {
@@ -18,12 +18,12 @@ Rectangle {
     }
     visible: existing
 
-    border.width: selected ? 2:0
-
-    border.color: "yellow"
+    border.width: selected || conflicting ? 2:0
+    border.color: conflicting ? "red" : "yellow"
 
     property bool selected: false
     property bool existing: true
+    property bool conflicting: false
 
     readonly property string class_type: "Point"
     property alias mouse_area:mouse_area

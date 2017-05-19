@@ -16,9 +16,9 @@ public:
     Q_INVOKABLE void apply(QObject* sketch);
     Constraints(QObject* parent=Q_NULLPTR);
     ~Constraints();
-    void solve();
 
 private:
+    void solve();
     void *CheckMalloc(size_t n);
     void compute2d(QObject* sketch);
     int getPointId(QObject* line, const char* pointPropertyName) const;
@@ -29,6 +29,7 @@ private:
     int m_allocated_memory;
     Slvs_System sys;
     QMap<int, QObject*> entityObjects;
+    QMap<int, QObject*> constraintObjects;
 };
 
 #endif // CONSTRAINTS_H

@@ -16,10 +16,10 @@ Rectangle {
     property alias mouse_area:mouse_area
 
     property bool selected: false
+    property bool conflicting: false
 
-    border.width: selected ? 2:0
-
-    border.color: "yellow"
+    border.width: selected || conflicting ? 2:0
+    border.color: conflicting ? "red" : "yellow"
 
     property var undo_buffer:[]
     property var redo_buffer:[]

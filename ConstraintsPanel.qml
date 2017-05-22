@@ -180,6 +180,7 @@ Rectangle {
                             c.conflicting ||
                             c.conflicting ||
                             c.conflicting ? "red" : "white"
+                    visible: c.type !== 9
                 }
                 MouseArea{
                     anchors.fill: parent

@@ -3,15 +3,15 @@ import QtQuick 2.0
 Item {
     readonly property string class_type: "Constraint"
 
-    property bool existing: private_existing ? (
-                                                   type===0 || type===1 ? entityA!==null && entityA.existing :
-                                                                          type===2 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
-                                                                                     type===3 ? entityA!==null && entityB!==null && entityA!==entityB && entityA.existing && entityB.existing :
-                                                                                                type===4 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
-                                                                                                           type===5 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
-                                                                                                                      type===6 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
-                                                                                                                                 type===7 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
-                                                                                                                                            type===8 ? entityA!==null && ptA!==null && ptA.existing && entityA.existing : false) :false
+    property bool existing: private_existing ? ( type===0 || type===1 ? entityA!==null && entityA.existing :
+                                                                        type===2 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
+                                                                                   type===3 ? entityA!==null && entityB!==null && entityA!==entityB && entityA.existing && entityB.existing :
+                                                                                              type===4 ? ptA!==null && ptB!==null && ptA!==ptB && ptA.existing && ptB.existing :
+                                                                                                         type===5 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
+                                                                                                                    type===6 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
+                                                                                                                               type===7 ? entityA!==null && entityB!==null && entityA!==entityB &&entityA.existing && entityB.existing :
+                                                                                                                                          type===8 ? entityA!==null && ptA!==null && ptA.existing && entityA.existing :
+                                                                                                                                                     type===9 ? ptA!==null && ptA.existing : false) :false
 
     property bool private_existing: true
 
@@ -22,7 +22,9 @@ Item {
                                                                          type==4 ? "Distance" :
                                                                                    type==5 ? "Parallel":
                                                                                              type==6 ?"Perpendicular":
-                                                                                                       type==7 ? "Angle" : "Invalid"
+                                                                                                       type==7 ? "Angle" :
+                                                                                                                 type==8 ? "MidPoint" :
+                                                                                                                           type==9 ? "Where Dragged" : "Invalid"
     property int type: -1
     property double valA: -1.0
     property var ptA: null

@@ -4,16 +4,20 @@ Item{
     property var current_target:undefined
     property var line_component
     property var constraint_component
+    property var last_move_constraint
 
     Component.onCompleted:  {
         line_component = Qt.createComponent("Line.qml");
         constraint_component = Qt.createComponent("Constraint.qml");
+        last_move_constraint = constraint_component.createObject(sketch)
     }
 
     function onPressed(target,mouse){
         if(target.class_type=="Point"){
             target.mouse_area.drag.target=target
             current_target=target
+            last_move_constraint.type = 9
+            last_move_constraint.ptA = target
         }
     }
 

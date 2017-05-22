@@ -138,15 +138,15 @@ Item {
                 }
             }
             if (constraintsPanel.horz_const.enabled && constraintsPanel.vert_const.checked) {
-                for(var e = 0; e < constraintsPanel.listEntities.count; e++){
-                    var c = constraint_component.createObject(sketch)
+                for(e = 0; e < constraintsPanel.listEntities.count; e++){
+                    c = constraint_component.createObject(sketch)
                     c.type = 1
                     c.entityA = constraintsPanel.listEntities.get(e).object
                 }
             }
             if (constraintsPanel.leng_const.enabled && constraintsPanel.leng_const.checked) {
-                for(var e = 0; e < constraintsPanel.listEntities.count; e++){
-                    var c = constraint_component.createObject(sketch)
+                for(e = 0; e < constraintsPanel.listEntities.count; e++){
+                    c = constraint_component.createObject(sketch)
                     c.type = 2
                     c.valA = constraintsPanel.leng_const.value
                     c.ptA = constraintsPanel.listEntities.get(e).object.p1
@@ -154,36 +154,36 @@ Item {
                 }
             }
             if (constraintsPanel.equL_const.enabled && constraintsPanel.equL_const.checked) {
-                for(var e = 1; e < constraintsPanel.listEntities.count; e++){
-                    var c = constraint_component.createObject(sketch)
+                for(e = 1; e < constraintsPanel.listEntities.count; e++){
+                    c = constraint_component.createObject(sketch)
                     c.type = 3
                     c.entityA = constraintsPanel.listEntities.get(0).object
                     c.entityB = constraintsPanel.listEntities.get(e).object
                 }
             }
             if (constraintsPanel.dist_const.enabled && constraintsPanel.dist_const.checked) {
-                var c = constraint_component.createObject(sketch)
+                c = constraint_component.createObject(sketch)
                 c.type = 4
                 c.valA = constraintsPanel.dist_const.value
                 c.ptA = constraintsPanel.listEntities.get(0).object
                 c.ptB = constraintsPanel.listEntities.get(1).object
             }
             if (constraintsPanel.para_const.enabled && constraintsPanel.para_const.checked) {
-                for(var e = 1; e < constraintsPanel.listEntities.count; e++){
-                    var c = constraint_component.createObject(sketch)
+                for(e = 1; e < constraintsPanel.listEntities.count; e++){
+                    c = constraint_component.createObject(sketch)
                     c.type = 5
                     c.entityA = constraintsPanel.listEntities.get(0).object
                     c.entityB = constraintsPanel.listEntities.get(e).object
                 }
             }
             if (constraintsPanel.perp_const.enabled && constraintsPanel.perp_const.checked) {
-                var c = constraint_component.createObject(sketch)
+                c = constraint_component.createObject(sketch)
                 c.type = 6
                 c.entityA = constraintsPanel.listEntities.get(0).object
                 c.entityB = constraintsPanel.listEntities.get(1).object
             }
             if (constraintsPanel.angl_const.enabled && constraintsPanel.angl_const.checked) {
-                var c = constraint_component.createObject(sketch)
+                c = constraint_component.createObject(sketch)
                 c.type = 7
                 c.valA = 180 - constraintsPanel.angl_const.value
                 c.entityA = constraintsPanel.listEntities.get(0).object
@@ -191,7 +191,7 @@ Item {
             }
             if (constraintsPanel.midP_const.enabled && constraintsPanel.midP_const.checked) {
 //                var pId = constraintsPanel.listEntities.get(0).object.class_type == "Point" ? 0 : 1
-//                var c = constraint_component.createObject(sketch)
+//                c = constraint_component.createObject(sketch)
 //                c.type = 8
 //                c.ptA = constraintsPanel.listEntities.get(pId).object
 //                c.entityA = constraintsPanel.listEntities.get(1 - pId).object

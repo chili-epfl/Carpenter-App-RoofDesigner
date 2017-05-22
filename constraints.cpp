@@ -100,7 +100,8 @@ void Constraints::compute2d(QObject* sketch) {
                                    SLVS_C_PARALLEL,
                                    SLVS_C_PERPENDICULAR,
                                    SLVS_C_ANGLE,
-                                   SLVS_C_AT_MIDPOINT});
+                                   SLVS_C_AT_MIDPOINT,
+                                   SLVS_C_WHERE_DRAGGED});
 
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Constraint")) {
@@ -139,7 +140,7 @@ void Constraints::compute2d(QObject* sketch) {
                             hPtA, hPtB, hEntityA, hEntityB);
                 constraintObjects.insert(constId++, child);
             } else {
-                qDebug() << "INVALID CONSTRAINT: " << child;
+                qDebug() << "UNKNOWN CONSTRAINT: " << child;
             }
         }
     }

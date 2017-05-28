@@ -28,7 +28,6 @@ Item {
     property alias pinch_area: pinch_area
 
     property alias constraints: constraints
-    property alias constraintsList: constraints.list
 
     readonly property string class_type: "Sketch"
 
@@ -98,11 +97,11 @@ Item {
                 parent.parent.x=wheel.x-parent.parent.width/2
                 var new_scale
                 if(wheel.angleDelta.y>0){
-                   new_scale=Math.max(1, parent.parent.zoomFactor*(1.25*wheel.angleDelta.y/120))
-                   new_scale=Math.min(3, new_scale);
-                   parent.parent.zoomFactor=new_scale
-                   parent.parent.zoom_origin_x=mouse_area.mouseX
-                   parent.parent.zoom_origin_y=mouse_area.mouseY
+                    new_scale=Math.max(1, parent.parent.zoomFactor*(1.25*wheel.angleDelta.y/120))
+                    new_scale=Math.min(3, new_scale);
+                    parent.parent.zoomFactor=new_scale
+                    parent.parent.zoom_origin_x=mouse_area.mouseX
+                    parent.parent.zoom_origin_y=mouse_area.mouseY
 
                 }
                 else if(wheel.angleDelta.y<0){
@@ -127,7 +126,7 @@ Item {
             constraints.apply(this)
         }
 
-        property ListModel list: ListModel {}
+        //property ListModel list: ListModel {}
 
         function add(){
             if (constraintsPanel.horz_const.enabled && constraintsPanel.horz_const.checked) {
@@ -146,11 +145,28 @@ Item {
             }
             if (constraintsPanel.leng_const.enabled && constraintsPanel.leng_const.checked) {
                 for(e = 0; e < constraintsPanel.listEntities.count; e++){
-                    c = constraint_component.createObject(sketch)
-                    c.type = 2
-                    c.valA = constraintsPanel.leng_const.value
-                    c.ptA = constraintsPanel.listEntities.get(e).object.p1
-                    c.ptB = constraintsPanel.listEntities.get(e).object.p2
+                    var oldExists = false
+                    for (var i = 0; i < sketch.children.length && !oldExists; i++) {
+                        if (sketch.children[i].class_type == "Constraint" &&
+                                sketch.children[i].existing) {
+                            c = sketch.children[i]
+                            if (c.type === 2 &&
+                                    (c.ptA === constraintsPanel.listEntities.get(e).object.p1 &&
+                                     c.ptB === constraintsPanel.listEntities.get(e).object.p2) ||
+                                    (c.ptA === constraintsPanel.listEntities.get(e).object.p2 &&
+                                     c.ptB === constraintsPanel.listEntities.get(e).object.p1)){
+                                oldExists = true
+                                c.valA = constraintsPanel.leng_const.value
+                            }
+                        }
+                    }
+                    if (!oldExists){
+                        c = constraint_component.createObject(sketch)
+                        c.type = 2
+                        c.valA = constraintsPanel.leng_const.value
+                        c.ptA = constraintsPanel.listEntities.get(e).object.p1
+                        c.ptB = constraintsPanel.listEntities.get(e).object.p2
+                    }
                 }
             }
             if (constraintsPanel.equL_const.enabled && constraintsPanel.equL_const.checked) {
@@ -162,11 +178,28 @@ Item {
                 }
             }
             if (constraintsPanel.dist_const.enabled && constraintsPanel.dist_const.checked) {
-                c = constraint_component.createObject(sketch)
-                c.type = 4
-                c.valA = constraintsPanel.dist_const.value
-                c.ptA = constraintsPanel.listEntities.get(0).object
-                c.ptB = constraintsPanel.listEntities.get(1).object
+                oldExists = false
+                for (i = 0; i < sketch.children.length && !oldExists; i++) {
+                    if (sketch.children[i].class_type == "Constraint" &&
+                            sketch.children[i].existing) {
+                        c = sketch.children[i]
+                        if (c.type === 4 &&
+                                (c.ptA === constraintsPanel.listEntities.get(0).object &&
+                                 c.ptB === constraintsPanel.listEntities.get(1).object) ||
+                                (c.ptA === constraintsPanel.listEntities.get(1).object &&
+                                 c.ptB === constraintsPanel.listEntities.get(0).object)){
+                            oldExists = true
+                            c.valA = constraintsPanel.dist_const.value
+                        }
+                    }
+                }
+                if (!oldExists){
+                    c = constraint_component.createObject(sketch)
+                    c.type = 4
+                    c.valA = constraintsPanel.dist_const.value
+                    c.ptA = constraintsPanel.listEntities.get(0).object
+                    c.ptB = constraintsPanel.listEntities.get(1).object
+                }
             }
             if (constraintsPanel.para_const.enabled && constraintsPanel.para_const.checked) {
                 for(e = 1; e < constraintsPanel.listEntities.count; e++){
@@ -183,19 +216,37 @@ Item {
                 c.entityB = constraintsPanel.listEntities.get(1).object
             }
             if (constraintsPanel.angl_const.enabled && constraintsPanel.angl_const.checked) {
-                c = constraint_component.createObject(sketch)
-                c.type = 7
-                c.valA = 180 - constraintsPanel.angl_const.value
-                c.entityA = constraintsPanel.listEntities.get(0).object
-                c.entityB = constraintsPanel.listEntities.get(1).object
+                oldExists = false
+                console.log("TEST ", constraintsPanel.constrains_list_model.count)
+                for (i = 0; i < sketch.children.length && !oldExists; i++) {
+                    if (sketch.children[i].class_type == "Constraint" &&
+                            sketch.children[i].existing) {
+                        c = sketch.children[i]
+                        if(c.type === 7 &&
+                                ((c.entityA === constraintsPanel.listEntities.get(0).object &&
+                                  c.entityB === constraintsPanel.listEntities.get(1).object) ||
+                                 (c.entityA === constraintsPanel.listEntities.get(1).object &&
+                                  c.entityB === constraintsPanel.listEntities.get(0).object))){
+                            oldExists = true
+                            c.valA = 180 - constraintsPanel.angl_const.value
+                        }
+                    }
+                }
+                if (!oldExists){
+                    c = constraint_component.createObject(sketch)
+                    c.type = 7
+                    c.valA = 180 - constraintsPanel.angl_const.value
+                    c.entityA = constraintsPanel.listEntities.get(0).object
+                    c.entityB = constraintsPanel.listEntities.get(1).object
+                }
             }
-            if (constraintsPanel.midP_const.enabled && constraintsPanel.midP_const.checked) {
-//                var pId = constraintsPanel.listEntities.get(0).object.class_type == "Point" ? 0 : 1
-//                c = constraint_component.createObject(sketch)
-//                c.type = 8
-//                c.ptA = constraintsPanel.listEntities.get(pId).object
-//                c.entityA = constraintsPanel.listEntities.get(1 - pId).object
-            }
+            //if (constraintsPanel.midP_const.enabled && constraintsPanel.midP_const.checked) {
+            //                var pId = constraintsPanel.listEntities.get(0).object.class_type == "Point" ? 0 : 1
+            //                c = constraint_component.createObject(sketch)
+            //                c.type = 8
+            //                c.ptA = constraintsPanel.listEntities.get(pId).object
+            //                c.entityA = constraintsPanel.listEntities.get(1 - pId).object
+            //}
         }
     }
 }

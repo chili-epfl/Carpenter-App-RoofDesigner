@@ -139,8 +139,6 @@ void Constraints::compute2d(QObject* sketch) {
                             constId, g, type, entityPlanId, valA,
                             hPtA, hPtB, hEntityA, hEntityB);
                 constraintObjects.insert(constId++, child);
-            } else {
-                qDebug() << "UNKNOWN CONSTRAINT: " << child;
             }
         }
     }

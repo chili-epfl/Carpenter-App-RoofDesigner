@@ -19,7 +19,7 @@ Rectangle {
     property bool conflicting: false
 
     border.width: selected || conflicting ? 2:0
-    border.color: conflicting ? "red" : "yellow"
+    border.color: conflicting ? selected ? "orange" : "red" : "yellow"
 
     property var undo_buffer:[]
     property var redo_buffer:[]

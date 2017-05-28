@@ -6,6 +6,8 @@ Rectangle {
     id: constraintsPanel
     color: "#999999"
 
+    property var selected_constraint
+
     Drag.active: drag_area.drag.active
 
     onVisibleChanged: {
@@ -62,6 +64,7 @@ Rectangle {
     property ListModel listEntities: ListModel{
         onCountChanged: {}
     }
+    property alias constrains_list_model: constrains_list_model
 
     property bool switch_views: true
     Item{
@@ -169,32 +172,35 @@ Rectangle {
             clip: true
             model: constrains_list_model
             spacing: Screen.pixelDensity
+            property var selected_constraint
             delegate: Rectangle {
+                id: constraints_rectangle
                 border.color: "black"
                 border.width: Screen.pixelDensity*0.5
                 width: constrains_list_view.width
                 height: 2*type_text.implicitHeight+Screen.pixelDensity*5
                 Component.onCompleted: {
                     var c = constrains_list_model.get(index).constraint
-                    color = c.conflicting ||
-                            c.conflicting ||
-                            c.conflicting ||
-                            c.conflicting ? "red" : "white"
                     visible: c.type !== 9
                 }
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
                         listEntities.clear()
-                        var c=constrains_list_model.get(parent.index).constraint
-                        if(c.entityA!==null)
-                            listEntities.append({"object":c.entityA})
-                        if(c.entityB!==null)
-                            listEntities.append({"object":c.entityB})
-                        if(c.ptA!==null)
-                            listEntities.append({"object":c.ptA})
-                        if(c.ptB!==null)
-                            listEntities.append({"object":c.ptB})
+                        var c = constrains_list_model.get(index).constraint
+                        if (selected_constraint != c){
+                            selected_constraint = c
+                            if(c.entityA!==null)
+                                listEntities.append({"object":c.entityA})
+                            if(c.entityB!==null)
+                                listEntities.append({"object":c.entityB})
+                            if(c.ptA!==null)
+                                listEntities.append({"object":c.ptA})
+                            if(c.ptB!==null)
+                                listEntities.append({"object":c.ptB})
+                        } else {
+                            selected_constraint = null
+                        }
                     }
                 }
                 Text{
@@ -523,7 +529,7 @@ Rectangle {
         Item {
             id: angl_const
             property bool checked: angl_const_button.checked
-            property double value: angl_const_value.text
+            property var value: angl_const_value.text
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.minimumHeight: Screen.pixelDensity*5

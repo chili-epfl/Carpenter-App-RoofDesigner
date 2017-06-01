@@ -113,7 +113,7 @@ void Constraints::compute2d(QObject* sketch) {
                 int hPtA = -1, hPtB = -1, hEntityA = -1, hEntityB = -1;
 
                 int type = constraintCodes[child->property("type").toInt()];
-                double valA = child->property("valA").isValid() ? child->property("valA").toDouble() : -1.0;
+                double valA = child->property("valA").isValid() ? child->property("valA").toDouble() * sketch->property("scaleFactor").toDouble() : -1.0;
 
                 QObject* ptA = qvariant_cast<QObject*>(child->property("ptA"));
                 if (ptA && ptA->property("x").isValid() && ptA->property("y").isValid()) {

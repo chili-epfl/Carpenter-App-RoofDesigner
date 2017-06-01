@@ -8,6 +8,8 @@ Item {
 
     property real scaleFactor: Screen.pixelDensity
 
+    property var origin
+
     property real zoomFactor: 1
     property int zoom_origin_x: width/2
     property int zoom_origin_y: height/2
@@ -158,6 +160,7 @@ Item {
                                      c.ptB === constraintsPanel.listEntities.get(e).object.p1)){
                                 oldExists = true
                                 c.valA = constraintsPanel.leng_const.value
+                                sketch.scaleFactor = constraintsPanel.listEntities.get(e).object.width / c.valA
                             }
                         }
                     }
@@ -167,6 +170,7 @@ Item {
                         c.valA = constraintsPanel.leng_const.value
                         c.ptA = constraintsPanel.listEntities.get(e).object.p1
                         c.ptB = constraintsPanel.listEntities.get(e).object.p2
+                        sketch.scaleFactor = constraintsPanel.listEntities.get(e).object.width / c.valA
                     }
                 }
             }
@@ -191,6 +195,17 @@ Item {
                                  c.ptB === constraintsPanel.listEntities.get(0).object)){
                             oldExists = true
                             c.valA = constraintsPanel.dist_const.value
+                            for (var l = 0; l < sketch.children.length; l++) {
+                                if (sketch.children[l].class_type == "Line" &&
+                                        sketch.children[l].existing && (
+                                            (sketch.children[l].p1 == c.ptA &&
+                                             sketch.children[l].p2 == c.ptB) ||
+                                            (sketch.children[l].p2 == c.ptB &&
+                                             sketch.children[l].p2 == c.ptA))) {
+                                    var line = sketch.children[l]
+                                    sketch.scaleFactor = line.width / c.valA
+                                }
+                            }
                         }
                     }
                 }
@@ -200,6 +215,17 @@ Item {
                     c.valA = constraintsPanel.dist_const.value
                     c.ptA = constraintsPanel.listEntities.get(0).object
                     c.ptB = constraintsPanel.listEntities.get(1).object
+                    for (l = 0; l < sketch.children.length; l++) {
+                        if (sketch.children[l].class_type == "Line" &&
+                                sketch.children[l].existing && (
+                                    (sketch.children[l].p1 == c.ptA &&
+                                     sketch.children[l].p2 == c.ptB) ||
+                                    (sketch.children[l].p2 == c.ptB &&
+                                     sketch.children[l].p2 == c.ptA))) {
+                            line = sketch.children[l]
+                            sketch.scaleFactor = line.width / c.valA
+                        }
+                    }
                 }
             }
             if (constraintsPanel.para_const.enabled && constraintsPanel.para_const.checked) {

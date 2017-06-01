@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Window 2.0
+
 Rectangle {
     id:_root
     width: parent.class_type ? Screen.pixelDensity*5*1/(parent.zoomFactor) : 10
@@ -97,6 +98,13 @@ Rectangle {
         context_menu.visible=true
     }
 
+    function distance(p2){
+        if (p2.class_type === "Point"){
+            return sqrt((x - p2.x) * (x - p2.x) + (y - p2.y) * (y - p2.y))
+        } else {
+            return -1
+        }
+    }
 
     MouseArea{
         id:mouse_area

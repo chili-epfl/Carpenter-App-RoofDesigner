@@ -27,7 +27,7 @@ Page {
 
     property bool isBackgroundSet: (background_picture_url!="")
     property alias visibleBackground: backgroundImage.visible
-    property url background_picture_url: ""
+    property alias background_picture_url: sketch.background_picture_url
 
     property alias visibleGrid: backgroundgrid.visible
 
@@ -53,7 +53,7 @@ Page {
         id: backgroundImage
         mipmap: true
         anchors.fill: parent
-        fillMode: Image.PreserveAspectFit
+        fillMode: Image.PreserveAspectCrop
         source: background_picture_url
         transform:  Scale{
             origin.x:sketch.zoom_origin_x

@@ -120,13 +120,13 @@ ToolBar {
                         sketchScreen.visibleGrid=this.checked
                     }
                 }
-                MenuItem {
+                /*MenuItem {
                     text: "Login"
                     onTriggered: {
-                        //                        loginFormLoader.source = "qrc:/LoginForm.qml"
-                        //                        sketchScreenLoader.source = ""
+                        loginFormLoader.source = "qrc:/LoginForm.qml"
+                        sketchScreenLoader.source = ""
                     }
-                }
+                }*/
             }
         }
     }

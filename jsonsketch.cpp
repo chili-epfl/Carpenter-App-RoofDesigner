@@ -110,6 +110,8 @@ QString JSONSketch::read(const QJsonObject json, QObject* sketch)
 
     generateSketch(sketch);
 
+    sketch->setProperty("background_picture_url", qvariant_cast<QUrl>(json["background_picture_url"].toString()));
+
     return "true";
 }
 
@@ -289,6 +291,8 @@ bool JSONSketch::write(QJsonObject &json, QObject* sketch)
     json["nb_points"] = nb_points;
     json["nb_lines"] = nb_lines;
     json["nb_constraints"] = nb_constraints;
+
+    json["background_picture_url"] = sketch->property("background_picture_url").toString();
 
     return nb_points > 0;
 }

@@ -16,6 +16,7 @@ Item {
     property int index_points: 0
     property int index_constraints: 0
 
+    property url background_picture_url: ""
 
     transformOrigin: Item.TopLeft
     transform: Scale{

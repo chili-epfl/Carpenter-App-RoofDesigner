@@ -252,6 +252,9 @@ bool JSONSketch::write(QJsonObject &json, QObject* sketch)
         if (!QString::compare(child->property("class_type").toString(), "Constraint")
                 && child->property("existing").toBool()) {
             int type = qvariant_cast<int>(child->property("type"));
+            if (type == 9) { // if type == WHERE_DRAGGED
+                continue;
+            }
             double valA = qvariant_cast<double>(child->property("valA"));
             QObject* ptA = qvariant_cast<QObject*>(child->property("ptA"));
             QObject* ptB = qvariant_cast<QObject*>(child->property("ptB"));

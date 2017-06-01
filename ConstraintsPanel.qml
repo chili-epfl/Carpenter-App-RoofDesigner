@@ -181,7 +181,11 @@ Rectangle {
                 height: 2*type_text.implicitHeight+Screen.pixelDensity*5
                 Component.onCompleted: {
                     var c = constrains_list_model.get(index).constraint
-                    visible: c.type !== 9
+                    color = c.conflicting ? "red" : "white"
+                    if (c.type === 9) {
+                        visible = false
+                        height = 0
+                    }
                 }
                 MouseArea{
                     anchors.fill: parent

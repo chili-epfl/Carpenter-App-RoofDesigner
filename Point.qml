@@ -100,7 +100,7 @@ Rectangle {
 
     function distance(p2){
         if (p2.class_type === "Point"){
-            return sqrt((x - p2.x) * (x - p2.x) + (y - p2.y) * (y - p2.y))
+            return Math.sqrt((x - p2.x) * (x - p2.x) + (y - p2.y) * (y - p2.y))
         } else {
             return -1
         }

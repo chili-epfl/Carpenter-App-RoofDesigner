@@ -13,7 +13,7 @@ public:
     explicit JSONSketch(QObject* parent=0);
 
     Q_INVOKABLE QString loadSketch(const QString url, QObject* sketch);
-    Q_INVOKABLE QString exportJSONSketch(const QString url, QObject* sketch);
+    Q_INVOKABLE QString exportJSONSketch(const QString url, QObject* sketch, int mode);
 
     Q_INVOKABLE int addPoint(int x, int y);
     Q_INVOKABLE int addLine(int p1, int p2);
@@ -22,15 +22,13 @@ private:
     int nextPointId;
     int nextLineId;
     int nextConstraintId;
-    int nb_points;
-    int nb_lines;
-    int nb_constraints;
     QMap<int, QVector2D> points;
     QMap<int, QVector2D> lines;
     QMap<int, QList<int>> constraints;
     QString read(const QJsonObject json, QObject* sketch);
     void generateSketch(QObject* sketch);
-    bool write(QJsonObject &json, QObject* sketch);
+    bool writeAll(QJsonObject &json, QObject* sketch);
+    bool writeMm(QJsonObject &json, QObject* sketch);
     int incrementPointsId();
     int incrementLinesId();
     int incrementConstraintId();

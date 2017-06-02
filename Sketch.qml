@@ -8,7 +8,7 @@ Item {
 
     property real scaleFactor: Screen.pixelDensity
 
-    property var origin
+    property Point origin: null
 
     property real zoomFactor: 1
     property int zoom_origin_x: width/2
@@ -126,7 +126,7 @@ Item {
 
         Component.onCompleted:  {
             constraint_component = Qt.createComponent("Constraint.qml");
-            constraints.apply(this)
+            constraints.apply(sketch)
         }
 
         //property ListModel list: ListModel {}

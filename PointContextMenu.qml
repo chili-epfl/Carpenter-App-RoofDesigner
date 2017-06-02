@@ -9,6 +9,7 @@ Popup {
     height: Screen.pixelDensity*10 +20
     visible: false
 
+    property bool origin: o.checked
     property bool cx: cx.checked
     property bool cy: cy.checked
     property bool cz: cz.checked
@@ -19,6 +20,19 @@ Popup {
     RowLayout {
         anchors.fill: parent
         spacing: 0
+
+        ToolButton {
+            id: o
+            text: "Origin"
+            font.family: "FontAwesome"
+            onClicked: {
+                if (sketch.origin != null){
+                    sketch.origin.color = "blue"
+                }
+                sketch.origin = _root
+                _root.color = "green"
+            }
+        }
 
         ToolButton {
             id: cx

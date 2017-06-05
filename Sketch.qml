@@ -8,7 +8,7 @@ Item {
 
     property real scaleFactor: Screen.pixelDensity
 
-    property Point origin: null
+    property var origin;
 
     property real zoomFactor: 1
     property int zoom_origin_x: width/2
@@ -160,9 +160,7 @@ Item {
                                      c.ptB === constraintsPanel.listEntities.get(e).object.p1)){
                                 oldExists = true
                                 c.valA = constraintsPanel.leng_const.value
-                                var d = c.ptA.distance(c.ptB)
-                                if (d !== -1)
-                                    sketch.scaleFactor = d / c.valA
+                                updateScaleFactor(c)
                             }
                         }
                     }
@@ -172,9 +170,7 @@ Item {
                         c.valA = constraintsPanel.leng_const.value
                         c.ptA = constraintsPanel.listEntities.get(e).object.p1
                         c.ptB = constraintsPanel.listEntities.get(e).object.p2
-                        d = c.ptA.distance(c.ptB)
-                        if (d !== -1)
-                            sketch.scaleFactor = d / c.valA
+                        updateScaleFactor(c)
                     }
                 }
             }
@@ -199,9 +195,7 @@ Item {
                                  c.ptB === constraintsPanel.listEntities.get(0).object)){
                             oldExists = true
                             c.valA = constraintsPanel.dist_const.value
-                            d = c.ptA.distance(c.ptB)
-                            if (d !== -1)
-                                sketch.scaleFactor = d / c.valA
+                            updateScaleFactor(c)
                         }
                     }
                 }
@@ -211,9 +205,7 @@ Item {
                     c.valA = constraintsPanel.dist_const.value
                     c.ptA = constraintsPanel.listEntities.get(0).object
                     c.ptB = constraintsPanel.listEntities.get(1).object
-                    d = c.ptA.distance(c.ptB)
-                    if (d !== -1)
-                        sketch.scaleFactor = d / c.valA
+                    updateScaleFactor(c)
                 }
             }
             if (constraintsPanel.para_const.enabled && constraintsPanel.para_const.checked) {
@@ -232,7 +224,6 @@ Item {
             }
             if (constraintsPanel.angl_const.enabled && constraintsPanel.angl_const.checked) {
                 oldExists = false
-                console.log("TEST ", constraintsPanel.constrains_list_model.count)
                 for (i = 0; i < sketch.children.length && !oldExists; i++) {
                     if (sketch.children[i].class_type == "Constraint" &&
                             sketch.children[i].existing) {
@@ -255,6 +246,7 @@ Item {
                     c.entityB = constraintsPanel.listEntities.get(1).object
                 }
             }
+
             //if (constraintsPanel.midP_const.enabled && constraintsPanel.midP_const.checked) {
             //                var pId = constraintsPanel.listEntities.get(0).object.class_type == "Point" ? 0 : 1
             //                c = constraint_component.createObject(sketch)
@@ -262,6 +254,12 @@ Item {
             //                c.ptA = constraintsPanel.listEntities.get(pId).object
             //                c.entityA = constraintsPanel.listEntities.get(1 - pId).object
             //}
+        }
+
+        function updateScaleFactor(c) {
+            var d = c.ptA.distance(c.ptB)
+            if (d !== -1)
+                sketch.scaleFactor = d / c.valA
         }
     }
 }

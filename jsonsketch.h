@@ -19,6 +19,7 @@ public:
     Q_INVOKABLE int addLine(int p1, int p2);
     Q_INVOKABLE int addConstraint(int type, int valA, int ptA, int ptB, int entityA, int entityB);
 private:
+    int originId;
     int nextPointId;
     int nextLineId;
     int nextConstraintId;

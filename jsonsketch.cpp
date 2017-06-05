@@ -29,13 +29,17 @@ QString JSONSketch::loadSketch(const QString url, QObject* sketch)
     QJsonParseError error;
     QJsonDocument doc(QJsonDocument::fromJson(data, &error));
 
-    return read(doc.object(), sketch);
+    return read(doc.object(), sketch) + ", Sketch loaded";
 }
 
 QString JSONSketch::read(const QJsonObject json, QObject* sketch)
 {
+    sketch->setProperty("scaleFactor", json["scaleFactor"].toDouble());
+
     int json_sketch_width=json["sketch_width"].toInt();
     int json_sketch_height=json["sketch_height"].toInt();
+
+    originId = json["origin_id"].toInt();
 
     qreal scale_w=(qreal)sketch->property("width").toInt()/json_sketch_width;
     qreal scale_h=(qreal)sketch->property("height").toInt()/json_sketch_height;
@@ -90,7 +94,7 @@ QString JSONSketch::read(const QJsonObject json, QObject* sketch)
 
     sketch->setProperty("background_picture_url", qvariant_cast<QUrl>(json["background_picture_url"].toString()));
 
-    return "true";
+    return "Sketch read";
 }
 
 void JSONSketch::generateSketch(QObject* sketch) {
@@ -113,6 +117,9 @@ void JSONSketch::generateSketch(QObject* sketch) {
 
         qPoints.insert(pid, point);
     }
+
+    qPoints[originId]->setProperty("color", "green");
+    sketch->setProperty("origin", qVariantFromValue(qPoints[originId]));
 
     QQmlComponent line_component(qmlEngine(sketch),sketch);
     line_component.loadUrl(QUrl("qrc:/Line.qml"));
@@ -158,7 +165,7 @@ void JSONSketch::generateSketch(QObject* sketch) {
 }
 
 QString JSONSketch::exportJSONSketch(const QString url, QObject* sketch, int mode) {
-    QList<QString> modeStrings = {"", "mm_"};
+    QList<QString> modeStrings = {"", "mm"};
     if (mode < 0 || mode >= modeStrings.length()){
         return "invalid mode";
     }
@@ -180,7 +187,7 @@ QString JSONSketch::exportJSONSketch(const QString url, QObject* sketch, int mod
         break;
     }
 
-    QFile file(modeStrings[mode] + url);
+    QFile file(url + modeStrings[mode]);
 
     if (!file.open(QIODevice::WriteOnly)) {
         return "cannot open the JSON file";
@@ -190,7 +197,7 @@ QString JSONSketch::exportJSONSketch(const QString url, QObject* sketch, int mod
     file.write(doc.toJson());
     file.close();
 
-    return "true";
+    return "Sketch exported";
 }
 
 bool JSONSketch::writeAll(QJsonObject &json, QObject* sketch)
@@ -273,6 +280,11 @@ bool JSONSketch::writeAll(QJsonObject &json, QObject* sketch)
     json["sketch_width"] = sketch->property("width").toInt();
     json["sketch_height"] = sketch->property("height").toInt();
 
+    json["scaleFactor"] = sketch->property("scaleFactor").toReal();
+    QObject* origin = qvariant_cast<QObject*>(sketch->property("origin"));
+    json["origin_id"] = origin->property("id").toInt();
+
+
     json["pid"] = qPid;
     json["points"] = qPoints;
 
@@ -292,8 +304,6 @@ bool JSONSketch::writeMm(QJsonObject &json, QObject* sketch)
     if (qvariant_cast<QObject*>(sketch->property("origin")) == nullptr){
         return false;
     }
-
-    qDebug() << sketch->property("scaleFactor");
 
     nextPointId = 0;
     nextLineId = 0;
@@ -320,7 +330,7 @@ bool JSONSketch::writeMm(QJsonObject &json, QObject* sketch)
         }
     }
 
-    json["origin"] = origin->property("id").toInt();
+    json["origin_id"] = origin->property("id").toInt();
 
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Line")

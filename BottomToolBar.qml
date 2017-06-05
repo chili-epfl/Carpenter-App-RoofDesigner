@@ -19,19 +19,20 @@ ToolBar {
     property int  ruler_order: 0
 
     onScaleFactorChanged: {
-        var ratio=scaleFactor/Screen.pixelDensity
-        var order = Math.floor(Math.log(ratio) / Math.LN10);
+        var ratio = scaleFactor / Screen.pixelDensity
+        var order = 1 - Math.floor(Math.log(ratio) / Math.LN10)
         if(order <= 0) {
-            ruler_order=0
+            ruler_order = 0
         }
         else if(order > 6) {
-            ruler_order=6
+            ruler_order = 6
         }
         else {
-            ruler_order=order;
+            ruler_order = order;
         }
 
-        ruler_length=scaleFactor*1/Math.pow(10,order-1)
+        ruler_length = scaleFactor * Math.pow(10, order)
+
     }
 
     Rectangle{
@@ -58,7 +59,7 @@ ToolBar {
         Text{
             anchors.bottom:parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            text:"1 "+ availableUnits[ruler_order+1]
+            text:"1 "+ availableUnits[ruler_order]
             anchors.margins: 10
         }
     }

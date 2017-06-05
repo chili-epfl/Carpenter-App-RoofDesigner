@@ -20,7 +20,7 @@ Rectangle {
     visible: existing
 
     border.width: selected || conflicting ? 2:0
-    border.color: conflicting ? "red" : "yellow"
+    border.color: conflicting ? selected ? "orange" : "red" : "yellow"
 
     property bool selected: false
     property bool existing: true

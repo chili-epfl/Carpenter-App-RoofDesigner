@@ -16,7 +16,7 @@ Page {
     Component.onCompleted: {
         if(sketch_to_load.length>0){
             console.log(json_sketch.loadSketch(Settings.exportPath + sketch_to_load+ ".json", sketch))
-            top_menu_bar.sketch_name=sketch_to_load;
+            topBar.sketch_name=sketch_to_load;
             sketch.store_state(sketch.undo_buffer.length+1);
         }
     }
@@ -38,13 +38,13 @@ Page {
 
     property alias sketch: sketch
 
-    header: TopMenuBar{
-        id:top_menu_bar
+    header: TopBar{
+        id:topBar
         height: Screen.pixelDensity*5*scalePixelFactor
         visible: aux_loader.status!=Loader.Ready
     }
 
-    footer: BottomToolBar{
+    footer: BottomBar{
         height: Screen.pixelDensity*5*scalePixelFactor
         visible: aux_loader.status!=Loader.Ready
     }
@@ -66,13 +66,16 @@ Page {
 
     Image {
         id: backgroundgrid
-        anchors.fill: parent
+        width: parent.width / scale
+        height: parent.height / scale
+        anchors.centerIn: parent
         fillMode: Image.Tile
         opacity: 0.42
         source: "pictures/background_grid.png"
+        scale: sketch.scaleFactor / 5
         transform:  Scale{
-            origin.x:sketch.zoom_origin_x
-            origin.y:sketch.zoom_origin_y
+            origin.x: sketch.zoom_origin_x
+            origin.y: sketch.zoom_origin_y
             xScale: sketch.zoomFactor
             yScale: sketch.zoomFactor
         }
@@ -119,7 +122,4 @@ Page {
     DeleteTool{
         id:delete_tool
     }
-
-
-
 }

@@ -8,11 +8,11 @@
         <file>fonts/Material-Design-Iconic-Font.ttf</file>
         <file>fonts/FontAwesome.otf</file>
         <file>ToolsMenu.qml</file>
-        <file>TopMenuBar.qml</file>
+        <file>TopBar.qml</file>
         <file>Sketch.qml</file>
         <file>CaptureImage.qml</file>
         <file>MessageBox.qml</file>
-        <file>BottomToolBar.qml</file>
+        <file>BottomBar.qml</file>
         <file>PointContextMenu.qml</file>
         <file>SplashScreen.qml</file>
         <file>WelcomeScreen.qml</file>

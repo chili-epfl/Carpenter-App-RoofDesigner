@@ -9,7 +9,7 @@ import SketchConverter 1.0
 import SketchStaticsExporter 1.0
 
 ToolBar {
-    id: menuBar
+    id: topBar
     property alias sketch_name: title_field.text
     TextField{
         id:title_field
@@ -33,7 +33,7 @@ ToolBar {
         Image{
             source: "qrc:/icons/icons/simple-orange-house-md.png"
             fillMode: Image.PreserveAspectFit
-            height: menuBar.height-10
+            height: topBar.height-10
             anchors.verticalCenter: parent.verticalCenter
             MouseArea{
                 anchors.fill: parent
@@ -46,11 +46,11 @@ ToolBar {
                 }
             }
         }
-        ToolSeparator{height: menuBar.height}
+        ToolSeparator{height: topBar.height}
         Image{
             source: "qrc:/icons/icons/undo-4-xxl.png"
             fillMode: Image.PreserveAspectFit
-            height: menuBar.height-10
+            height: topBar.height-10
             anchors.verticalCenter: parent.verticalCenter
             MouseArea{
                 anchors.fill: parent
@@ -60,18 +60,18 @@ ToolBar {
         Image{
             source: "qrc:/icons/icons/redo-4-xxl.png"
             fillMode: Image.PreserveAspectFit
-            height: menuBar.height-10
+            height: topBar.height-10
             anchors.verticalCenter: parent.verticalCenter
             MouseArea{
                 anchors.fill: parent
                 onClicked: sketch.redo();
             }
         }
-        ToolSeparator{height: menuBar.height}
+        ToolSeparator{height: topBar.height}
         Image{
             source: "qrc:/icons/icons/camera.png"
             fillMode: Image.PreserveAspectFit
-            height: menuBar.height-10
+            height: topBar.height-10
             anchors.verticalCenter: parent.verticalCenter
             MouseArea{
                 anchors.fill: parent
@@ -79,11 +79,11 @@ ToolBar {
 
             }
         }
-        ToolSeparator{height: menuBar.height}
+        ToolSeparator{height: topBar.height}
         Image{
             source: "qrc:/icons/icons/export3d.png"
             fillMode: Image.PreserveAspectFit
-            height: menuBar.height-10
+            height: topBar.height-10
             anchors.verticalCenter: parent.verticalCenter
             MouseArea{
                 anchors.fill: parent
@@ -92,10 +92,10 @@ ToolBar {
                 }
             }
         }
-        ToolSeparator{height: menuBar.height}
+        ToolSeparator{height: topBar.height}
         ToolButton{
             text:"⋮"
-            height: menuBar.height
+            height: topBar.height
             onClicked: textMenu.open()
             Menu {
                 id:textMenu

@@ -86,13 +86,6 @@ Page {
 
     }
 
-
-    ToolsMenu {
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
-        anchors.margins: 10
-    }
-
     ConstraintsPanel {
         id: constraintsPanel
         visible: current_tool===select_tool
@@ -100,6 +93,11 @@ Page {
         y:parent.height/2-height/2
         height: parent.height-10
         width: Screen.pixelDensity*50
+    }
+
+    ToolsMenu {
+        x:10
+        y:parent.height/2-height/2
     }
 
     Loader{

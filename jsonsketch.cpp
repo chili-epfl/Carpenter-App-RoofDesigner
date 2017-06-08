@@ -118,8 +118,10 @@ void JSONSketch::generateSketch(QObject* sketch) {
         qPoints.insert(pid, point);
     }
 
-    qPoints[originId]->setProperty("color", "green");
-    sketch->setProperty("origin", qVariantFromValue(qPoints[originId]));
+    if (originId >= 0){
+        qPoints[originId]->setProperty("color", "green");
+        sketch->setProperty("origin", qVariantFromValue(qPoints[originId]));
+    }
 
     QQmlComponent line_component(qmlEngine(sketch),sketch);
     line_component.loadUrl(QUrl("qrc:/Line.qml"));
@@ -282,7 +284,11 @@ bool JSONSketch::writeAll(QJsonObject &json, QObject* sketch)
 
     json["scaleFactor"] = sketch->property("scaleFactor").toReal();
     QObject* origin = qvariant_cast<QObject*>(sketch->property("origin"));
-    json["origin_id"] = origin->property("id").toInt();
+    if (origin != nullptr){
+        json["origin_id"] = origin->property("id").toInt();
+    } else {
+        json["origin_id"] = -1;
+    }
 
 
     json["pid"] = qPid;
@@ -330,8 +336,6 @@ bool JSONSketch::writeMm(QJsonObject &json, QObject* sketch)
         }
     }
 
-    json["origin_id"] = origin->property("id").toInt();
-
     foreach (QObject* child, sketch->children()) {
         if (!QString::compare(child->property("class_type").toString(), "Line")
                 && child->property("existing").toBool()) {
@@ -349,6 +353,8 @@ bool JSONSketch::writeMm(QJsonObject &json, QObject* sketch)
             }
         }
     }
+
+    json["origin_id"] = origin->property("id").toInt();
 
     json["pid"] = qPid;
     json["points"] = qPoints;

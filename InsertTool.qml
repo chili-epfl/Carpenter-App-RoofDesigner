@@ -9,7 +9,6 @@ Item{
         line_component = Qt.createComponent("Line.qml");
         point_component = Qt.createComponent("Point.qml");
         constraint_component = Qt.createComponent("Constraint.qml");
-
     }
 
     property var unfinished_p1: undefined
@@ -59,7 +58,6 @@ Item{
         line.p2=p2
         unfinished_p2=p2
         unfinished_line=line
-
     }
 
     function onReleased(target,mouse){

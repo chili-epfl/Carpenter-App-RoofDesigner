@@ -1,111 +1,143 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.2
-import QtMultimedia 5.5
-import QtQuick.Controls.Styles 1.4
-import "." // to import Settings
+﻿import "." // to import Settings
+import QtQuick 2.7
+import QtQuick.Controls 2.1
+import QtQuick.Layouts 1.1
+import QtQuick.Window 2.0
 
-Rectangle {
-    id: menuBar
-    Layout.fillWidth: true
-    color: "transparent"
-    height:100
-    z: 1000
+import Constraints 1.0
+import SketchConverter 1.0
+import SketchStaticsExporter 1.0
 
-    RowLayout {
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        anchors.leftMargin: 20
-        anchors.rightMargin: 20
-        anchors.fill: parent
-
-        Button {
-            text: "Menu"
-            style: RoundedButton {
-                icon: "\uf060";
-            }
-
-            onClicked: {
-                welcomeScreen.visible = true
-            }
+ToolBar {
+    id: topBar
+    property alias sketch_name: title_field.text
+    TextField{
+        id:title_field
+        background: Rectangle{color: "transparent"}
+        anchors.left: parent.left
+        anchors.topMargin: 5
+        anchors.bottomMargin: 5
+        anchors.leftMargin: 15
+        anchors.top:parent.top
+        anchors.bottom: parent.bottom
+        placeholderText: "Title: "+ default_title
+        property string default_title
+        Component.onCompleted: {
+            var date=new Date()
+            default_title= date.toLocaleString(Qt.locale("en_GB"),"dd-MMM-yy_hh-mm")
         }
-
-        Item {
-            width: 10
-        }
-
-        Label {
-            Layout.fillWidth: true
-            Layout.minimumWidth: 100
-            text: "Sketch"
-            color: Settings.topBarLabelColor
-            font.pointSize: 18
-        }
-
-        Button {
-            text: "Set background"
-            style: RoundedButton {
-                icon: "\uf030"
-            }
-
-            onClicked: {
-                if(QtMultimedia.availableCameras.length === 0) {
-                    message.displayErrorMessage("No camera available");
-                }
-                else {
-                    mainForm.displayCameraPanel()
+    }
+    Row{
+        anchors.centerIn: parent
+        spacing: 10
+        Image{
+            source: "qrc:/icons/icons/simple-orange-house-md.png"
+            fillMode: Image.PreserveAspectFit
+            height: topBar.height-10
+            anchors.verticalCenter: parent.verticalCenter
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    //Add code to save
+                    title_field.text.trim().length>0 ?
+                                json_sketch.exportJSONSketch(title_field.text.trim()+".json", sketch, 0):
+                                json_sketch.exportJSONSketch(title_field.default_title+".json", sketch, 0)
+                    stack_view.pop()
                 }
             }
         }
-
-        Button {
-            text:"Apply constraints"
-            style: RoundedButton {
-                icon: "\uf021"
+        ToolSeparator{height: topBar.height}
+        Image{
+            source: "qrc:/icons/icons/undo-4-xxl.png"
+            fillMode: Image.PreserveAspectFit
+            height: topBar.height-10
+            anchors.verticalCenter: parent.verticalCenter
+            MouseArea{
+                anchors.fill: parent
+                onClicked: sketch.undo();
             }
+        }
+        Image{
+            source: "qrc:/icons/icons/redo-4-xxl.png"
+            fillMode: Image.PreserveAspectFit
+            height: topBar.height-10
+            anchors.verticalCenter: parent.verticalCenter
+            MouseArea{
+                anchors.fill: parent
+                onClicked: sketch.redo();
+            }
+        }
+        ToolSeparator{height: topBar.height}
+        Image{
+            source: "qrc:/icons/icons/camera.png"
+            fillMode: Image.PreserveAspectFit
+            height: topBar.height-10
+            anchors.verticalCenter: parent.verticalCenter
+            MouseArea{
+                anchors.fill: parent
+                onClicked: sketchScreen.aux_loader.source="qrc:/CaptureImage.qml"
 
-            onClicked: {
-                var solveResult = mouseArea.constraintsSolver.solve()
-                console.log("solveResult: ", solveResult);
-                if(solveResult === true) {
-                    mouseArea.constraintsSolver.applyOnSketch();
-                    message.displaySuccessMessage("Constraints application succeed")
-                }
-                else {
-                    message.displayErrorMessage("Constraints application failed : " + solveResult)
+            }
+        }
+        ToolSeparator{height: topBar.height}
+        Image{
+            source: "qrc:/icons/icons/export3d.png"
+            fillMode: Image.PreserveAspectFit
+            height: topBar.height-10
+            anchors.verticalCenter: parent.verticalCenter
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    console.log(json_sketch.exportJSONSketch(sketch_name + ".json", sketch, 0))
                 }
             }
         }
-
-        Button {
-            text:"Export"
-            style: RoundedButton {
-                icon: "\uf1b2"
-            }
-
-            onClicked: {
-                var lolExportResult = mouseArea.lolExporter.exportToFile(Settings.assetsExportPath + "model");
-                console.log("lolExportResult", lolExportResult);
-
-                var exportResult = mouseArea.converter.exportToFile(sketch, Settings.assetsExportPath + "output-" + new Date().getTime());
-                console.log("exportResult: ", exportResult);
-
-                if(exportResult === true) {
-                    if(lolExportResult !== true) {
-                        message.displayErrorMessage("Text file export failed: " + lolExportResult)
+        ToolSeparator{height: topBar.height}
+        ToolButton{
+            text:"⋮"
+            height: topBar.height
+            onClicked: textMenu.open()
+            Menu {
+                id:textMenu
+                title: "View"
+                y:parent.height
+                width: display_background_menu_item.implicitWidth
+                MenuItem {
+                    id:display_background_menu_item
+                    text: "Display background"
+                    enabled: sketchScreen.isBackgroundSet
+                    checkable: true
+                    checked: sketchScreen.isBackgroundSet && sketchScreen.visibleBackground
+                    onTriggered: {
+                        sketchScreen.visibleBackground=this.checked
                     }
-                    else {
-                        message.displaySuccessMessage("3D export succeed")
+                }
+                MenuItem {
+                    text: "Display grid"
+                    checkable: true
+                    checked: sketchScreen.visibleGrid
+                    onTriggered: {
+                        sketchScreen.visibleGrid=this.checked
                     }
                 }
-                else {
-                    message.displayErrorMessage("3D export failed : " + exportResult);
+                MenuItem {
+                    text: "Export sketch in mm"
+                    onClicked: {
+                        console.log(json_sketch.exportJSONSketch(sketch_name + ".json", sketch, 1))
+                    }
                 }
+                /*MenuItem {
+                    text: "Login"
+                    onTriggered: {
+                        loginFormLoader.source = "qrc:/LoginForm.qml"
+                        sketchScreenLoader.source = ""
+                    }
+                }*/
             }
         }
     }
 }
+
 
 
 

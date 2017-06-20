@@ -492,7 +492,7 @@ int solve(double  **x,int xLength, Constraint * cons, int consLength, int isFine
 
 #endif
 
-   delete s;
+   delete[] s;
    for(int i=0; i < xLength; i++)
    {
        delete N[i];
@@ -502,16 +502,16 @@ int solve(double  **x,int xLength, Constraint * cons, int consLength, int isFine
        delete NDotGammaDotDeltaXt[i];
 
    }
-   delete N;
-   delete FirstSecond;
-   delete deltaXDotGammatDotN;
-   delete gammatDotDeltaXt;
-   delete NDotGammaDotDeltaXt;
-   delete origSolution;
+   delete[] N;
+   delete[] FirstSecond;
+   delete[] deltaXDotGammatDotN;
+   delete[] gammatDotDeltaXt;
+   delete[] NDotGammaDotDeltaXt;
+   delete[] origSolution;
 
-   delete grad;
-   delete xold;
-   delete gammatDotN;
+   delete[] grad;
+   delete[] xold;
+   delete[] gammatDotN;
 
    ///End of function
    double validSolution;

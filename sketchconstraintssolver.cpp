@@ -48,7 +48,7 @@ QVariant SketchConstraintsSolver::solve() {
                 Q_RETURN_ARG(QVariant, mmPerPixelScale)
     );
 
-    if(!isGetMmPerPixelScaleCallWorks) {
+    if(!isGetMmPerPixelScaleCallWorks || !mmPerPixelScale.isValid()) {
         return "Cannot retrieve the scale";
     }
 

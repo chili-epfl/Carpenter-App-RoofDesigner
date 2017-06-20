@@ -48,7 +48,7 @@ class SketchConverter : public QObject
         QSharedPointer<SketchLine> addLine(QObject* line, QMap<QObject*, QList<QObject*>> linesPerPoint);
         QSharedPointer<SketchJoint> addJoint(QObject* point, QList<QObject*> lines);
         QSharedPointer<SketchPoint> addPoint(QObject* point);
-        QSharedPointer<aiScene> generateScene(double scale);
+        QSharedPointer<aiScene> generateScene(double scale, QVector2D offset=QVector2D(0,0));
         QList<QSharedPointer<SketchMesh>> meshes;
 
     public slots:
@@ -62,7 +62,7 @@ class SketchConverter : public QObject
          * that allows to work in Javascript side, since string are
          * immutable type in Javascript.
          */
-        QVariant exportToFile(QObject* sketch, QString path);
+        QVariant exportToFile(QObject* sketch, QString basename);
 };
 
 #endif // SKETCHCONVERTER_H

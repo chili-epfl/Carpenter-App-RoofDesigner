@@ -4,15 +4,17 @@
 
 #include <sketch_converter.h>
 #include <sketchconstraintssolver.h>
-#include <sketchlolexporter.h>
+#include <sketchstaticsexporter.h>
 #include <displaykeyboard.h>
+#include <jsonsketch.h>
+#include <constraints.h>
 
 #include <QSharedPointer>
 #include <QSharedDataPointer>
 #include <QDir>
 #include <QDebug>
-
-
+#include "globals.h"
+#include "realtoexporter.h"
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -21,11 +23,13 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<SketchConverter>("SketchConverter", 1, 0, "SketchConverter");
     qmlRegisterType<SketchConstraintsSolver>("SketchConstraintsSolver", 1, 0, "SketchConstraintsSolver");
-    qmlRegisterType<SketchLolExporter>("SketchLolExporter", 1, 0, "SketchLolExporter");
+    qmlRegisterType<SketchStaticsExporter>("SketchStaticsExporter", 1, 0, "SketchStaticsExporter");
     qmlRegisterType<DisplayKeyboard>("DisplayKeyboard", 1, 0, "DisplayKeyboard");
+    qmlRegisterType<RealtoExporter>("RealtoExporter", 1, 0, "RealtoExporter");
+    qmlRegisterType<JSONSketch>("JSONSketch", 1, 0, "JSONSketch");
+    qmlRegisterType<Constraints>("Constraints", 1, 0, "Constraints");
 
-    engine.rootContext()->setContextProperty("appPath", QDir().currentPath());
-    engine.rootContext()->setContextProperty("appUrl", QUrl::fromLocalFile(QDir().currentPath()).toString());
+    engine.rootContext()->setContextProperty("scenariosPath", "file://"+scenariosDir);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

@@ -1,86 +1,77 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick 2.7
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.2
+import QtQuick.Window 2.0
 
-import "." // to import Settings
-
-Rectangle {
+Popup {
     id: pointContextMenu
-    width: childrenRect.width + 10
-    height: childrenRect.height
-    z: Settings.contextMenuZ
-    radius: Settings.contextMenuRadius
-    color: Settings.contextMenuColor
+    width: Screen.pixelDensity*10 + 20
+    height: Screen.pixelDensity*10 + 20
     visible: false
 
-    property Item cx: cx
-    property Item cy: cy
-    property Item cz: cz
-
-    property Item mx: mx
-    property Item my: my
-    property Item mz: mz
+    property bool origin: o.checked
+    /*property bool cx: cx.checked
+    property bool cy: cy.checked
+    property bool cz: cz.checked
+    property bool mx: mx.checked
+    property bool my: my.checked
+    property bool mz: mz.checked*/
 
     RowLayout {
-        x: 5
+        anchors.fill: parent
         spacing: 0
 
-        Button {
-            id: cx
-            text: "x"
-            style: TogglableButton { icon: "\uf023" }
+        ToolButton {
+            id: o
+            text: "Origin"
+            font.family: "FontAwesome"
+            anchors.horizontalCenter: parent.horizontalCenter
             onClicked: {
-                checked = !checked
-                sketch.setPointReaction("cx", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
-        }
-        Button {
-            id: cy
-            text: "y"
-            style: TogglableButton { icon: "\uf023" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("cy", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
-        }
-        Button {
-            id: cz
-            text: "z"
-            style: TogglableButton { icon: "\uf023" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("cz", checked, mouseArea.selectTool.selectedItem.identifier);
+                if (sketch.origin != null){
+                    sketch.origin.color = "blue"
+                }
+                sketch.origin = _root
+                _root.color = "green"
             }
         }
 
-        Button {
+        /*ToolButton {
+            id: cx
+            text: "\uf023 x"
+            font.family: "FontAwesome"
+            checkable: true
+        }
+        ToolButton {
+            id: cy
+            text: "\uf023 y"
+            font.family: "FontAwesome"
+            checkable: true
+        }
+        ToolButton {
+            id: cz
+            text: "\uf023 z"
+            font.family: "FontAwesome"
+            checkable: true
+        }
+
+        ToolButton {
             id: mx
-            text: "x"
-            style: TogglableButton { icon: "\uf01e" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("mx", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
+            text: "\uf01e x"
+            font.family: "FontAwesome"
+            checkable: true
         }
-        Button {
+        ToolButton {
             id: my
-            text: "y"
-            style: TogglableButton { icon: "\uf01e" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("my", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
+            text: "\uf01e y"
+            font.family: "FontAwesome"
+            checkable: true
         }
-        Button {
+        ToolButton {
             id: mz
-            text: "z"
-            style: TogglableButton { icon: "\uf01e" }
-            onClicked: {
-                checked = !checked
-                sketch.setPointReaction("mz", checked, mouseArea.selectTool.selectedItem.identifier);
-            }
-        }
+            text: "\uf01e z"
+            font.family: "FontAwesome"
+            checkable: true
+        }*/
     }
 }
 

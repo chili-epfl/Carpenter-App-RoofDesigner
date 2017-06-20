@@ -8,7 +8,6 @@ Rectangle {
     id: message
     radius: 5
     border.width: 0
-    z: 90
     anchors.centerIn: parent
     width: childrenRect.width+20
     height: childrenRect.height+40
@@ -86,7 +85,7 @@ Rectangle {
         id: hideTimer
         onTriggered: {
             console.log("end of timer")
-            message.opacity = 0;
+            hideMessage()
         }
     }
 
@@ -125,7 +124,7 @@ Rectangle {
         Label {
             id: messageContent
             color: "#ffffff"
-            text: "Errror message"
+            text: "Error message"
             anchors.margins: 5
             font.pointSize: 14
 
@@ -134,9 +133,8 @@ Rectangle {
         MouseArea {
             id: messageContentMouseArea
             anchors.fill: parent
-
             onPressed: {
-                hideMessage()
+                hideTimer.restart()
             }
         }
     }

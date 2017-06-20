@@ -1,39 +1,48 @@
 TEMPLATE = app
 
-QT += qml quick multimedia 3dcore 3drenderer 3dinput 3dquick
+QT += qml quick multimedia 3dcore 3drender 3dinput 3dquick
 CONFIG += c++11
 
-SOURCES += main.cpp \
+ASSIMP_DIR= /Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/assimp
+
+SOLVESPACE_DIR= /Users/jonathancollaud/Documents/Ecole/EPFL/BA6/BachelorProject/solvespace
+
+SOURCES += constrainedline.cpp \
+    constrainedpoint.cpp \
+    derivatives.cpp \
+    displaykeyboard.cpp \
+    main.cpp \
+    realtoexporter.cpp \
+    parameter.cpp \
     sketch_converter.cpp \
+    sketchconstraintssolver.cpp \
+    sketchjoint.cpp \
+    sketchline.cpp \
     sketchmesh.cpp \
     sketchpoint.cpp \
-    sketchline.cpp \
-    sketchconstraintssolver.cpp \
-    constrainedpoint.cpp \
-    constrainedline.cpp \
-    sketchjoint.cpp \
+    sketchstaticsexporter.cpp \
     solve.cpp \
-    derivatives.cpp \
-    sketchlolexporter.cpp \
-    parameter.cpp \
-    displaykeyboard.cpp
+    jsonsketch.cpp \
+    constraints.cpp
 
-HEADERS += sketch_converter.h \
+HEADERS += constrainedline.h \
+    constrainedpoint.h \
+    displaykeyboard.h \
+    globals.h \
+    parameter.h \
+    realtoexporter.h \
+    sketch_converter.h \
+    sketchconstraintssolver.h \
+    sketchjoint.h \
+    sketchline.h \
     sketchmesh.h \
     sketchpoint.h \
-    sketchline.h \
-    sketchconstraintssolver.h \
-    constrainedpoint.h \
-    constrainedline.h \
-    sketchjoint.h \
+    sketchstaticsexporter.h \
     solve.h \
-    sketchlolexporter.h \
-    parameter.h \
-    displaykeyboard.h
+    jsonsketch.h \
+    constraints.h
 
-
-RESOURCES += qml.qrc \
-    3d.qrc
+RESOURCES += qml.qrc
 
 # enable debug
 DEFINES += CARPENTER_DEBUG
@@ -42,37 +51,32 @@ DEFINES += CARPENTER_DEBUG
 # enable using SketchJoint as joint component
 DEFINES += CARPENTER_USE_SKETCHJOINT
 
-macx {
-    INCLUDEPATH += /usr/local/include/
+LIBS += -lassimp.3.1.1 -lquazip -lz -lslvs
 
-    LIBS += /usr/local/lib/libassimp.dylib
-}
-linux {
-    INCLUDEPATH += /usr/local/include/
+INCLUDEPATH += $$SOLVESPACE_DIR/include/
+INCLUDEPATH += /Applications/Qt/5.8/clang_64/include
+unix {
+    INCLUDEPATH += $$ASSIMP_DIR/build-unix/install/include/
+    LIBS += -L/usr/local/lib/
+    LIBS += -L$$ASSIMP_DIR/build-unix/install/lib
+    LIBS += -L$$SOLVESPACE_DIR/build-unix/src
 
-    LIBS += -L/usr/local/lib
-    LIBS += -lassimp
 }
-win32  {
-    # build or download binaries from : https://bruceoutdoors.wordpress.com/2014/08/22/building-assimp-3-with-mingw-4-8/
-    INCLUDEPATH += C:\Assimp3-1-1_MinGW4-8-1_Win32\include
 
-    LIBS += -LC:\Assimp3-1-1_MinGW4-8-1_Win32\ -lassimp
-}
 android {
+    INCLUDEPATH += $$ASSIMP_DIR/build-android/install/include/
 
+    LIBS += -L$$ASSIMP_DIR/build-android/install/lib
+    LIBS += -L$$SOLVESPACE_DIR/build-android/src
+
+    ANDROID_EXTRA_LIBS = \
+           $$ASSIMP_DIR/build-android/install/lib/libassimp.so \
+           $$SOLVESPACE_DIR/build-android/src/libslvs.so \
+           $$[QT_INSTALL_LIBS]/libquazip.so
 }
-
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
 # Default rules for deployment.
 include(deployment.pri)
-
-DISTFILES += \
-    qmldir
-
-#QMAKE_CC=/usr/local/Cellar/gcc/5.2.0/bin/g++-5
-#QMAKE_CXX=/usr/local/Cellar/gcc/5.2.0/bin/g++-5
-#QMAKE_LINK=/usr/local/Cellar/gcc/5.2.0/bin/g++-5

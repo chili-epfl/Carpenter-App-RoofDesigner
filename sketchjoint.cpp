@@ -2,6 +2,7 @@
 #include "sketchline.h"
 #include <QDebug>
 
+
 SketchJoint::SketchJoint(QObject* rawPoint, QList<QObject*> lines) {
 
     /**
@@ -230,21 +231,31 @@ SketchJoint::SketchJoint(QObject* rawPoint, QList<QObject*> lines) {
 
         double c = x12 * y34 - y12 * x34;
 
+        QVector2D intersection;
         // No intersection
         if (fabs(c) < 0.01) {
-          this->setErrorMessage("Cannot build a joint because of an intersection");
-          return;
+            if(A.distanceToPoint(B)==0 || A.distanceToPoint(C)==0 || A.distanceToPoint(D)==0)
+                intersection=A;
+            else if(B.distanceToPoint(C)==0 || B.distanceToPoint(D)==0)
+                intersection=B;
+            else if(C.distanceToPoint(D)==0)
+                intersection=C;
+            else {
+                this->setErrorMessage("Cannot build a joint because of an intersection");
+                return;
+            }
         }
+        else{
 
-        // Intersection
-        double a = x1 * y2 - y1 * x2;
-        double b = x3 * y4 - y3 * x4;
+            // Intersection
+            double a = x1 * y2 - y1 * x2;
+            double b = x3 * y4 - y3 * x4;
 
-        double x = (a * x34 - b * x12) / c;
-        double y = (a * y34 - b * y12) / c;
+            double x = (a * x34 - b * x12) / c;
+            double y = (a * y34 - b * y12) / c;
 
-        QVector2D intersection = QVector2D(x, y);
-
+            intersection = QVector2D(x, y);
+        }
         vertices << B;
         vertices << intersection;
         vertices << D;
@@ -255,11 +266,77 @@ SketchJoint::SketchJoint(QObject* rawPoint, QList<QObject*> lines) {
     qDebug() << "SketchJoint: vertices\n";
 #endif
 
+//    /*CCW sorting*/
+//    QVector2D centre(0,0);
+//    Q_FOREACH(QVector2D v, vertices){
+//        centre+=v;
+//    }
+//    centre/=vertices.size();
+
+//    QMap<qreal,QVector2D> angles;
+//    Q_FOREACH(QVector2D v, vertices){
+//        qreal val=atan2(v.y()-centre.y(),v.x()-centre.x());
+//        if(val<0)
+//            val=M_PI+(M_PI+val);
+//        angles[val]=v;
+//    }
+
+//    if(angles.size()!=vertices.size()){
+//        qDebug()<<"Found Duplicates!";
+//    }
+//    /*http://gamedev.stackexchange.com/questions/79638/calculating-the-winding-and-normal-when-programatically-adding-triangles-to-a-me*/
+
+
+//    QList<QVector2D> ordered_vertices=angles.values();
+
+//    Q_FOREACH(QVector2D v, ordered_vertices)
+//        this->vertices.append(QVector3D(v.x(),v.y(),SketchLine::radius));
+//    Q_FOREACH(QVector2D v, ordered_vertices)
+//        this->vertices.append(QVector3D(v.x(),v.y(),-SketchLine::radius));
+
+//    /*Top cap*/
+//    QList<int> _part;
+//    for(int i=0;i<ordered_vertices.size()-2;i++){
+//        _part.clear();
+//        _part.append(i);
+//        _part.append(i+1);
+//        _part.append(i+2);
+//        this->faces.append(_part);
+//    }
+//    /*Bottom cap*/
+//    for(int i=ordered_vertices.size();i<2*ordered_vertices.size()-2;i++){
+//        _part.clear();
+//        _part.append(ordered_vertices.size());
+//        _part.append(ordered_vertices.size()+2);
+//        _part.append(ordered_vertices.size()+1);
+//        this->faces.append(_part);
+//    }
+//    /*Side cap*/
+//    for(int i=0;i<ordered_vertices.size();i++){
+//        _part.clear();
+//        _part.append(i+ordered_vertices.size());
+//        if( (i+ordered_vertices.size()+1) <(2*ordered_vertices.size()) )
+//            _part.append(i+ordered_vertices.size()+1);
+//        else
+//            _part.append(ordered_vertices.size());
+//        _part.append(i);
+//        this->faces.append(_part);
+
+//        _part.clear();
+//        _part.append(i+ordered_vertices.size());
+//        _part.append(i);
+//        _part.append((i+1)%ordered_vertices.size());
+//        this->faces.append(_part);
+
+//    }
+
     int faceIndex = 0;
     int totalFaces = vertices.size();
     QList<int> topFace;
     QList<int> bottomFace;
     QList<QVector3D> topVertices;
+
+
     foreach(QVector2D vertex, vertices) {
 #ifdef CARPENTER_DEBUG
         qDebug() << "SketchJoint: (" << vertex.x() << "," << vertex.y() << ")";
@@ -284,7 +361,13 @@ SketchJoint::SketchJoint(QObject* rawPoint, QList<QObject*> lines) {
 
     this->vertices << topVertices;
     this->faces << topFace;
-    this->faces << bottomFace;
+    //this->faces << bottomFace;
+
+    QList<int> rlist; // reverse list+
+    for(int i=bottomFace.size()-1;i>=0;i--){
+        rlist<<bottomFace[i];
+    }
+    this->faces << rlist;
 
 #ifdef CARPENTER_DEBUG
     qDebug() << "SketchJoint: ---------\nSketchJoint: ";

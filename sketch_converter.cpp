@@ -1,7 +1,7 @@
 #include "sketch_converter.h"
 #include <QDebug>
-
-
+#include "globals.h"
+#include <QDir>
 SketchConverter::SketchConverter() {
 
 }
@@ -30,9 +30,9 @@ QSharedPointer<SketchPoint> SketchConverter::addPoint(QObject* point) {
     return sketchPoint;
 }
 
-QVariant SketchConverter::exportToFile(QObject* sketch, QString file) {
+QVariant SketchConverter::exportToFile(QObject* sketch, QString basename) {
     QString error;
-    bool result = this->exportToFile(sketch, file, error);
+    bool result = this->exportToFile(sketch, basename, error);
 
     if(result) {
         return true;
@@ -43,7 +43,7 @@ QVariant SketchConverter::exportToFile(QObject* sketch, QString file) {
 }
 
 
-bool SketchConverter::exportToFile(QObject* sketch, QString file, QString& error) {
+bool SketchConverter::exportToFile(QObject* sketch, QString basename, QString& error) {
 #ifdef CARPENTER_DEBUG
     qDebug() << "SketchConverter: exportToFile() called";
 #endif
@@ -86,6 +86,10 @@ bool SketchConverter::exportToFile(QObject* sketch, QString file, QString& error
                 Q_RETURN_ARG(QVariant, mmPerPixelScale)
     );
 
+    if(!mmPerPixelScale.isValid()){
+         error="Set Scale First";
+         return false;
+    }
 
 #ifdef CARPENTER_USE_SKETCHPOINT
     foreach(QVariant rawPoint, points) {
@@ -151,26 +155,83 @@ bool SketchConverter::exportToFile(QObject* sketch, QString file, QString& error
     qDebug() << "SketchConverter: linesPerPoint: " << linesPerPoint;
 #endif
 
+
+    // getting the origin :
+    double minX = 0;
+    double maxX = 0;
+    double minY = 0;
+    double maxY = 0;
+    bool first = true;
+
+    foreach(QVariant rawPoint, points) {
+        QObject* point = rawPoint.value<QObject*>();
+        QVector2D position = point->property("start").value<QVector2D>();
+        double x = position.x();
+        double y = -position.y();
+
+        if(first) {
+            first = false;
+            minX = x;
+            maxY = x;
+
+            minY = y;
+            maxY = y;
+        }
+        else {
+            if(x > maxX) {
+                maxX = x;
+            }
+            if(x < minX) {
+                minX = x;
+            }
+            if(y > maxY) {
+                maxY = y;
+            }
+            if(y < minY) {
+                minY = y;
+            }
+        }
+    }
+
+
+    double moveX = - (maxX + minX) / 2.0;
+    //double moveY = - (maxY + minY) / 2.0;
+    double moveY = -minY ;
+
+
     // create a scene
-    QSharedPointer<aiScene> scene = this->generateScene(mmPerPixelScale.toDouble());
+    QSharedPointer<aiScene> scene = this->generateScene(mmPerPixelScale.toDouble()*100,QVector2D(moveX,moveY));
 
     Assimp::Exporter exporter;
 
+    QString path=scenariosDir+basename+"/";
+
+    if(!QDir(path).exists()){
+        if(!QDir().mkpath(path)){
+            qDebug()<<"Can't create path";
+            return false;
+        }
+    }
+
+    QString file=path+basename;
     QString pathDae = (file + ".dae");
     QString pathObj = (file + ".obj");
-    QString pathObjFinal = (file + ".final.obj");
-    aiReturn stateDae = exporter.Export(scene.data(), "collada", pathDae.toStdString().c_str(), aiProcess_Triangulate);
+    aiReturn stateDae = exporter.Export(scene.data(), "collada", pathDae.toStdString().c_str(), aiProcess_Triangulate );
     aiReturn stateObj = exporter.Export(scene.data(), "obj", pathObj.toStdString().c_str(), aiProcess_Triangulate);
 
-    Assimp::Importer importer;
-    const aiScene* import = importer.ReadFile(pathObj.toStdString().c_str(), 0);
+    /*Comment this check because it might fail beacuse of the normals*/
+    //QString pathObjFinal = (file + ".final.obj");
+
+//    Assimp::Importer importer;
+//    const aiScene* import = importer.ReadFile(pathObj.toStdString().c_str(), 0);
 
     aiReturn stateObjFinal = aiReturn_FAILURE;
 
-    if(stateObj == AI_SUCCESS) {
-        stateObjFinal = exporter.Export(import, "obj", pathObjFinal.toStdString().c_str());
-    }
+//    if(stateObj == AI_SUCCESS) {
+//        stateObjFinal = exporter.Export(import, "obj", pathObjFinal.toStdString().c_str());
+//    }
 
+    stateObjFinal=AI_SUCCESS;
 
     if(stateDae == AI_SUCCESS && stateObj == AI_SUCCESS && stateObjFinal == AI_SUCCESS) {
         return true;
@@ -185,11 +246,10 @@ bool SketchConverter::exportToFile(QObject* sketch, QString file, QString& error
     }
 }
 
-QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
+QSharedPointer<aiScene> SketchConverter::generateScene(double scale,QVector2D offset) {
     QSharedPointer<aiScene> scene(new aiScene());
 
     scene->mRootNode = new aiNode();
-
     // single material, not reallyused
     scene->mMaterials = new aiMaterial*[ 1 ];
     scene->mMaterials[ 0 ] = nullptr;
@@ -203,46 +263,6 @@ QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
     scene->mRootNode->mMeshes = new unsigned int[ meshes.size() ];
     scene->mRootNode->mNumMeshes = meshes.size();
 
-
-    // getting the origin :
-    double minX = 0;
-    double maxX = 0;
-    double minY = 0;
-    double maxY = 0;
-    bool first = true;
-
-    foreach(QSharedPointer<SketchMesh> mesh, this->meshes) {
-        foreach(QVector3D vertex, mesh->getVertices()) {
-            double x = vertex.x();
-            double y = vertex.y();
-
-            if(first) {
-                first = false;
-                minX = x;
-                maxY = x;
-
-                minY = y;
-                maxY = y;
-            }
-            else {
-                if(x > maxX) {
-                    maxX = x;
-                }
-                if(x < minX) {
-                    minX = x;
-                }
-                if(y > maxY) {
-                    maxY = y;
-                }
-                if(y < minY) {
-                    minY = y;
-                }
-            }
-        }
-    }
-
-    double moveX = - (maxX + minX) / 2.0;
-    double moveY = - (maxY + minY) / 2.0;
 
 
     // per mesh initialization, set the material to 0
@@ -260,13 +280,15 @@ QSharedPointer<aiScene> SketchConverter::generateScene(double scale) {
         int verticesCount = mesh->getVertices().size();
 
         pMesh->mVertices = new aiVector3D[verticesCount];
-        pMesh->mNumVertices = verticesCount;
+        pMesh->mNormals=new aiVector3D[verticesCount];
 
+        pMesh->mNumVertices = verticesCount;
 
 
         for(int j = 0; j < verticesCount; j++) {
             QVector3D vertex = mesh->getVertices().at(j);
-            pMesh->mVertices[j] = aiVector3D( (vertex.x() + moveX) * scale, (vertex.y() + moveY) * scale, vertex.z() * scale );
+            pMesh->mVertices[j] = aiVector3D( (vertex.x() + offset.x()) * scale, (-vertex.y() + offset.y()) * scale +30, vertex.z() * scale );
+            pMesh->mNormals[j]=aiVector3D(0,0,1);
             //pMesh->mVertices[j] = aiVector3D(vertex.x(), vertex.y(), vertex.z());
         }
 
